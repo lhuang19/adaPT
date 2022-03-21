@@ -7,18 +7,35 @@
  * adaPT_users -- map. K=username, V=temporary value
  */
 
+async function getHash(input) {
+  const encoded = new TextEncoder().encode(input);
+  const hash = await crypto.subtle.digest("SHA-256", encoded);
+  let result = "";
+  const view = new DataView(hash);
+  for (let i = 0; i < hash.byteLength; i += 4) {
+    result += `00000000${view.getUint32(i).toString(16).slice(-8)}`;
+  }
+  return result;
+}
+
 /**
  *
  * @param {*} username
  * @returns true if account with username exists
  */
-async function loginRequest(username) {
+async function loginRequest(username, password) {
   const data = localStorage.getItem("adaPT_users");
   const parsedJSON = data === null ? {} : JSON.parse(data);
-  if (parsedJSON[username] !== undefined) {
+  if (parsedJSON[username] === undefined) {
+    return { success: false, error: "User not found" };
+  }
+
+  const hashed = await getHash(password);
+  if (parsedJSON[username] !== undefined && hashed === parsedJSON[username]) {
     return { success: true };
   }
-  return { success: false, error: "user not found" };
+
+  return { success: false, error: "Incorrect password" };
 }
 
 /**
@@ -26,14 +43,15 @@ async function loginRequest(username) {
  * @param {*} username
  * @returns true if account with username does not exist
  */
-async function signupRequest(username) {
+async function signupRequest(username, password) {
   const data = localStorage.getItem("adaPT_users");
   const parsedJSON = data === null ? {} : JSON.parse(data);
   if (parsedJSON[username] !== undefined) {
-    return { success: false, error: "user already exists" };
+    return { success: false, error: "User already exists" };
   }
+  const hashed = await getHash(password);
   if (parsedJSON[username] === undefined) {
-    parsedJSON[username] = "temp data";
+    parsedJSON[username] = hashed;
   }
   localStorage.setItem("adaPT_users", JSON.stringify(parsedJSON));
   return { success: true };

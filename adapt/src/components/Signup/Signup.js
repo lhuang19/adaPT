@@ -1,71 +1,122 @@
-import React, { useRef, useContext } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { Row, Col, Form, Input, Button } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
 import { AuthUserContext } from "../../context/Auth";
 import { signupRequest } from "../../modules/storage";
-import { Row, Col, Form, Input, Button } from "antd";
 
 function Signup() {
   const { setCredentials } = useContext(AuthUserContext);
   const navigate = useNavigate();
-  const signupInput = useRef("");
-  async function signupHandler() {
-    const input = signupInput.current;
-    const { success, error } = await signupRequest(input);
+  async function signupHandler(values) {
+    const { username, password } = values;
+    const { success, error } = await signupRequest(username, password);
     if (success) {
-      setCredentials({ user: input });
+      setCredentials({ user: username });
       navigate("/");
     } else {
       alert(error);
     }
   }
-  function onInputHandler(event) {
-    signupInput.current = event.target.value;
-  }
   return (
-    <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-      <Col
-        span={16}
-        style={{
-          padding: "15px",
-          border: "1px solid black",
-          borderRadius: "5px",
-          paddingTop: "50px",
-          paddingBottom: "50px",
-        }}
-      >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        minWidth: "100vw",
+      }}
+    >
+      <div style={{ width: "80%", minWidth: "450px", height: "80%" }}>
         <Row justify="center">
-          <h1>Sign up</h1>
+          <h1>Signup</h1>
         </Row>
-
-        <Row justify="center">
-          <Form
-            name="basic"
-            onFinish={() => signupHandler()}
-            autoComplete="off"
-            style={{ width: " 60% " }}
-            layout={"vertical"}
+        <Row justify="center" align="middle">
+          <Col
+            span={16}
+            style={{
+              padding: "15px",
+              border: "1px solid black",
+              borderRadius: "5px",
+              paddingTop: "120px",
+              paddingBottom: "120px",
+            }}
           >
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input onChange={(input) => onInputHandler(input)} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Sign up
-              </Button>
-            </Form.Item>
-          </Form>
+            <Row justify="center">
+              <Form
+                name="basic"
+                onFinish={(values) => signupHandler(values)}
+                autoComplete="off"
+                style={{ width: " 60% " }}
+                layout="vertical"
+              >
+                <Form.Item
+                  label="Username"
+                  name="username"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please create a username!",
+                    },
+                    {
+                      pattern: /^[a-zA-Z0-9]*$/,
+                      message: "Must be alphanumeric",
+                    },
+                    {
+                      pattern: /.{5,10}/,
+                      message: "Must be between 5 and 10 characters in length",
+                    },
+                  ]}
+                  validateTrigger="onSubmit"
+                >
+                  <Input
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please create a password!",
+                    },
+                    {
+                      pattern: /.{5,10}/,
+                      message: "Must be between 5 and 10 characters in length",
+                    },
+                  ]}
+                  validateTrigger="onSubmit"
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Sign up
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Row>
+            <Row justify="center">
+              <p>
+                Already have an account?
+                <Button
+                  type="link"
+                  onClick={() => navigate("/login")}
+                  style={{ paddingLeft: "3px" }}
+                >
+                  Log in
+                </Button>
+              </p>
+            </Row>
+          </Col>
         </Row>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 }
 
