@@ -1,71 +1,162 @@
-import React, { useRef, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { Row, Col, Form, Button, Steps, Result } from "antd";
 import { AuthUserContext } from "../../context/Auth";
+
 import { signupRequest } from "../../modules/storage";
-import { Row, Col, Form, Input, Button } from "antd";
+import FormData from "./FormData";
+
+const { Step } = Steps;
 
 function Signup() {
   const { setCredentials } = useContext(AuthUserContext);
+  const [current, setCurrent] = useState(0);
+  const [showForm, setShowForm] = useState(true);
+  const [data, setData] = useState({});
+
+  const [form] = Form.useForm();
+
+  const next = () => {
+    form
+      .validateFields()
+      .then(() => {
+        setCurrent(current + 1);
+      })
+      .catch(() => {});
+  };
+
+  const prev = () => {
+    setCurrent(current - 1);
+  };
   const navigate = useNavigate();
-  const signupInput = useRef("");
+
   async function signupHandler() {
-    const input = signupInput.current;
-    const { success, error } = await signupRequest(input);
+    const formData = form.getFieldsValue(true);
+    console.log(formData);
+
+    const { username, password } = formData;
+    const { success, error } = await signupRequest(username, password);
     if (success) {
-      setCredentials({ user: input });
-      navigate("/");
+      setData(formData);
+      setShowForm(false);
     } else {
       alert(error);
     }
   }
-  function onInputHandler(event) {
-    signupInput.current = event.target.value;
-  }
   return (
-    <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-      <Col
-        span={16}
-        style={{
-          padding: "15px",
-          border: "1px solid black",
-          borderRadius: "5px",
-          paddingTop: "50px",
-          paddingBottom: "50px",
-        }}
-      >
-        <Row justify="center">
-          <h1>Sign up</h1>
-        </Row>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        minWidth: "100vw",
+      }}
+    >
+      {showForm ? (
+        <>
+          <div style={{ width: "80%", minWidth: "1000px", height: "80%" }}>
+            <Row justify="center">
+              <h1>Signup</h1>
+            </Row>
 
-        <Row justify="center">
-          <Form
-            name="basic"
-            onFinish={() => signupHandler()}
-            autoComplete="off"
-            style={{ width: " 60% " }}
-            layout={"vertical"}
-          >
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
+            <Row justify="center" align="middle">
+              <Col
+                span={16}
+                style={{
+                  padding: "5px",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  paddingTop: "80px",
+                  paddingBottom: "100px",
+                }}
+              >
+                <Row justify="start" style={{ width: "75%", margin: "auto" }}>
+                  <Steps
+                    current={current}
+                    size="small"
+                    style={{ marginBottom: "25px" }}
+                  >
+                    {FormData.map((item) => (
+                      <Step
+                        key={item.title}
+                        title={item.title}
+                        icon={item.icon}
+                      />
+                    ))}
+                  </Steps>
+                  <Form
+                    name="basic"
+                    form={form}
+                    onFinish={() => signupHandler()}
+                    autoComplete="off"
+                    layout="vertical"
+                    validateTrigger="onSubmit"
+                    style={{ width: "100%" }}
+                    labelAlign="left"
+                  >
+                    {FormData[current].content}
+                    <Form.Item>
+                      {current < FormData.length - 1 && (
+                        <Button type="primary" onClick={() => next()}>
+                          Next
+                        </Button>
+                      )}
+                      {current === FormData.length - 1 && (
+                        <Button type="primary" htmlType="submit">
+                          Sign up
+                        </Button>
+                      )}
+                      {current > 0 && (
+                        <Button
+                          style={{ margin: "0 8px" }}
+                          onClick={() => prev()}
+                        >
+                          Previous
+                        </Button>
+                      )}
+                    </Form.Item>
+                  </Form>
+                </Row>
+                <Row justify="center">
+                  <p>
+                    Already have an account?
+                    <Button
+                      type="link"
+                      onClick={() => navigate("/login")}
+                      style={{ paddingLeft: "3px" }}
+                    >
+                      Log in
+                    </Button>
+                  </p>
+                </Row>
+              </Col>
+            </Row>
+          </div>
+        </>
+      ) : (
+        <Result
+          status="success"
+          title="Successfully Created An Account!"
+          subTitle={`Welcome ${data.username}`}
+          extra={[
+            <Button
+              type="primary"
+              key="console"
+              onClick={() => {
+                setCredentials({ user: data.username });
+                navigate("/");
+              }}
             >
-              <Input onChange={(input) => onInputHandler(input)} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Sign up
-              </Button>
-            </Form.Item>
-          </Form>
-        </Row>
-      </Col>
-    </Row>
+              Go to Home
+            </Button>,
+            <Button key="login" onClick={() => navigate("/login")}>
+              Login
+            </Button>,
+          ]}
+        />
+      )}
+    </div>
   );
 }
 

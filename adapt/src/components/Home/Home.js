@@ -3,7 +3,6 @@ import { AuthUserContext } from "../../context/Auth";
 
 function Home() {
   const { credentials } = useContext(AuthUserContext);
-  console.log(credentials);
   return (
     <div>
       <h1>Home</h1>

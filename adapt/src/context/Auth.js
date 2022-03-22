@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AuthUserContext = createContext([{}, () => {}]);
 
@@ -27,14 +27,21 @@ const AuthUserContext = createContext([{}, () => {}]);
 //   return Wrapping;
 // };
 
+const protectedPages = ["/"];
+
 function WithAuth({ children }) {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ user: "" });
+  const location = useLocation();
+  console.log(location);
   useEffect(() => {
-    if (credentials.user.length === 0) {
+    if (
+      credentials.user.length === 0 &&
+      protectedPages.includes(location.pathname)
+    ) {
       navigate("/login");
     }
-  }, [credentials]);
+  }, [credentials, location]);
   const passInValue = React.useMemo(
     () => ({
       credentials,
