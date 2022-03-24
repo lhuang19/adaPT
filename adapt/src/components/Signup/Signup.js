@@ -5,6 +5,7 @@ import { AuthUserContext } from "../../context/Auth";
 
 import { signupRequest } from "../../modules/storage";
 import FormData from "./FormData";
+import styles from "./Signup.module.scss";
 
 const { Step } = Steps;
 
@@ -13,20 +14,29 @@ function Signup() {
   const [current, setCurrent] = useState(0);
   const [showForm, setShowForm] = useState(true);
   const [data, setData] = useState({});
+  const [leave, setLeave] = useState(styles.animateIn);
 
   const [form] = Form.useForm();
-
+  console.log(leave);
   const next = () => {
     form
       .validateFields()
       .then(() => {
-        setCurrent(current + 1);
+        setLeave(styles.animateOut);
+        setTimeout(() => {
+          setCurrent(current + 1);
+          setLeave(styles.animateIn);
+        }, 400);
       })
       .catch(() => {});
   };
 
   const prev = () => {
-    setCurrent(current - 1);
+    setLeave(styles.animateOutRev);
+    setTimeout(() => {
+      setCurrent(current - 1);
+      setLeave(styles.animateInRev);
+    }, 400);
   };
   const navigate = useNavigate();
 
@@ -95,27 +105,29 @@ function Signup() {
                     style={{ width: "100%" }}
                     labelAlign="left"
                   >
-                    {FormData[current].content}
-                    <Form.Item>
-                      {current < FormData.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>
-                          Next
-                        </Button>
-                      )}
-                      {current === FormData.length - 1 && (
-                        <Button type="primary" htmlType="submit">
-                          Sign up
-                        </Button>
-                      )}
-                      {current > 0 && (
-                        <Button
-                          style={{ margin: "0 8px" }}
-                          onClick={() => prev()}
-                        >
-                          Previous
-                        </Button>
-                      )}
-                    </Form.Item>
+                    <div className={leave}>
+                      {FormData[current].content}
+                      <Form.Item>
+                        {current < FormData.length - 1 && (
+                          <Button type="primary" onClick={() => next()}>
+                            Next
+                          </Button>
+                        )}
+                        {current === FormData.length - 1 && (
+                          <Button type="primary" htmlType="submit">
+                            Sign up
+                          </Button>
+                        )}
+                        {current > 0 && (
+                          <Button
+                            style={{ margin: "0 8px" }}
+                            onClick={() => prev()}
+                          >
+                            Previous
+                          </Button>
+                        )}
+                      </Form.Item>
+                    </div>
                   </Form>
                 </Row>
                 <Row justify="center">

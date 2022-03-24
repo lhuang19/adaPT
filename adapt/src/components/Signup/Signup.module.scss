@@ -1,0 +1,62 @@
+$width: 5 / 100;
+$duration: 0.4s;
+
+.animateIn {
+  animation: slidein $duration cubic-bezier(0.43, 1.19, 0.7, 0.95);
+}
+.animateOut {
+  animation: slideout $duration cubic-bezier(0.43, 1.19, 0.7, 0.95);
+}
+.animateInRev {
+  animation: slideinRev $duration cubic-bezier(0.43, 1.19, 0.7, 0.95);
+}
+.animateOutRev {
+  animation: slideoutRev $duration cubic-bezier(0.43, 1.19, 0.7, 0.95);
+}
+@keyframes slidein {
+  from {
+    transform: translateX(percentage(-$width));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideout {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(percentage($width));
+    opacity: 0;
+  }
+}
+
+@keyframes slideinRev {
+  from {
+    transform: translateX(percentage($width));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideoutRev {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(percentage(-$width));
+    opacity: 0;
+  }
+}
