@@ -102,7 +102,7 @@ export default FormData = [
     content: (
       <Form.Item
         label="Role"
-        name="radio"
+        name="role"
         rules={[
           {
             required: true,

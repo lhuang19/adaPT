@@ -42,12 +42,10 @@ function Signup() {
 
   async function signupHandler() {
     const formData = form.getFieldsValue(true);
-    console.log(formData);
 
-    const { username, password } = formData;
-    const { success, error } = await signupRequest(username, password);
+    const { success, data, error } = await signupRequest(formData);
     if (success) {
-      setData(formData);
+      setData(data);
       setShowForm(false);
     } else {
       alert(error);
@@ -59,7 +57,7 @@ function Signup() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        minHeight: "100%",
         minWidth: "100vw",
       }}
     >
@@ -67,7 +65,9 @@ function Signup() {
         <>
           <div style={{ width: "80%", minWidth: "1000px", height: "80%" }}>
             <Row justify="center">
-              <h1>Signup</h1>
+              <h1>
+                <b>Signup</b>
+              </h1>
             </Row>
 
             <Row justify="center" align="middle">
@@ -156,7 +156,7 @@ function Signup() {
               type="primary"
               key="console"
               onClick={() => {
-                setCredentials({ user: data.username });
+                setCredentials(data);
                 navigate("/");
               }}
             >

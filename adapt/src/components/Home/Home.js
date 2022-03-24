@@ -6,7 +6,7 @@ function Home() {
   return (
     <div>
       <h1>Home</h1>
-      <p>{credentials.user}</p>
+      <p>{credentials.username}</p>
     </div>
   );
 }

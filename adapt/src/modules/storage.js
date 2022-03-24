@@ -31,8 +31,12 @@ async function loginRequest(username, password) {
   }
 
   const hashed = await getHash(password);
-  if (parsedJSON[username] !== undefined && hashed === parsedJSON[username]) {
-    return { success: true };
+  if (
+    parsedJSON[username] !== undefined &&
+    hashed === parsedJSON[username].password
+  ) {
+    const { password, ...withoutPassword } = parsedJSON[username];
+    return { success: true, data: withoutPassword };
   }
 
   return { success: false, error: "Incorrect password" };
@@ -43,18 +47,21 @@ async function loginRequest(username, password) {
  * @param {*} username
  * @returns true if account with username does not exist
  */
-async function signupRequest(username, password) {
+async function signupRequest(formData) {
   const data = localStorage.getItem("adaPT_users");
   const parsedJSON = data === null ? {} : JSON.parse(data);
+  const { username } = formData;
   if (parsedJSON[username] !== undefined) {
     return { success: false, error: "User already exists" };
   }
-  const hashed = await getHash(password);
+  const hashed = await getHash(formData.password);
+  formData.password = hashed;
   if (parsedJSON[username] === undefined) {
-    parsedJSON[username] = hashed;
+    parsedJSON[username] = formData;
   }
   localStorage.setItem("adaPT_users", JSON.stringify(parsedJSON));
-  return { success: true };
+  const { password, ...withoutPassword } = parsedJSON[username];
+  return { success: true, data: withoutPassword };
 }
 
 export { loginRequest, signupRequest };

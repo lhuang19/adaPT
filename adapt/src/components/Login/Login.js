@@ -12,9 +12,9 @@ function Login() {
 
   async function loginHandler(values) {
     const { username, password } = values;
-    const { success, error } = await loginRequest(username, password);
+    const { success, data, error } = await loginRequest(username, password);
     if (success) {
-      setCredentials({ user: username });
+      setCredentials(data);
       navigate("/");
     } else {
       setErrorMessage(error);
@@ -27,11 +27,17 @@ function Login() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        minHeight: "100%",
         minWidth: "100vw",
       }}
     >
-      <div style={{ width: "80%", minWidth: "450px", height: "80%" }}>
+      <div
+        style={{
+          width: "80%",
+          minWidth: "450px",
+          height: "80%",
+        }}
+      >
         <Row justify="center">
           <h1>
             <b>Login</b>

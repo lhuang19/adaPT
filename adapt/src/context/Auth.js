@@ -1,5 +1,10 @@
 import React, { useState, useEffect, createContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Layout } from "antd";
+
+import NavBar from "../components/NavBar/Navbar";
+
+const { Header, Content } = Layout;
 
 const AuthUserContext = createContext([{}, () => {}]);
 
@@ -31,12 +36,12 @@ const protectedPages = ["/"];
 
 function WithAuth({ children }) {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ user: "" });
+  const [credentials, setCredentials] = useState({ username: "" });
   const location = useLocation();
-  console.log(location);
+  console.log(credentials);
   useEffect(() => {
     if (
-      credentials.user.length === 0 &&
+      credentials.username.length === 0 &&
       protectedPages.includes(location.pathname)
     ) {
       navigate("/login");
@@ -51,8 +56,15 @@ function WithAuth({ children }) {
   );
   return (
     <AuthUserContext.Provider value={passInValue}>
-      {/* eslint-disable-next-line */}
-      {children}
+      <Layout>
+        <Header style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+          <NavBar {...credentials} />
+        </Header>
+      </Layout>
+      <Content style={{ paddingTop: "50px" }}>
+        {/* eslint-disable-next-line */}
+        {children}
+      </Content>
     </AuthUserContext.Provider>
   );
 }
