@@ -1,23 +1,21 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Menu } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { UserOutlined, BellOutlined, HomeOutlined } from "@ant-design/icons";
 import { IoBarbellSharp } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
-import { AuthUserContext } from "../../context/Auth";
 
 function IconWrapper({ children }) {
   return <div>{children}</div>;
 }
 
 function NavBar(props) {
-  const { username, firstname } = props;
-  const { setCredentials } = useContext(AuthUserContext);
+  const { credentials, setCredentials } = props;
+  const { username, firstname } = credentials;
 
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   return (
     <>
       <div className="logo" style={{ float: "left", marginRight: "20px" }}>
@@ -47,7 +45,7 @@ function NavBar(props) {
                 </IconWrapper>
               }
               onClick={() => navigate("/")}
-            ></Menu.Item>
+            />
             <Menu.Item
               key="/exercise_nav_bar"
               icon={
@@ -56,7 +54,7 @@ function NavBar(props) {
                 </IconWrapper>
               }
               onClick={() => alert("implement exersices")}
-            ></Menu.Item>
+            />
             <Menu.Item
               key="/friends_nav_bar"
               icon={
@@ -65,7 +63,7 @@ function NavBar(props) {
                 </IconWrapper>
               }
               onClick={() => alert("implement friends")}
-            ></Menu.Item>
+            />
             <Menu.Item
               key="/chat_nav_bar"
               icon={
@@ -74,7 +72,7 @@ function NavBar(props) {
                 </IconWrapper>
               }
               onClick={() => alert("implement chat")}
-            ></Menu.Item>
+            />
           </Menu>
           <Menu
             theme="dark"

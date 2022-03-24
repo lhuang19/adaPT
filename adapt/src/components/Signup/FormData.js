@@ -9,7 +9,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 
-export default FormData = [
+const FormData = [
   {
     title: "Account",
     icon: <UserAddOutlined />,
@@ -111,10 +111,12 @@ export default FormData = [
         ]}
       >
         <Radio.Group name="radiogroup">
-          <Radio value={"Patient"}>Patient</Radio>
-          <Radio value={"PT"}>PT</Radio>
+          <Radio value="Patient">Patient</Radio>
+          <Radio value="PT">PT</Radio>
         </Radio.Group>
       </Form.Item>
     ),
   },
 ];
+
+export default FormData;

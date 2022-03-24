@@ -35,8 +35,7 @@ async function loginRequest(username, password) {
     parsedJSON[username] !== undefined &&
     hashed === parsedJSON[username].password
   ) {
-    const { password, ...withoutPassword } = parsedJSON[username];
-    return { success: true, data: withoutPassword };
+    return { success: true, data: parsedJSON[username] };
   }
 
   return { success: false, error: "Incorrect password" };
@@ -55,13 +54,13 @@ async function signupRequest(formData) {
     return { success: false, error: "User already exists" };
   }
   const hashed = await getHash(formData.password);
-  formData.password = hashed;
+  const newFormData = { ...formData };
+  newFormData.password = hashed;
   if (parsedJSON[username] === undefined) {
-    parsedJSON[username] = formData;
+    parsedJSON[username] = newFormData;
   }
   localStorage.setItem("adaPT_users", JSON.stringify(parsedJSON));
-  const { password, ...withoutPassword } = parsedJSON[username];
-  return { success: true, data: withoutPassword };
+  return { success: true, data: parsedJSON[username] };
 }
 
 export { loginRequest, signupRequest };
