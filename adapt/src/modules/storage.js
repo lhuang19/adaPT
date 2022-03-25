@@ -63,4 +63,20 @@ async function signupRequest(formData) {
   return { success: true, data: parsedJSON[username] };
 }
 
-export { loginRequest, signupRequest };
+function getPost(postID) {
+  // TODO Add retrieving from storage functionality
+  return {
+    username: "testUser",
+    timestamp: new Date(),
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    imageURL:
+      "https://www.clipartkey.com/mpngs/m/122-1222244_fat-yoshi-transparent-fat-yoshi-transparent-background.png",
+  };
+}
+
+function getProfilePicURL(username) {
+  // TODO Add retrieving from storage functionality
+  return "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+}
+
+export { loginRequest, signupRequest, getPost, getProfilePicURL };
