@@ -34,7 +34,15 @@ function WithAuth({ children }) {
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>
-        <Header style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+        <Header
+          style={{
+            position: "fixed",
+            zIndex: 1,
+            width: "100%",
+            paddingLeft: "20px",
+            paddingRight: "10px",
+          }}
+        >
           <NavBar
             credentials={credentials}
             setCredentials={(input) => setCredentials(input)}
@@ -43,7 +51,7 @@ function WithAuth({ children }) {
       </Layout>
       <Content
         style={{
-          paddingTop: "50px",
+          paddingTop: "100px",
         }}
       >
         {/* eslint-disable-next-line */}
