@@ -1,12 +1,18 @@
-import React, { useContext } from "react";
-import { AuthUserContext } from "../../context/Auth";
+import React from "react";
+import Post from "../Post/Post";
 
 function Home() {
-  const { credentials } = useContext(AuthUserContext);
   return (
-    <div>
-      <h1>Home</h1>
-      <p>{credentials.username}</p>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100%",
+        minWidth: "100vw",
+      }}
+    >
+      <Post postID={0} />
     </div>
   );
 }
