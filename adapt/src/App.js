@@ -10,14 +10,16 @@ import { WithAuth } from "./context/Auth";
 
 function App() {
   return (
-    <WithAuth>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </WithAuth>
+    <div style={{ minWidth: "650px" }}>
+      <WithAuth>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </WithAuth>
+    </div>
   );
 }
 

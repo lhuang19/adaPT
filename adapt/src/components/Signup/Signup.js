@@ -45,7 +45,7 @@ function Signup() {
 
     const { success, data, error } = await signupRequest(formData);
     if (success) {
-      setShowForm(true);
+      setShowForm(false);
       setUserData(data);
     } else {
       setErrorMessage(error);
@@ -172,9 +172,9 @@ function Signup() {
             >
               Go to Home
             </Button>,
-            <Button key="login" onClick={() => navigate("/login")}>
-              Login
-            </Button>,
+            // <Button key="login" onClick={() => navigate("/login")}>
+            //   Login
+            // </Button>,
           ]}
         />
       )}

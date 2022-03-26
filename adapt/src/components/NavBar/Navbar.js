@@ -5,6 +5,7 @@ import { UserOutlined, BellOutlined, HomeOutlined } from "@ant-design/icons";
 import { IoBarbellSharp } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
+import { logout } from "../../modules/storage";
 
 function IconWrapper({ children }) {
   return <div>{children}</div>;
@@ -24,7 +25,7 @@ function NavBar(props) {
         </h1>
       </div>
 
-      {username.length !== 0 ? (
+      {username !== undefined && username.length !== 0 ? (
         <>
           <Menu
             theme="dark"
@@ -104,6 +105,7 @@ function NavBar(props) {
               key="/logout_nav_bar"
               onClick={() => {
                 setCredentials({ username: "" });
+                logout();
                 navigate("/login");
               }}
             >

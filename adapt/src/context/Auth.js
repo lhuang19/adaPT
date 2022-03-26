@@ -3,25 +3,27 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "antd";
 
 import NavBar from "../components/NavBar/Navbar";
+import { checkLoggedIn } from "../modules/storage";
 
 const { Header, Content } = Layout;
 
 const AuthUserContext = createContext([{}, () => {}]);
-
-const protectedPages = ["/"];
 
 function WithAuth({ children }) {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ username: "" });
   const location = useLocation();
   useEffect(() => {
-    if (
-      credentials.username.length === 0 &&
-      protectedPages.includes(location.pathname)
-    ) {
+    const loginToken = checkLoggedIn();
+    if (loginToken !== null) {
+      setCredentials(loginToken);
+      if (location.pathname === "/login" || location.pathname === "/signup") {
+        navigate("/");
+      }
+    } else {
       navigate("/login");
     }
-  }, [credentials, location]);
+  }, []);
   const passInValue = React.useMemo(
     () => ({
       credentials,
@@ -39,7 +41,11 @@ function WithAuth({ children }) {
           />
         </Header>
       </Layout>
-      <Content style={{ paddingTop: "50px" }}>
+      <Content
+        style={{
+          paddingTop: "50px",
+        }}
+      >
         {/* eslint-disable-next-line */}
         {children}
       </Content>

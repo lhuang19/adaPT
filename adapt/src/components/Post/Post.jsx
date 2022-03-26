@@ -1,17 +1,21 @@
 import React from "react";
 import { getPost, getProfilePicURL } from "../../modules/storage";
+import { Avatar } from "antd"
+import { UserOutlined } from '@ant-design/icons';
 
-function Post({ postID }) {
+
+function Post(props) {
+  const { data } = props;
+  const { title, body, time, poster } = data;
+  
   // post is JSON with username, timestamp, text, and imageURL
-  const post = getPost(postID);
-  const { username, timestamp, text, imageURL } = post;
+  // const { username, timestamp, text, imageURL } = post;
   return (
     <div
       style={{
-        border: "1px solid #969696",
-        borderRadius: "2vw",
         maxWidth: "80vw",
-        padding: "4vw",
+        width: "100%",
+        padding: "20px"
       }}
     >
       <div
@@ -22,28 +26,24 @@ function Post({ postID }) {
           paddingBottom: "1vw",
         }}
       >
-        <img
-          src={getProfilePicURL(username)}
-          alt={username.concat("'s profile picture")}
-          width="100vw"
-          height="100vw"
-        />
+        <Avatar size={64} icon={<UserOutlined />} alt={poster.concat("'s profile picture")}/>
         <div
           style={{
             paddingLeft: "1vw",
           }}
         >
-          <h2>{username}</h2>
-          <p>{timestamp.toString()}</p>
+          <h2>{poster} </h2>
+          <p>{new Date(time).toLocaleString()}</p>
           {
             // TODO Format timestamp better
           }
         </div>
       </div>
-      <p>{text}</p>
-      {imageURL.length > 0 ? (
+      <h3><b>{title}</b></h3>
+      <p style={{whiteSpace: "pre-wrap"}}>{body}</p>
+      {/* {imageURL.length > 0 ? (
         <img src={imageURL} alt={"A post from ".concat(username)} />
-      ) : null}
+      ) : null} */}
       {
         // TODO Figure out how to make image fit neatly in div
       }

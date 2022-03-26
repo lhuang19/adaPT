@@ -6,6 +6,9 @@
  *
  * adaPT_users -- map. K=username, V=temporary value
  */
+const loggedInStorage = "adaPT_loggedIn";
+const userStorage = "adaPT_users";
+const postStorage = "adaPT_posts";
 
 async function getHash(input) {
   const encoded = new TextEncoder().encode(input);
@@ -24,7 +27,7 @@ async function getHash(input) {
  * @returns true if account with username exists
  */
 async function loginRequest(username, password) {
-  const data = localStorage.getItem("adaPT_users");
+  const data = localStorage.getItem(userStorage);
   const parsedJSON = data === null ? {} : JSON.parse(data);
   if (parsedJSON[username] === undefined) {
     return { success: false, error: "User not found" };
@@ -35,6 +38,7 @@ async function loginRequest(username, password) {
     parsedJSON[username] !== undefined &&
     hashed === parsedJSON[username].password
   ) {
+    localStorage.setItem(loggedInStorage, JSON.stringify(parsedJSON[username]));
     return { success: true, data: parsedJSON[username] };
   }
 
@@ -47,7 +51,7 @@ async function loginRequest(username, password) {
  * @returns true if account with username does not exist
  */
 async function signupRequest(formData) {
-  const data = localStorage.getItem("adaPT_users");
+  const data = localStorage.getItem(userStorage);
   const parsedJSON = data === null ? {} : JSON.parse(data);
   const { username } = formData;
   if (parsedJSON[username] !== undefined) {
@@ -59,8 +63,35 @@ async function signupRequest(formData) {
   if (parsedJSON[username] === undefined) {
     parsedJSON[username] = newFormData;
   }
-  localStorage.setItem("adaPT_users", JSON.stringify(parsedJSON));
+  localStorage.setItem(userStorage, JSON.stringify(parsedJSON));
+  localStorage.setItem(loggedInStorage, JSON.stringify(parsedJSON[username]));
   return { success: true, data: parsedJSON[username] };
+}
+
+function logout() {
+  localStorage.removeItem(loggedInStorage);
+}
+
+function checkLoggedIn() {
+  const data = localStorage.getItem(loggedInStorage);
+  const parsedJSON = data === null ? null : JSON.parse(data);
+  return parsedJSON;
+}
+
+function getPosts(username) {
+  const data = localStorage.getItem(postStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter((post) => post.poster === username);
+  filtered.sort((a, b) => b.time - a.time);
+  return filtered;
+}
+
+function postPost(username, postData) {
+  const data = localStorage.getItem(postStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const completePostData = { ...postData, poster: username };
+  parsedJSON.push(completePostData);
+  localStorage.setItem(postStorage, JSON.stringify(parsedJSON));
 }
 
 function getPost(postID) {
@@ -79,4 +110,13 @@ function getProfilePicURL(username) {
   return "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
 }
 
-export { loginRequest, signupRequest, getPost, getProfilePicURL };
+export {
+  loginRequest,
+  signupRequest,
+  checkLoggedIn,
+  logout,
+  getPosts,
+  postPost,
+  getPost,
+  getProfilePicURL,
+};
