@@ -10,6 +10,7 @@ function Search({ visible, close }) {
   const navigate = useNavigate();
   const [usernames, setUsernames] = useState([]);
   const [results, setResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(async () => {
     const data = await getUsernamesList();
     setUsernames(data);
@@ -42,12 +43,15 @@ function Search({ visible, close }) {
         style={{
           width: 400,
         }}
+        value={searchTerm}
         onSearch={(input) => handleSearch(input)}
         onSelect={(input) => {
           close();
+          setSearchTerm("");
           navigate(`/profile/${input}`);
         }}
-        placeholder="input here"
+        onChange={(input) => setSearchTerm(input)}
+        placeholder="input username"
       >
         {results.map((username) => (
           <Option key={username} value={username}>
