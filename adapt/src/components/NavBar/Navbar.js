@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Menu } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import { UserOutlined, BellOutlined, HomeOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  BellOutlined,
+  HomeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { IoBarbellSharp } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
+import Search from "./Search";
 import { logout } from "../../modules/storage";
 
 function IconWrapper({ children }) {
@@ -15,6 +21,8 @@ function NavBar(props) {
   const { credentials, setCredentials } = props;
   const { username, firstname } = credentials;
 
+  const [showSearch, setShowSearch] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   return (
@@ -24,7 +32,7 @@ function NavBar(props) {
           ada<b>PT</b>
         </h1>
       </div>
-
+      <Search visible={showSearch} close={() => setShowSearch(false)} />
       {username !== undefined && username.length !== 0 ? (
         <>
           <Menu
@@ -74,6 +82,16 @@ function NavBar(props) {
               }
               onClick={() => alert("implement chat")}
             />
+            <Menu.Item
+              key="search_nav_bar"
+              icon={
+                <IconWrapper>
+                  <SearchOutlined />
+                </IconWrapper>
+              }
+              style={{ outline: "none" }}
+              onClick={() => setShowSearch(true)}
+            />
           </Menu>
           <Menu
             theme="dark"
@@ -86,7 +104,7 @@ function NavBar(props) {
             }}
           >
             <Menu.Item
-              key="/profile_nav_bar"
+              key={`/profile/${username}_nav_bar`}
               icon={<UserOutlined />}
               onClick={() => navigate(`/profile/${username}`)}
             >

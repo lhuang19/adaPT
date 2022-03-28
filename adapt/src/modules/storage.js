@@ -94,6 +94,13 @@ async function getUserData(username) {
   return { success: true, data: copy };
 }
 
+async function getUsernamesList() {
+  const data = localStorage.getItem(userStorage);
+  const parsedJSON = data === null ? {} : JSON.parse(data);
+  const usernames = Object.keys(parsedJSON);
+  return usernames;
+}
+
 function getPosts(username) {
   const data = localStorage.getItem(postStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -131,6 +138,7 @@ export {
   signupRequest,
   checkLoggedIn,
   getUserData,
+  getUsernamesList,
   logout,
   getPosts,
   postPost,
