@@ -88,7 +88,7 @@ function NavBar(props) {
             <Menu.Item
               key="/profile_nav_bar"
               icon={<UserOutlined />}
-              onClick={() => alert("implement profile")}
+              onClick={() => navigate(`/profile/${username}`)}
             >
               {firstname}
             </Menu.Item>

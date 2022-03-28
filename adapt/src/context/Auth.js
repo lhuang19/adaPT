@@ -51,6 +51,8 @@ function WithAuth({ children }) {
       </Layout>
       <Content
         style={{
+          height: "100vh",
+          width: "100vw",
           paddingTop: "60px",
         }}
       >

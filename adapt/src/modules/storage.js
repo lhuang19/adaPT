@@ -39,7 +39,9 @@ async function loginRequest(username, password) {
     hashed === parsedJSON[username].password
   ) {
     localStorage.setItem(loggedInStorage, JSON.stringify(parsedJSON[username]));
-    return { success: true, data: parsedJSON[username] };
+    const copy = { ...parsedJSON[username] };
+    delete copy.password;
+    return { success: true, data: copy };
   }
 
   return { success: false, error: "Incorrect password" };
@@ -65,6 +67,9 @@ async function signupRequest(formData) {
   }
   localStorage.setItem(userStorage, JSON.stringify(parsedJSON));
   localStorage.setItem(loggedInStorage, JSON.stringify(parsedJSON[username]));
+
+  const copy = { ...parsedJSON[username] };
+  delete copy.password;
   return { success: true, data: parsedJSON[username] };
 }
 
@@ -76,6 +81,17 @@ function checkLoggedIn() {
   const data = localStorage.getItem(loggedInStorage);
   const parsedJSON = data === null ? null : JSON.parse(data);
   return parsedJSON;
+}
+
+async function getUserData(username) {
+  const data = localStorage.getItem(userStorage);
+  const parsedJSON = data === null ? {} : JSON.parse(data);
+  if (parsedJSON[username] === undefined) {
+    return { success: false, error: "User not found" };
+  }
+  const copy = { ...parsedJSON[username] };
+  delete copy.password;
+  return { success: true, data: copy };
 }
 
 function getPosts(username) {
@@ -114,6 +130,7 @@ export {
   loginRequest,
   signupRequest,
   checkLoggedIn,
+  getUserData,
   logout,
   getPosts,
   postPost,
