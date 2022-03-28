@@ -1,19 +1,18 @@
 import React from "react";
-import { getPost, getProfilePicURL } from "../../modules/storage";
 import { Avatar } from "antd"
 import { UserOutlined } from '@ant-design/icons';
+import { Parallax } from "rc-scroll-anim";
+
 
 
 function Post(props) {
   const { data } = props;
   const { title, body, time, poster } = data;
-  
   // post is JSON with username, timestamp, text, and imageURL
   // const { username, timestamp, text, imageURL } = post;
   return (
     <div
       style={{
-        maxWidth: "80vw",
         width: "100%",
         padding: "20px"
       }}
@@ -26,18 +25,40 @@ function Post(props) {
           paddingBottom: "1vw",
         }}
       >
-        <Avatar size={64} icon={<UserOutlined />} alt={poster.concat("'s profile picture")}/>
-        <div
+        <Parallax
+          animation={[
+            { x: 20, opacity: 1, playScale: [0, 0.2] },
+            { x: 0, opacity: 1, playScale: [0, 0.1] },
+          ]}
+          style={{
+            transform: "translateX(-100px)",
+            opacity: 0,
+          }}
+          className="code-box-shape"
+        >
+          <Avatar size={64} icon={<UserOutlined />} />
+        </Parallax>
+        <Parallax
+          animation={[
+            { x: -20, opacity: 1, playScale: [0, 0.2] },
+            { x: 0, opacity: 1, playScale: [0, 0.1] },
+          ]}
+          style={{
+            transform: "translateX(100px)",
+            opacity: 0,
+          }}
+          className="code-box-shape"
+        >
+          <div
           style={{
             paddingLeft: "1vw",
           }}
         >
           <h2>{poster} </h2>
           <p>{new Date(time).toLocaleString()}</p>
-          {
-            // TODO Format timestamp better
-          }
         </div>
+        </Parallax>
+        
       </div>
       <h3><b>{title}</b></h3>
       <p style={{whiteSpace: "pre-wrap"}}>{body}</p>

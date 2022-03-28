@@ -71,7 +71,14 @@ function PostModal({ fetchNewPosts }) {
           </Form.Item>
         </Form>
       </Modal>
-      <div style={{ position: "fixed", bottom: "40px", right: "40px" }}>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "50px",
+          right: "50px",
+          transform: "scale(1.5)",
+        }}
+      >
         <Tooltip title="Post">
           <Button
             type="primary"

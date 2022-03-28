@@ -5,6 +5,7 @@ import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import PageNotFound from "./components/ErrorPage/PageNotFound";
 import "antd/dist/antd.min.css";
+import "rc-texty/assets/index.css";
 import "./App.css";
 import { WithAuth } from "./context/Auth";
 

@@ -51,7 +51,7 @@ function WithAuth({ children }) {
       </Layout>
       <Content
         style={{
-          paddingTop: "100px",
+          paddingTop: "60px",
         }}
       >
         {/* eslint-disable-next-line */}

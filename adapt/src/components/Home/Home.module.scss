@@ -1,0 +1,49 @@
+$duration: 2s;
+
+.pulseOut {
+  animation: pulseout $duration cubic-bezier(0.55, 0, 0.75, 1.03) infinite
+    alternate;
+}
+
+@keyframes pulseout {
+  from {
+    transform: scale(0.75);
+    //border: 1px solid black;
+  }
+
+  to {
+    transform: scale(1.25);
+    //transform: translate(-50%, -50%);
+  }
+}
+
+.flow {
+  background: linear-gradient(
+    -45deg,
+    #005e9450,
+    #00879350,
+    #00bf7250,
+    #a8eb1250,
+    #a1e90750
+  );
+  background-size: 400% 400%;
+  animation: gradient 5s ease infinite;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animationPlay {
+  animation-play-state: running;
+}
+.animationPaused {
+  animation-play-state: paused;
+}
