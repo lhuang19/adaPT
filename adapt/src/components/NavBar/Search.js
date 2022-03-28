@@ -1,8 +1,9 @@
-import React, { useState, useEfect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "antd/lib/modal/Modal";
 import { useNavigate } from "react-router-dom";
 import { AutoComplete } from "antd";
 import { getUsernamesList } from "../../modules/storage";
+
 const { Option } = AutoComplete;
 
 function Search({ visible, close }) {
@@ -41,7 +42,7 @@ function Search({ visible, close }) {
         style={{
           width: 400,
         }}
-        onSearch={handleSearch}
+        onSearch={(input) => handleSearch(input)}
         onSelect={(input) => {
           close();
           navigate(`/profile/${input}`);
