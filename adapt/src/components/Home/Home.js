@@ -43,7 +43,7 @@ function Home() {
                   opacity: 0,
                 }}
               >
-                <Post data={post} />
+                <Post data={post} animate />
               </Parallax>
             </List.Item>
           )}
