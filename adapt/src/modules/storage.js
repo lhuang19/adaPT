@@ -79,9 +79,9 @@ function logout() {
 }
 
 function checkLoggedIn() {
-  //const data = localStorage.getItem(loggedInStorage);
-  //const parsedJSON = data === null ? null : JSON.parse(data);
-  //return parsedJSON;
+  // const data = localStorage.getItem(loggedInStorage);
+  // const parsedJSON = data === null ? null : JSON.parse(data);
+  // return parsedJSON;
   return null;
 }
 
@@ -141,24 +141,25 @@ function addFriend(username1, username2) {
 function removeFriend(username1, username2) {
   const data = localStorage.getItem(friendsList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
-  for (var i = 0; i < parsedJSON.length; i++) {
-    if (parsedJSON[i][0] === username1 && parsedJSON[i][1] === username2 ||
-      parsedJSON[i][0] === username2 && parsedJSON[i][1] === username1) {
-      parsedJSON.splice(i, 1);
-    }
-  }
-  localStorage.setItem(friendsList, JSON.stringify(parsedJSON));
+  const filtered = parsedJSON.filter(
+    (pair) =>
+      (pair[0] !== username1 || pair[1] !== username2) &&
+      (pair[0] !== username2 || pair[1] !== username1)
+  );
+  localStorage.setItem(friendsList, JSON.stringify(filtered));
   return { success: true };
 }
 
 function areFriends(username1, username2) {
   const data = localStorage.getItem(friendsList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
-  for (const pair of parsedJSON) {
-    if (pair[0] === username1 && pair[1] === username2 ||
-        pair[0] === username2 && pair[1] === username1) {
-      return true;
-    }
+  parsedJSON.filter(
+    (pair) =>
+      (pair[0] === username1 && pair[1] === username2) ||
+      (pair[0] === username2 && pair[1] === username1)
+  );
+  if (parsedJSON.length === 1) {
+    return true;
   }
   return false;
 }
