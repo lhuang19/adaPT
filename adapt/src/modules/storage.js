@@ -9,6 +9,8 @@
 const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
+const friendsList = "adaPT_friends";
+const friendRequestList = "adaPT_friendRequests";
 
 async function getHash(input) {
   const encoded = new TextEncoder().encode(input);
@@ -78,9 +80,10 @@ function logout() {
 }
 
 function checkLoggedIn() {
-  const data = localStorage.getItem(loggedInStorage);
-  const parsedJSON = data === null ? null : JSON.parse(data);
-  return parsedJSON;
+  // const data = localStorage.getItem(loggedInStorage);
+  // const parsedJSON = data === null ? null : JSON.parse(data);
+  // return parsedJSON;
+  return null;
 }
 
 async function getUserData(username) {
@@ -128,6 +131,79 @@ function getPost(postID) {
   };
 }
 
+function sendFriendRequest(username1, username2) {
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  parsedJSON.push([username1, username2]);
+  localStorage.setItem(friendRequestList, JSON.stringify(parsedJSON));
+  return { success: true };
+}
+
+function deleteFriendRequest(username1, username2) {
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (pair) => pair[0] !== username1 || pair[1] !== username2
+  );
+  localStorage.setItem(friendRequestList, JSON.stringify(filtered));
+  return { success: true };
+}
+
+function requestedFriend(username1, username2) {
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+
+  const filtered = parsedJSON.filter(
+    (pair) => pair[0] === username1 && pair[1] === username2
+  );
+  if (filtered.length !== 0) {
+    return 1;
+  }
+
+  const filtered2 = parsedJSON.filter(
+    (pair) => pair[0] === username2 && pair[1] === username1
+  );
+  if (filtered2.length !== 0) {
+    return 2;
+  }
+
+  return 0;
+}
+
+function addFriend(username1, username2) {
+  const data = localStorage.getItem(friendsList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  parsedJSON.push([username1, username2]);
+  localStorage.setItem(friendsList, JSON.stringify(parsedJSON));
+  return { success: true };
+}
+
+function removeFriend(username1, username2) {
+  const data = localStorage.getItem(friendsList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (pair) =>
+      (pair[0] !== username1 || pair[1] !== username2) &&
+      (pair[0] !== username2 || pair[1] !== username1)
+  );
+  localStorage.setItem(friendsList, JSON.stringify(filtered));
+  return { success: true };
+}
+
+function areFriends(username1, username2) {
+  const data = localStorage.getItem(friendsList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (pair) =>
+      (pair[0] === username1 && pair[1] === username2) ||
+      (pair[0] === username2 && pair[1] === username1)
+  );
+  if (filtered.length !== 0) {
+    return true;
+  }
+  return false;
+}
+
 function getProfilePicURL(username) {
   // TODO Add retrieving from storage functionality
   return "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
@@ -143,5 +219,11 @@ export {
   getPosts,
   postPost,
   getPost,
+  sendFriendRequest,
+  deleteFriendRequest,
+  requestedFriend,
+  addFriend,
+  removeFriend,
+  areFriends,
   getProfilePicURL,
 };
