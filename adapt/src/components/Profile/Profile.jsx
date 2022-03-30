@@ -2,9 +2,10 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, List, Avatar, Result, Button, Divider } from "antd";
 import { HeartOutlined, UserOutlined } from "@ant-design/icons";
-import { areFriends, addFriend, getPosts, getUserData, removeFriend } from "../../modules/storage";
+import { areFriends, addFriend, getPosts, getUserData, removeFriend, requestedFriend, deleteFriendRequest, sendFriendRequest } from "../../modules/storage";
 import { AuthUserContext } from "../../context/Auth";
 import Post from "../Post/Post";
+import "./Profile.css";
 
 function Profile() {
   let { name } = useParams();
@@ -16,6 +17,12 @@ function Profile() {
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
   const [friends, setFriends] = useState(areFriends(username, name));
+  const [request, setRequest] = useState(requestedFriend(username, name));
+
+  useEffect(() => {setInterval(() => {
+    setFriends(areFriends(username, name));
+    setRequest(requestedFriend(username, name));
+  }, 2000)}, []);
 
   async function fetchNewPosts() {
     const newPosts = await getPosts(name);
@@ -67,16 +74,51 @@ function Profile() {
           {name === username ? (
             <Button>Edit Profile</Button>
           ) :
-          !friends ? (
+          !friends && request === 0 ? (
             <Button
               type="primary"
               onClick={() => {
-                setFriends(true);
-                addFriend(name, username);
+                setRequest(1);
+                sendFriendRequest(username, name);
               }}
             >
-            Add Friend
+            Request Friend
             </Button>
+          ) :
+          !friends && request === 1 ? (
+            <Button
+              type="primary"
+            >
+              Requested Friend
+            </Button>
+          ) :
+          !friends && request === 2 ? (
+            <div className="buttons">
+              <div className="action_btn">
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setRequest(0);
+                    setFriends(true);
+                    deleteFriendRequest(name, username);
+                    addFriend(username, name);
+                  }}
+                >
+                  Accept
+                </Button>
+
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setRequest(0);
+                    deleteFriendRequest(name, username);
+                  }}
+                  danger
+                >
+                  Decline
+                </Button>
+              </div>
+            </div>
           ) : (
             <Button
               type="primary"
