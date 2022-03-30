@@ -14,6 +14,7 @@ function Search({ visible, close }) {
   useEffect(async () => {
     const data = await getUsernamesList();
     setUsernames(data);
+    console.log(data);
   }, []);
   function handleSearch(value) {
     let res = [];

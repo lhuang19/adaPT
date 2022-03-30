@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, List, Avatar, Result, Button, Divider } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { getPosts, getUserData } from "../../modules/storage";
+import { HeartOutlined, UserOutlined } from "@ant-design/icons";
+import { areFriends, addFriend, getPosts, getUserData, removeFriend } from "../../modules/storage";
 import { AuthUserContext } from "../../context/Auth";
 import Post from "../Post/Post";
 
@@ -15,6 +15,7 @@ function Profile() {
   const [posts, setPosts] = useState([]);
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
+  const [friends, setFriends] = useState(areFriends(username, name));
 
   async function fetchNewPosts() {
     const newPosts = await getPosts(name);
@@ -65,8 +66,28 @@ function Profile() {
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
             <Button>Edit Profile</Button>
+          ) :
+          !friends ? (
+            <Button
+              type="primary"
+              onClick={() => {
+                setFriends(true);
+                addFriend(name, username);
+              }}
+            >
+            Add Friend
+            </Button>
           ) : (
-            <Button>Add Friend</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setFriends(false);
+                removeFriend(name, username);
+              }}
+              danger
+            >
+              Remove Friend
+            </Button>
           )}
         </div>
         <Divider type="vertical" />
