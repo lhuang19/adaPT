@@ -1,3 +1,5 @@
+const MOCK_LOGIN_TOKEN = false; // change to false if you need multiple ppl logged in at same time.
+
 /**
  *
  * localStorage design. (simple right now. we can add to it to cover features for included later
@@ -9,6 +11,7 @@
 const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
+const reactionStorage = "adaPT_reactions";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
 
@@ -80,10 +83,9 @@ function logout() {
 }
 
 function checkLoggedIn() {
-  // const data = localStorage.getItem(loggedInStorage);
-  // const parsedJSON = data === null ? null : JSON.parse(data);
-  // return parsedJSON;
-  return null;
+  const data = localStorage.getItem(loggedInStorage);
+  const parsedJSON = data === null ? null : JSON.parse(data);
+  return MOCK_LOGIN_TOKEN ? parsedJSON : null;
 }
 
 async function getUserData(username) {
@@ -104,6 +106,49 @@ async function getUsernamesList() {
   return usernames;
 }
 
+async function getReactions(poster, time, username) {
+  const data = localStorage.getItem(reactionStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (reaction) => reaction.poster === poster && reaction.time === time
+  );
+  const smiles = filtered.filter((reaction) => reaction.type === "smile");
+  const likes = filtered.filter((reaction) => reaction.type === "like");
+  const checks = filtered.filter((reaction) => reaction.type === "check");
+
+  return {
+    smileCount: smiles.length,
+    likeCount: likes.length,
+    checkCount: checks.length,
+    smiled:
+      smiles.filter((reaction) => reaction.username === username).length > 0,
+    liked:
+      likes.filter((reaction) => reaction.username === username).length > 0,
+    checked:
+      checks.filter((reaction) => reaction.username === username).length > 0,
+  };
+}
+
+async function postReaction(poster, time, username, type) {
+  const data = localStorage.getItem(reactionStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  parsedJSON.push({ poster, time, username, type });
+  localStorage.setItem(reactionStorage, JSON.stringify(parsedJSON));
+}
+
+async function deleteReaction(poster, time, username, type) {
+  const data = localStorage.getItem(reactionStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (reaction) =>
+      reaction.poster !== poster ||
+      reaction.time !== time ||
+      reaction.username !== username ||
+      reaction.type !== type
+  );
+  localStorage.setItem(reactionStorage, JSON.stringify(filtered));
+}
+
 function getPosts(username) {
   const data = localStorage.getItem(postStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -118,6 +163,22 @@ function postPost(username, postData) {
   const completePostData = { ...postData, poster: username };
   parsedJSON.push(completePostData);
   localStorage.setItem(postStorage, JSON.stringify(parsedJSON));
+}
+
+function deletePost(poster, time) {
+  const data = localStorage.getItem(postStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (post) => post.poster !== poster || post.time !== time
+  );
+  localStorage.setItem(postStorage, JSON.stringify(filtered));
+
+  const rData = localStorage.getItem(reactionStorage);
+  const rParsedJSON = rData === null ? [] : JSON.parse(rData);
+  const rFiltered = rParsedJSON.filter(
+    (reaction) => reaction.poster !== poster || reaction.time !== time
+  );
+  localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
 function getPost(postID) {
@@ -215,6 +276,10 @@ export {
   checkLoggedIn,
   getUserData,
   getUsernamesList,
+  deletePost,
+  getReactions,
+  postReaction,
+  deleteReaction,
   logout,
   getPosts,
   postPost,

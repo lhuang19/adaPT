@@ -1,10 +1,18 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Col, Row, List, Avatar, Result, Button, Divider } from "antd";
-import { HeartOutlined, UserOutlined } from "@ant-design/icons";
-import { areFriends, addFriend, getPosts, getUserData, removeFriend, requestedFriend, deleteFriendRequest, sendFriendRequest } from "../../modules/storage";
+import { Col, Row, Avatar, Result, Button, Divider } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
-import Post from "../Post/Post";
+import Posts from "../Posts/Posts";
+import {
+  areFriends,
+  addFriend,
+  getUserData,
+  removeFriend,
+  requestedFriend,
+  deleteFriendRequest,
+  sendFriendRequest,
+} from "../../modules/storage";
 import "./Profile.css";
 
 function Profile() {
@@ -13,27 +21,22 @@ function Profile() {
   const { username } = credentials;
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
   const [friends, setFriends] = useState(areFriends(username, name));
   const [request, setRequest] = useState(requestedFriend(username, name));
 
-  useEffect(() => {setInterval(() => {
-    setFriends(areFriends(username, name));
-    setRequest(requestedFriend(username, name));
-  }, 2000)}, []);
+  useEffect(() => {
+    setInterval(() => {
+      setFriends(areFriends(username, name));
+      setRequest(requestedFriend(username, name));
+    }, 2000);
+  }, []);
 
-  async function fetchNewPosts() {
-    const newPosts = await getPosts(name);
-    setPosts(newPosts);
-  }
   useEffect(async () => {
     const { success, data, error } = await getUserData(name);
-    console.log(success, data, error);
     if (success) {
       setUserData(data);
-      if (name !== undefined) fetchNewPosts();
     } else {
       errorMessage.current = error;
       setUserNotFound(true);
@@ -73,8 +76,7 @@ function Profile() {
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
             <Button>Edit Profile</Button>
-          ) :
-          !friends && request === 0 ? (
+          ) : !friends && request === 0 ? (
             <Button
               type="primary"
               onClick={() => {
@@ -82,17 +84,11 @@ function Profile() {
                 sendFriendRequest(username, name);
               }}
             >
-            Request Friend
+              Request Friend
             </Button>
-          ) :
-          !friends && request === 1 ? (
-            <Button
-              type="primary"
-            >
-              Requested Friend
-            </Button>
-          ) :
-          !friends && request === 2 ? (
+          ) : !friends && request === 1 ? (
+            <Button type="primary">Requested Friend</Button>
+          ) : !friends && request === 2 ? (
             <div className="buttons">
               <div className="action_btn">
                 <Button
@@ -135,17 +131,7 @@ function Profile() {
         <Divider type="vertical" />
       </Col>
       <Col span={14} style={{ height: "100%", overflow: "scroll" }}>
-        <List
-          style={{
-            width: "90%",
-          }}
-          dataSource={posts}
-          renderItem={(post) => (
-            <List.Item>
-              <Post key={`${post.title}-${post.time}`} data={post} />
-            </List.Item>
-          )}
-        />
+        <Posts profile name={name} />
       </Col>
     </Row>
   );
