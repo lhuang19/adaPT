@@ -5,6 +5,7 @@ import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import PageNotFound from "./components/ErrorPage/PageNotFound";
 import Profile from "./components/Profile/Profile";
+import ChangeProfile from "./components/Profile/ChangeProfile";
 import "antd/dist/antd.min.css";
 import "rc-texty/assets/index.css";
 import "./App.css";
@@ -19,6 +20,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile/:name" element={<Profile />} />
+          <Route path="/change_profile/:name" element={<ChangeProfile />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </WithAuth>
