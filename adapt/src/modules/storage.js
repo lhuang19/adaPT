@@ -182,27 +182,6 @@ function deletePost(poster, time) {
   localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
-function sendFriendRequest(username1, username2) {
-  if (requestedFriend(username1, username2) !== 0) {
-    return { success: false };
-  }
-  const data = localStorage.getItem(friendRequestList);
-  const parsedJSON = data === null ? [] : JSON.parse(data);
-  parsedJSON.push([username1, username2]);
-  localStorage.setItem(friendRequestList, JSON.stringify(parsedJSON));
-  return { success: true };
-}
-
-function deleteFriendRequest(username1, username2) {
-  const data = localStorage.getItem(friendRequestList);
-  const parsedJSON = data === null ? [] : JSON.parse(data);
-  const filtered = parsedJSON.filter(
-    (pair) => pair[0] !== username1 || pair[1] !== username2
-  );
-  localStorage.setItem(friendRequestList, JSON.stringify(filtered));
-  return { success: true };
-}
-
 function requestedFriend(username1, username2) {
   const data = localStorage.getItem(friendRequestList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -222,6 +201,27 @@ function requestedFriend(username1, username2) {
   }
 
   return 0;
+}
+
+function sendFriendRequest(username1, username2) {
+  if (requestedFriend(username1, username2) !== 0) {
+    return { success: false };
+  }
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  parsedJSON.push([username1, username2]);
+  localStorage.setItem(friendRequestList, JSON.stringify(parsedJSON));
+  return { success: true };
+}
+
+function deleteFriendRequest(username1, username2) {
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (pair) => pair[0] !== username1 || pair[1] !== username2
+  );
+  localStorage.setItem(friendRequestList, JSON.stringify(filtered));
+  return { success: true };
 }
 
 function addFriend(username1, username2) {
