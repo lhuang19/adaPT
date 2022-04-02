@@ -13,8 +13,6 @@ function Post(props) {
   const { title, body, time, poster } = data;
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
-  // post is JSON with username, timestamp, text, and imageURL
-  // const { username, timestamp, text, imageURL } = post;
   return (
     <div
       style={{
@@ -84,12 +82,6 @@ function Post(props) {
         <b>{title}</b>
       </h3>
       <p style={{ whiteSpace: "pre-wrap" }}>{body}</p>
-      {/* {imageURL.length > 0 ? (
-      <img src={imageURL} alt={"A post from ".concat(username)} />
-    ) : null} */}
-      {
-        // TODO Figure out how to make image fit neatly in div
-      }
       {username === poster ? (
         <div style={{ position: "absolute", right: "10px", top: "10px" }}>
           <Button

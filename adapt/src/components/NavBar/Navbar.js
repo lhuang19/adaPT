@@ -62,7 +62,7 @@ function NavBar(props) {
                   <IoBarbellSharp />
                 </IconWrapper>
               }
-              onClick={() => alert("implement exersices")}
+              onClick={() => navigate("/exercises")}
             />
             <Menu.Item
               key="/friends_nav_bar"

@@ -12,6 +12,7 @@ const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
 const reactionStorage = "adaPT_reactions";
+const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
 
@@ -183,15 +184,25 @@ function deletePost(poster, time) {
   localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
-function getPost(postID) {
-  // TODO Add retrieving from storage functionality
-  return {
-    username: "testUser",
-    timestamp: new Date(),
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    imageURL:
-      "https://www.clipartkey.com/mpngs/m/122-1222244_fat-yoshi-transparent-fat-yoshi-transparent-background.png",
-  };
+function requestedFriend(username1, username2) {
+  const data = localStorage.getItem(friendRequestList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+
+  const filtered = parsedJSON.filter(
+    (pair) => pair[0] === username1 && pair[1] === username2
+  );
+  if (filtered.length !== 0) {
+    return 1;
+  }
+
+  const filtered2 = parsedJSON.filter(
+    (pair) => pair[0] === username2 && pair[1] === username1
+  );
+  if (filtered2.length !== 0) {
+    return 2;
+  }
+
+  return 0;
 }
 
 function sendFriendRequest(username1, username2) {
@@ -281,9 +292,31 @@ function areFriends(username1, username2) {
   return false;
 }
 
-function getProfilePicURL(username) {
-  // TODO Add retrieving from storage functionality
-  return "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+function getExercises(username) {
+  const data = localStorage.getItem(exerciseStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (exercise) => exercise.patient === username
+  );
+  return filtered;
+}
+
+function addExercise(exerciseData) {
+  const data = localStorage.getItem(exerciseStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  parsedJSON.push(exerciseData);
+  localStorage.setItem(exerciseStorage, JSON.stringify(parsedJSON));
+}
+
+function completeExercise(time) {
+  const data = localStorage.getItem(exerciseStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const changedJSON = parsedJSON.map((exercise) =>
+    exercise.time === time
+      ? { ...exercise, completed: !exercise.completed }
+      : exercise
+  );
+  localStorage.setItem(exerciseStorage, JSON.stringify(changedJSON));
 }
 
 export {
@@ -299,7 +332,6 @@ export {
   logout,
   getPosts,
   postPost,
-  getPost,
   sendFriendRequest,
   deleteFriendRequest,
   requestedFriend,
@@ -307,5 +339,7 @@ export {
   addFriend,
   removeFriend,
   areFriends,
-  getProfilePicURL,
+  getExercises,
+  addExercise,
+  completeExercise,
 };
