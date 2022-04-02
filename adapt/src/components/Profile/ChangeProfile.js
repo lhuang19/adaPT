@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Col, Row, Avatar, Result, Button, Divider, Input, Space } from "antd";
+import { Col, Row, Avatar, Result, Button, Divider, Input, Space, Form } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
 import {
@@ -64,40 +64,91 @@ function ChangeProfile() {
           <h1 style={{ marginBottom: "10px" }}>
             {userData.firstname} {userData.lastname} ({username})
           </h1>
-          <Space direction="vertical" size={"middle"}>
-          <Input placeholder="Username" prefix={<UserOutlined />} onChange={(e) => setNewUsername(e.target.value)}/>
-            <Space>
-              <Input placeholder="First Name" prefix={<UserOutlined />} onChange={(e) => setNewFirstName(e.target.value)}/>
-              <Input placeholder="Last Name" prefix={<UserOutlined />} onChange={(e) => setNewLastName(e.target.value)}/>
-            </Space>
-            <Input.Password
-              placeholder="New Password"
-              prefix={<LockOutlined />}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <Input.Password
-              placeholder="Enter Password"
-              prefix={<LockOutlined />}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Input.Password
-              placeholder="Re-Enter Password"
-              prefix={<LockOutlined />}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
-            />
-            <div className="buttons">
-              <div className="action_btn">
-                <Space size={"large"}>
-                <Button type="primary" onClick={() => console.log("Canceled")} danger>
-                  Cancel
-                </Button>
-                <Button type="primary" onClick={() => console.log("Submitted")}>
-                  Submit
-                </Button>
-                </Space>
-              </div>
-            </div>
-          </Space>
+          <Form
+            name="editProfile"
+            labelCol={{ span: 10 }}
+            wrapperCol={{ span: 12 }}
+            initialValues={{ remember: true }}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="First Name"
+              name="first"
+              rules={[
+                {
+                  pattern: /^[a-zA-Z]*$/,
+                  message: "Can only contain letters",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Last Name"
+              name="last"
+              rules={[
+                {
+                  pattern: /^[a-zA-Z]*$/,
+                  message: "Can only contain letters",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[
+                {
+                  pattern: /^[a-zA-Z0-9]*$/,
+                  message: "Must be alphanumeric",
+                },
+                {
+                  pattern: /^.{5,10}$/,
+                  message: "Must be between 5 and 10 characters in length",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="New Password"
+              name="password"
+              rules={[
+                {
+                  pattern: /^.{5,10}$/,
+                  message: "Must be between 5 and 10 characters in length",
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              label="Current Password"
+              name="password"
+              rules={[{ required: true, message: 'Enter your password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              label="Current Password"
+              name="password"
+              rules={[{ required: true, message: 'Confirm Password' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
       </Col>
     </Row>
