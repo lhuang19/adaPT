@@ -12,6 +12,7 @@ const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
 const reactionStorage = "adaPT_reactions";
+const activityStorage = "adaPT_activities";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
 
@@ -181,17 +182,6 @@ function deletePost(poster, time) {
   localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
-function getPost(postID) {
-  // TODO Add retrieving from storage functionality
-  return {
-    username: "testUser",
-    timestamp: new Date(),
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    imageURL:
-      "https://www.clipartkey.com/mpngs/m/122-1222244_fat-yoshi-transparent-fat-yoshi-transparent-background.png",
-  };
-}
-
 function sendFriendRequest(username1, username2) {
   if (requestedFriend(username1, username2) !== 0) {
     return { success: false };
@@ -268,9 +258,16 @@ function areFriends(username1, username2) {
   return false;
 }
 
-function getProfilePicURL(username) {
-  // TODO Add retrieving from storage functionality
-  return "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+function getActivities(username) {
+  throw "unimplemented";
+}
+
+function addActivity(username, activityData) {
+  const data = localStorage.getItem(activityStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const completeActivityData = { ...activityData, patient: username };
+  parsedJSON.push(completeActivityData);
+  localStorage.setItem(activityStorage, JSON.stringify(parsedJSON));
 }
 
 export {
@@ -286,12 +283,12 @@ export {
   logout,
   getPosts,
   postPost,
-  getPost,
   sendFriendRequest,
   deleteFriendRequest,
   requestedFriend,
   addFriend,
   removeFriend,
   areFriends,
-  getProfilePicURL,
+  getActivities,
+  addActivity,
 };
