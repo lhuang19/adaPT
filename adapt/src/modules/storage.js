@@ -267,12 +267,22 @@ function getExercises(username) {
   return filtered;
 }
 
-function addExercise(username, exerciseData) {
+function addExercise(exerciseData) {
   const data = localStorage.getItem(exerciseStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
-  const completeExerciseData = { ...exerciseData, patient: username };
-  parsedJSON.push(completeExerciseData);
+  parsedJSON.push(exerciseData);
   localStorage.setItem(exerciseStorage, JSON.stringify(parsedJSON));
+}
+
+function completeExercise(time) {
+  const data = localStorage.getItem(exerciseStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const changedJSON = parsedJSON.map((exercise) =>
+    exercise.time === time
+      ? { ...exercise, completed: !exercise.completed }
+      : exercise
+  );
+  localStorage.setItem(exerciseStorage, JSON.stringify(changedJSON));
 }
 
 export {
@@ -296,4 +306,5 @@ export {
   areFriends,
   getExercises,
   addExercise,
+  completeExercise,
 };
