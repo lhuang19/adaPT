@@ -132,6 +132,9 @@ function getPost(postID) {
 }
 
 function sendFriendRequest(username1, username2) {
+  if (requestedFriend(username1, username2) !== 0) {
+    return { success: false };
+  }
   const data = localStorage.getItem(friendRequestList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
   parsedJSON.push([username1, username2]);
