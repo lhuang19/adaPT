@@ -34,6 +34,7 @@ function Profile() {
   }, []);
 
   useEffect(async () => {
+    console.log(name);
     const { success, data, error } = await getUserData(name);
     if (success) {
       setUserData(data);

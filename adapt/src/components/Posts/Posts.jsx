@@ -3,7 +3,7 @@ import { List } from "antd";
 import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
-import { getPosts } from "../../modules/storage";
+import { getPosts, getFriends } from "../../modules/storage";
 import Post from "./Post";
 import PostModal from "./PostModal";
 
@@ -14,13 +14,20 @@ function Posts({ profile, name, animate, allowPosting }) {
   const [posts, setPosts] = useState([]);
 
   async function fetchNewPosts() {
-    console.log(profile, profile ? name : username);
-    const newPosts = await getPosts(profile ? name : username);
+    console.log(profile);
+    const usernamesToFetch = [];
+    usernamesToFetch.push(profile ? name : username);
+    if (!profile) {
+      const friends = await getFriends(username);
+      usernamesToFetch.push(...friends);
+    }
+    console.log(usernamesToFetch);
+    const newPosts = await getPosts(usernamesToFetch);
     setPosts(newPosts);
   }
   useEffect(() => {
     if (username !== undefined) fetchNewPosts();
-  }, [username]);
+  }, [username, name]);
   return (
     <>
       <List

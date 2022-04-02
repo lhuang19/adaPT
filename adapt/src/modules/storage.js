@@ -149,10 +149,12 @@ async function deleteReaction(poster, time, username, type) {
   localStorage.setItem(reactionStorage, JSON.stringify(filtered));
 }
 
-function getPosts(username) {
+function getPosts(usernamesToFetch) {
   const data = localStorage.getItem(postStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
-  const filtered = parsedJSON.filter((post) => post.poster === username);
+  const filtered = parsedJSON.filter((post) =>
+    usernamesToFetch.includes(post.poster)
+  );
   filtered.sort((a, b) => b.time - a.time);
   return filtered;
 }
@@ -234,6 +236,17 @@ function requestedFriend(username1, username2) {
   return 0;
 }
 
+function getFriends(username) {
+  const data = localStorage.getItem(friendsList);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (pair) => pair[0] === username || pair[1] === username
+  );
+  const onlyFriends = filtered.map(([a, b]) => (a !== username ? a : b));
+
+  return onlyFriends;
+}
+
 function addFriend(username1, username2) {
   const data = localStorage.getItem(friendsList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -290,6 +303,7 @@ export {
   sendFriendRequest,
   deleteFriendRequest,
   requestedFriend,
+  getFriends,
   addFriend,
   removeFriend,
   areFriends,
