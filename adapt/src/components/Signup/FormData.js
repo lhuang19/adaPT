@@ -28,7 +28,7 @@ const FormData = [
               message: "Must be alphanumeric",
             },
             {
-              pattern: /.{5,10}/,
+              pattern: /^.{5,10}$/,
               message: "Must be between 5 and 10 characters in length",
             },
           ]}
@@ -44,7 +44,7 @@ const FormData = [
               message: "Please create a password!",
             },
             {
-              pattern: /.{5,10}/,
+              pattern: /^.{5,10}$/,
               message: "Must be between 5 and 10 characters in length",
             },
           ]}
