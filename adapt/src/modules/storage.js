@@ -226,27 +226,6 @@ function deleteFriendRequest(username1, username2) {
   return { success: true };
 }
 
-function requestedFriend(username1, username2) {
-  const data = localStorage.getItem(friendRequestList);
-  const parsedJSON = data === null ? [] : JSON.parse(data);
-
-  const filtered = parsedJSON.filter(
-    (pair) => pair[0] === username1 && pair[1] === username2
-  );
-  if (filtered.length !== 0) {
-    return 1;
-  }
-
-  const filtered2 = parsedJSON.filter(
-    (pair) => pair[0] === username2 && pair[1] === username1
-  );
-  if (filtered2.length !== 0) {
-    return 2;
-  }
-
-  return 0;
-}
-
 function getFriends(username) {
   const data = localStorage.getItem(friendsList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
