@@ -75,7 +75,9 @@ function Profile() {
           </h1>
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
-            <Button>Edit Profile</Button>
+            <Button
+              onClick={() => navigate(`/change_profile/${username}`)}
+            >Edit Profile</Button>
           ) : !friends && request === 0 ? (
             <Button
               type="primary"
