@@ -12,7 +12,7 @@ const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
 const reactionStorage = "adaPT_reactions";
-const activityStorage = "adaPT_activities";
+const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
 
@@ -258,16 +258,21 @@ function areFriends(username1, username2) {
   return false;
 }
 
-function getActivities(username) {
-  throw "unimplemented";
+function getExercises(username) {
+  const data = localStorage.getItem(exerciseStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (exercise) => exercise.patient === username
+  );
+  return filtered;
 }
 
-function addActivity(username, activityData) {
-  const data = localStorage.getItem(activityStorage);
+function addExercise(username, exerciseData) {
+  const data = localStorage.getItem(exerciseStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
-  const completeActivityData = { ...activityData, patient: username };
-  parsedJSON.push(completeActivityData);
-  localStorage.setItem(activityStorage, JSON.stringify(parsedJSON));
+  const completeExerciseData = { ...exerciseData, patient: username };
+  parsedJSON.push(completeExerciseData);
+  localStorage.setItem(exerciseStorage, JSON.stringify(parsedJSON));
 }
 
 export {
@@ -289,6 +294,6 @@ export {
   addFriend,
   removeFriend,
   areFriends,
-  getActivities,
-  addActivity,
+  getExercises,
+  addExercise,
 };
