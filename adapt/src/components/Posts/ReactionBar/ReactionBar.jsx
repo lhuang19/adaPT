@@ -15,10 +15,13 @@ function ReactionBar({ poster, time, username }) {
   useEffect(async () => {
     const response = await getReactions(poster, time, username);
     setReactions({ ...response });
-    setInterval(async () => {
+
+    const periodicRefresh = setInterval(async () => {
       const response = await getReactions(poster, time, username);
       setReactions({ ...response });
     }, 100000);
+
+    return () => clearInterval(periodicRefresh);
   }, []);
 
   return reactions ? (

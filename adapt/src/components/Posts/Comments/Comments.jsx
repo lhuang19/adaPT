@@ -50,7 +50,6 @@ function Comments({ poster, time }) {
   const [commentData, setCommentData] = useState([]);
 
   function onSubmitCommentHandler() {
-    console.log("submit");
     setInput("");
     const submitTime = Date.now();
     postComment(poster, time, username, input, Date.now());

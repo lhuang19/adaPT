@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DownSquareOutlined } from "@ant-design/icons";
 import Texty from "rc-texty";
 import styles from "./Home.module.scss";
 
 function LandingScreen() {
   const [doAnimation, setDoAnimation] = useState(true);
-  function animationEnd() {
-    setTimeout(() => {
+  useEffect(() => {
+    const periodicAnimation = setTimeout(() => {
       setDoAnimation(false);
       setTimeout(() => {
         setDoAnimation(true);
       }, 2500);
     }, 10000);
-  }
+    return () => clearTimeout(periodicAnimation);
+  }, []);
+
   return (
     <div
       style={{
@@ -40,7 +42,6 @@ function LandingScreen() {
             height: "100px",
           }}
           type={doAnimation ? "right" : "left"}
-          onEnd={() => animationEnd()}
           duration={500}
           mode="smooth"
         >

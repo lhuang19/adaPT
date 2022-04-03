@@ -27,14 +27,15 @@ function Profile() {
   const [request, setRequest] = useState(requestedFriend(username, name));
 
   useEffect(() => {
-    setInterval(() => {
+    const periodicRefresh = setInterval(() => {
       setFriends(areFriends(username, name));
       setRequest(requestedFriend(username, name));
     }, 2000);
+
+    return () => clearInterval(periodicRefresh);
   }, []);
 
   useEffect(async () => {
-    console.log(name);
     const { success, data, error } = await getUserData(name);
     if (success) {
       setUserData(data);
