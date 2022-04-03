@@ -14,14 +14,12 @@ function Posts({ profile, name, animate, allowPosting }) {
   const [posts, setPosts] = useState([]);
 
   async function fetchNewPosts() {
-    console.log(profile);
     const usernamesToFetch = [];
     usernamesToFetch.push(profile ? name : username);
     if (!profile) {
       const friends = await getFriends(username);
       usernamesToFetch.push(...friends);
     }
-    console.log(usernamesToFetch);
     const newPosts = await getPosts(usernamesToFetch);
     setPosts(newPosts);
   }
@@ -38,12 +36,6 @@ function Posts({ profile, name, animate, allowPosting }) {
               <Parallax
                 animation={[
                   { y: 0, opacity: 1, scale: 1, playScale: [-0.3, 0.5] },
-                  {
-                    translateY: -100,
-                    opacity: 0,
-                    scale: 0,
-                    playScale: [0.4, 0.9],
-                  },
                 ]}
                 style={{
                   transform: "translateY(100px) scale(0)",

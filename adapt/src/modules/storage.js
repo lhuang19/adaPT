@@ -1,4 +1,4 @@
-const MOCK_LOGIN_TOKEN = false; // change to false if you need multiple ppl logged in at same time.
+const MOCK_LOGIN_TOKEN = true; // change to false if you need multiple ppl logged in at same time.
 
 /**
  *
@@ -12,6 +12,7 @@ const loggedInStorage = "adaPT_loggedIn";
 const userStorage = "adaPT_users";
 const postStorage = "adaPT_posts";
 const reactionStorage = "adaPT_reactions";
+const commentStorage = "adaPT_comments";
 const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
@@ -157,7 +158,17 @@ function getPosts(usernamesToFetch) {
     usernamesToFetch.includes(post.poster)
   );
   filtered.sort((a, b) => b.time - a.time);
-  return filtered;
+
+  const userData = localStorage.getItem(userStorage);
+  const userDataParsed = userData === null ? [] : JSON.parse(userData);
+  const withUserInformation = filtered.map((postData) => {
+    return {
+      ...postData,
+      firstname: userDataParsed[postData.poster].firstname,
+      lastname: userDataParsed[postData.poster].lastname,
+    };
+  });
+  return withUserInformation;
 }
 
 function postPost(username, postData) {
@@ -184,6 +195,35 @@ function deletePost(poster, time) {
   localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
+
+function postComment(poster, time, commenter, content, commentTime) {
+  const data = localStorage.getItem(commentStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const inputData = { postid: poster + time, commenter, content, commentTime };
+  parsedJSON.push(inputData);
+  localStorage.setItem(commentStorage, JSON.stringify(parsedJSON));
+}
+
+function getComments(poster, time) {
+  const data = localStorage.getItem(commentStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (comment) => comment.postid === poster + time
+  );
+  filtered.sort((a, b) => a.commentTime - b.commentTime);
+
+  const userData = localStorage.getItem(userStorage);
+  const userDataParsed = userData === null ? [] : JSON.parse(userData);
+  const withUserInformation = filtered.map((commentData) => {
+    return {
+      ...commentData,
+      firstname: userDataParsed[commentData.commenter].firstname,
+      lastname: userDataParsed[commentData.commenter].lastname,
+    };
+  });
+
+  return withUserInformation;
+
 function requestedFriend(username1, username2) {
   const data = localStorage.getItem(friendRequestList);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -203,6 +243,7 @@ function requestedFriend(username1, username2) {
   }
 
   return 0;
+
 }
 
 function sendFriendRequest(username1, username2) {
@@ -311,6 +352,8 @@ export {
   logout,
   getPosts,
   postPost,
+  postComment,
+  getComments,
   sendFriendRequest,
   deleteFriendRequest,
   requestedFriend,

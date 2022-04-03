@@ -7,10 +7,11 @@ import { AuthUserContext } from "../../context/Auth";
 
 import { deletePost } from "../../modules/storage";
 import ReactionBar from "./ReactionBar/ReactionBar";
+import Comments from "./Comments/Comments";
 
 function Post(props) {
   const { data, animate, fetchNewPosts } = props;
-  const { title, body, time, poster } = data;
+  const { title, body, time, poster, firstname, lastname } = data;
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
   return (
@@ -41,10 +42,10 @@ function Post(props) {
             }}
             className="code-box-shape"
           >
-            <Avatar size={64} icon={<UserOutlined />} />
+            <Avatar size={64} src={`https://joeschmoe.io/api/v1/${poster}`} />
           </Parallax>
         ) : (
-          <Avatar size={64} icon={<UserOutlined />} />
+          <Avatar size={64} src={`https://joeschmoe.io/api/v1/${poster}`} />
         )}
         {animate ? (
           <Parallax
@@ -63,7 +64,15 @@ function Post(props) {
                 paddingLeft: "1vw",
               }}
             >
-              <h2>{poster} </h2>
+              <h2>
+                <b>
+                  {firstname} {lastname}
+                </b>
+
+                <span style={{ fontSize: "10px", color: "grey" }}>
+                  &emsp;{poster}
+                </span>
+              </h2>
               <p>{new Date(time).toLocaleString()}</p>
             </div>
           </Parallax>
@@ -96,6 +105,7 @@ function Post(props) {
         </div>
       ) : null}
       <ReactionBar poster={poster} time={time} username={username} />
+      <Comments poster={poster} time={time} />
     </div>
   );
 }

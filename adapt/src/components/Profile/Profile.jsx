@@ -68,7 +68,7 @@ function Profile() {
         <div style={{ textAlign: "center" }}>
           <Avatar
             size={128}
-            icon={<UserOutlined />}
+            src={`https://joeschmoe.io/api/v1/${name}`}
             alt={name.concat("'s profile picture")}
           />
           <h1 style={{ marginBottom: "0px" }}>
@@ -76,9 +76,9 @@ function Profile() {
           </h1>
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
-            <Button
-              onClick={() => navigate(`/change_profile/${username}`)}
-            >Edit Profile</Button>
+            <Button onClick={() => navigate(`/change_profile/${username}`)}>
+              Edit Profile
+            </Button>
           ) : !friends && request === 0 ? (
             <Button
               type="primary"
