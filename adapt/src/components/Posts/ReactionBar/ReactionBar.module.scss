@@ -1,8 +1,16 @@
 .asButton {
-  transition-duration: 0.5s;
+  background-color: #fafafa;
+  margin: 0px;
+  padding: 0px;
+  transition-duration: 0.3s;
 }
 .asButton:hover {
-  transform: scale(1.2);
+  transform: translateY(1px);
+  cursor: pointer;
+}
+
+.asButton:active {
+  transform: translateY(3px);
 }
 
 .noselect {

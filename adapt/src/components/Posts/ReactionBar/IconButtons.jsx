@@ -24,11 +24,6 @@ function IconButton({
     }
   }
   const cloned = cloneElement(icon, {
-    className: styles.asButton,
-    onClick: () => {
-      reactionHandler();
-      setSelected(!selected);
-    },
     twoToneColor: selected ? selectedColor : "#CCCCCC",
   });
   useEffect(() => {
@@ -37,21 +32,34 @@ function IconButton({
   return (
     <div
       style={{
-        textAlign: "center",
-        boxShadow: "0px 1px 2px 0px grey",
-        borderRadius: "10px",
-        paddingTop: "4px",
-        paddingLeft: "4px",
-        paddingRight: "4px",
+        background: "grey",
+        height: "25px",
+        borderRadius: "3px",
+        marginBottom: "5px",
       }}
     >
       <div
         className={styles.asButton}
-        style={{ marginLeft: "5px", marginRight: "5px" }}
+        style={{
+          position: "relative",
+          top: "-3px",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: "3px",
+          height: "25px",
+          width: "40px",
+          display: "flex",
+        }}
+        onClick={() => {
+          reactionHandler();
+          setSelected(!selected);
+        }}
       >
-        {cloned}
+        <div style={{ marginRight: "4px" }}>{cloned}</div>
+        <div className={styles.noselect} style={{ fontSize: "10px" }}>
+          {num}
+        </div>
       </div>
-      <p className={styles.noselect}>{num}</p>
     </div>
   );
 }
