@@ -161,13 +161,11 @@ function getPosts(usernamesToFetch) {
 
   const userData = localStorage.getItem(userStorage);
   const userDataParsed = userData === null ? [] : JSON.parse(userData);
-  const withUserInformation = filtered.map((postData) => {
-    return {
-      ...postData,
-      firstname: userDataParsed[postData.poster].firstname,
-      lastname: userDataParsed[postData.poster].lastname,
-    };
-  });
+  const withUserInformation = filtered.map((postData) => ({
+    ...postData,
+    firstname: userDataParsed[postData.poster].firstname,
+    lastname: userDataParsed[postData.poster].lastname,
+  }));
   return withUserInformation;
 }
 
@@ -195,7 +193,6 @@ function deletePost(poster, time) {
   localStorage.setItem(reactionStorage, JSON.stringify(rFiltered));
 }
 
-
 function postComment(poster, time, commenter, content, commentTime) {
   const data = localStorage.getItem(commentStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
@@ -214,15 +211,14 @@ function getComments(poster, time) {
 
   const userData = localStorage.getItem(userStorage);
   const userDataParsed = userData === null ? [] : JSON.parse(userData);
-  const withUserInformation = filtered.map((commentData) => {
-    return {
-      ...commentData,
-      firstname: userDataParsed[commentData.commenter].firstname,
-      lastname: userDataParsed[commentData.commenter].lastname,
-    };
-  });
+  const withUserInformation = filtered.map((commentData) => ({
+    ...commentData,
+    firstname: userDataParsed[commentData.commenter].firstname,
+    lastname: userDataParsed[commentData.commenter].lastname,
+  }));
 
   return withUserInformation;
+}
 
 function requestedFriend(username1, username2) {
   const data = localStorage.getItem(friendRequestList);
@@ -243,7 +239,6 @@ function requestedFriend(username1, username2) {
   }
 
   return 0;
-
 }
 
 function sendFriendRequest(username1, username2) {

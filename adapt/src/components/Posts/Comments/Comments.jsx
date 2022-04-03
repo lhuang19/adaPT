@@ -70,13 +70,8 @@ function Comments({ poster, time }) {
   }
 
   useEffect(() => {
-    console.log(poster, time);
     setCommentData(getComments(poster, time));
   }, []);
-
-  useEffect(() => {
-    console.log(ref.current);
-  }, [ref.current]);
   return (
     <Collapse
       bordered={false}
