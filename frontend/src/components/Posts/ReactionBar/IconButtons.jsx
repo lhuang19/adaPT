@@ -1,6 +1,6 @@
 import React, { useState, cloneElement, useEffect } from "react";
 import styles from "./ReactionBar.module.scss";
-import { postReaction, deleteReaction } from "../../../modules/storage";
+import { doAPIRequest } from "../../../modules/api";
 
 function IconButton({
   poster,
@@ -16,10 +16,15 @@ function IconButton({
   const [num, setNum] = useState(count);
   function reactionHandler() {
     if (selected) {
-      deleteReaction(poster, time, username, name);
+      doAPIRequest(`/post/${poster}${time}/reactions/${username}/${name}`, {
+        method: "DELETE",
+      });
       setNum(num - 1);
     } else {
-      postReaction(poster, time, username, name);
+      doAPIRequest("/post/reactions", {
+        method: "POST",
+        body: { poster, time, username, type: name },
+      });
       setNum(num + 1);
     }
   }

@@ -6,6 +6,7 @@ import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
 import { deletePost } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import ReactionBar from "./ReactionBar/ReactionBar";
 import Comments from "./Comments/Comments";
 
@@ -95,8 +96,11 @@ function Post(props) {
         <div style={{ position: "absolute", right: "10px", top: "10px" }}>
           <Button
             danger
-            onClick={() => {
-              deletePost(poster, time);
+            onClick={async () => {
+              await doAPIRequest("/post", {
+                method: "DELETE",
+                body: { poster, time },
+              });
               fetchNewPosts();
             }}
           >

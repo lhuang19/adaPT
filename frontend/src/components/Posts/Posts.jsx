@@ -4,6 +4,7 @@ import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
 import { getPosts, getFriends } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import Post from "./Post";
 import PostModal from "./PostModal";
 
@@ -20,8 +21,11 @@ function Posts({ profile, name, animate, allowPosting }) {
       const friends = await getFriends(username);
       usernamesToFetch.push(...friends);
     }
-    const newPosts = await getPosts(usernamesToFetch);
-    setPosts(newPosts);
+    const { data } = await doAPIRequest("/post/feed", {
+      method: "POST",
+      body: usernamesToFetch,
+    });
+    setPosts(data);
   }
   useEffect(() => {
     if (username !== undefined) fetchNewPosts();

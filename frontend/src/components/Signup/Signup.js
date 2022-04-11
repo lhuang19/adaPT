@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Row, Col, Form, Button, Steps, Result, Alert } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 
-import { signupRequest } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
+
 import FormData from "./FormData";
 import styles from "./Signup.module.scss";
 
@@ -42,11 +43,13 @@ function Signup() {
 
   async function signupHandler() {
     const formData = form.getFieldsValue(true);
-
-    const { success, data, error } = await signupRequest(formData);
-    if (success) {
+    const { data, error } = await doAPIRequest("/login/signup", {
+      method: "POST",
+      body: formData,
+    });
+    if (data) {
       setShowForm(false);
-      setUserData(data);
+      setUserData(formData);
     } else {
       setErrorMessage(error);
     }

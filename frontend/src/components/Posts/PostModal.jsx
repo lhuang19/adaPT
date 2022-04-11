@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Tooltip, Button, Modal, Form, Input } from "antd";
 import { FormOutlined } from "@ant-design/icons";
 import { postPost } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
 function PostModal({ fetchNewPosts }) {
@@ -12,7 +13,11 @@ function PostModal({ fetchNewPosts }) {
   async function onCreate(values) {
     const postData = values;
     postData.time = Date.now();
-    await postPost(credentials.username, postData);
+    postData.poster = credentials.username;
+    await doAPIRequest("/post", {
+      method: "POST",
+      body: postData,
+    });
     setShow(false);
     fetchNewPosts();
   }

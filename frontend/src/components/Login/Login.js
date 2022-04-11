@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Row, Col, Form, Input, Button, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
-import { loginRequest } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 
 function Login() {
   const { setCredentials } = useContext(AuthUserContext);
@@ -12,8 +12,11 @@ function Login() {
 
   async function loginHandler(values) {
     const { username, password } = values;
-    const { success, data, error } = await loginRequest(username, password);
-    if (success) {
+    const { data, error } = await doAPIRequest("/login", {
+      method: "POST",
+      body: { username, password },
+    });
+    if (data) {
       setCredentials(data);
       navigate("/");
     } else {

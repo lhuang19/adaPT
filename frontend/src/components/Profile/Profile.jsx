@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, Avatar, Result, Button, Divider } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
 import Posts from "../Posts/Posts";
 import {
@@ -13,6 +12,7 @@ import {
   deleteFriendRequest,
   sendFriendRequest,
 } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
 function Profile() {
@@ -36,8 +36,10 @@ function Profile() {
   }, []);
 
   useEffect(async () => {
-    const { success, data, error } = await getUserData(name);
-    if (success) {
+    const { data, error } = await doAPIRequest(`/user/${name}`, {
+      method: "GET",
+    });
+    if (data) {
       setUserData(data);
     } else {
       errorMessage.current = error;

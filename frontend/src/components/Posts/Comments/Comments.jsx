@@ -12,7 +12,8 @@ import {
 
 import { AuthUserContext } from "../../../context/Auth";
 
-import { getComments, postComment } from "../../../modules/storage";
+// import { getComments, postComment } from "../../../modules/storage";
+import { doAPIRequest } from "../../../modules/api";
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -52,7 +53,11 @@ function Comments({ poster, time }) {
   function onSubmitCommentHandler() {
     setInput("");
     const submitTime = Date.now();
-    postComment(poster, time, username, input, Date.now());
+    // postComment(poster, time, username, input, Date.now());
+    doAPIRequest(`/post/${poster}${time}/comments`, {
+      method: "POST",
+      body: { commenter: username, content: input, commentTime: Date.now() },
+    });
     const current = [...commentData];
     current.push({
       postid: poster + time,
@@ -68,8 +73,12 @@ function Comments({ poster, time }) {
     }, 100);
   }
 
-  useEffect(() => {
-    setCommentData(getComments(poster, time));
+  useEffect(async () => {
+    const { data } = await doAPIRequest(`/post/${poster}${time}/comments`, {
+      method: "GET",
+    });
+
+    setCommentData(data);
   }, []);
   return (
     <Collapse

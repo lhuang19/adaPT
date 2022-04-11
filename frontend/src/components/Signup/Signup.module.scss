@@ -15,7 +15,7 @@ $duration: 0.4s;
 }
 @keyframes slidein {
   from {
-    transform: translateX(percentage(-$width));
+    transform: translateX(percentage($width));
     opacity: 0;
   }
 
@@ -32,14 +32,14 @@ $duration: 0.4s;
   }
 
   to {
-    transform: translateX(percentage($width));
+    transform: translateX(percentage(-$width));
     opacity: 0;
   }
 }
 
 @keyframes slideinRev {
   from {
-    transform: translateX(percentage($width));
+    transform: translateX(percentage(-$width));
     opacity: 0;
   }
 
@@ -56,7 +56,7 @@ $duration: 0.4s;
   }
 
   to {
-    transform: translateX(percentage(-$width));
+    transform: translateX(percentage($width));
     opacity: 0;
   }
 }

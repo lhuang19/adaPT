@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "antd/lib/modal/Modal";
 import { useNavigate } from "react-router-dom";
 import { AutoComplete } from "antd";
-import { getUsernamesList } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 
 const { Option } = AutoComplete;
 
@@ -12,7 +12,9 @@ function Search({ visible, close }) {
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(async () => {
-    const data = await getUsernamesList();
+    const { data } = await doAPIRequest("/user", {
+      method: "GET",
+    });
     setUsernames(data);
   }, []);
   function handleSearch(value) {
@@ -22,7 +24,7 @@ function Search({ visible, close }) {
       res = [];
     } else {
       res = usernames.filter((username) => username.startsWith(value));
-      res = res.slice(0, 2);
+      res = res.slice(0, 5);
     }
 
     setResults(res);

@@ -8,17 +8,24 @@ import {
 } from "@ant-design/icons";
 import IconButton from "./IconButtons";
 
-import { getReactions } from "../../../modules/storage";
+import { doAPIRequest } from "../../../modules/api";
 
 function ReactionBar({ poster, time, username }) {
   const [reactions, setReactions] = useState(null);
+  async function makeReactionRequest(poster, time, username) {
+    const { data } = await doAPIRequest(
+      `/post/${poster}${time}/reactions/${username}`,
+      {
+        method: "GET",
+      }
+    );
+    setReactions(data);
+  }
   useEffect(async () => {
-    const response = await getReactions(poster, time, username);
-    setReactions({ ...response });
+    makeReactionRequest(poster, time, username);
 
     const periodicRefresh = setInterval(async () => {
-      const response = await getReactions(poster, time, username);
-      setReactions({ ...response });
+      makeReactionRequest(poster, time, username);
     }, 100000);
 
     return () => clearInterval(periodicRefresh);

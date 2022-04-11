@@ -1,11 +1,9 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Col, Row, Avatar, Result, Button, Divider, Input, Space, Form } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Col, Row, Avatar, Result, Button, Input, Form } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
-import {
-  getUserData,
-} from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
 function ChangeProfile() {
@@ -25,8 +23,10 @@ function ChangeProfile() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   useEffect(async () => {
-    const { success, data, error } = await getUserData(name);
-    if (success) {
+    const { data, error } = await doAPIRequest(`/user/${name}`, {
+      method: "GET",
+    });
+    if (data) {
       setUserData(data);
     } else {
       errorMessage.current = error;
@@ -130,7 +130,7 @@ function ChangeProfile() {
             <Form.Item
               label="Current Password"
               name="password"
-              rules={[{ required: true, message: 'Enter your password!' }]}
+              rules={[{ required: true, message: "Enter your password!" }]}
             >
               <Input.Password />
             </Form.Item>
@@ -138,7 +138,7 @@ function ChangeProfile() {
             <Form.Item
               label="Current Password"
               name="password"
-              rules={[{ required: true, message: 'Confirm Password' }]}
+              rules={[{ required: true, message: "Confirm Password" }]}
             >
               <Input.Password />
             </Form.Item>
