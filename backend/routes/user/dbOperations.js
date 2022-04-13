@@ -1,6 +1,7 @@
 const getUserData = async (db, username) => {
+  if (!username) throw new Error("params not filled");
   try {
-    const result = await db.collection("Users").findOne({ username: username });
+    const result = await db.collection("Users").findOne({ username });
     if (result === null) throw new Error();
     const copy = { ...result };
     delete copy.password;

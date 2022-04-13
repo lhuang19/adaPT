@@ -9,12 +9,15 @@ function getHash(input) {
 }
 
 const login = async (db, user) => {
+  if (!user || !user.password || !user.username)
+    throw new Error("params not filled");
   try {
     const hashedPassword = getHash(user.password);
     const result = await db
       .collection("Users")
       .findOne({ username: user.username });
-    if (result === null || result.password != hashedPassword) throw new Error();
+    if (result === null || result.password !== hashedPassword)
+      throw new Error();
     const copy = { ...result };
     delete copy.password;
     return copy;
@@ -25,13 +28,14 @@ const login = async (db, user) => {
 };
 
 const signup = async (db, user) => {
+  if (!user || !user.password || !user.username)
+    throw new Error("params not filled");
   try {
     const result = await db
       .collection("Users")
       .findOne({ username: user.username });
     if (result != null) throw new Error();
-    const hashedPassword = await getHash(user.password);
-
+    const hashedPassword = getHash(user.password);
     const copy = { ...user };
     copy.password = hashedPassword;
     const ret = await db.collection("Users").insertOne(copy);

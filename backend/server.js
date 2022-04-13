@@ -5,9 +5,11 @@ const app = express();
 const lib = require("./dbOperations");
 const loginRouter = require("./routes/login/routes");
 const userRouter = require("./routes/user/routes");
+const postRouter = require("./routes/post/routes");
 
 const url =
   "mongodb+srv://adapt:adapt@cluster0.bmk3y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -22,6 +24,7 @@ app.use(
 
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 // Default response for any other request
 app.use((_req, res) => {
@@ -31,7 +34,7 @@ app.use((_req, res) => {
 // Start server
 const port = process.env.PORT || 5000;
 app.listen(port, async () => {
-  db = await lib.connect(url);
+  const db = await lib.connect(url);
   app.set("db", db);
   console.log(`Server running on port:${port}`);
 });
