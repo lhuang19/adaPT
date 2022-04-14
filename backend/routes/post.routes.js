@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const lib = require("./dbOperations");
+const lib = require("../controllers/post.controllers");
 
 router.post("/feed", async (req, res) => {
   try {
-    const results = await lib.getPosts(req.app.get("db"), req.body);
+    const results = await lib.getPosts(req.body);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -12,7 +12,7 @@ router.post("/feed", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const results = await lib.postPost(req.app.get("db"), req.body);
+    const results = await lib.postPost(req.body);
     res.status(201).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
 });
 router.delete("/", async (req, res) => {
   try {
-    const results = await lib.deletePost(req.app.get("db"), req.body);
+    const results = await lib.deletePost(req.body);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -28,11 +28,7 @@ router.delete("/", async (req, res) => {
 });
 router.get("/:id/reactions/:username", async (req, res) => {
   try {
-    const results = await lib.getReactions(
-      req.app.get("db"),
-      req.params.id,
-      req.params.username
-    );
+    const results = await lib.getReactions(req.params.id, req.params.username);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -41,7 +37,7 @@ router.get("/:id/reactions/:username", async (req, res) => {
 
 router.post("/reactions", async (req, res) => {
   try {
-    const results = await lib.postReaction(req.app.get("db"), req.body);
+    const results = await lib.postReaction(req.body);
     res.status(201).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -51,7 +47,6 @@ router.post("/reactions", async (req, res) => {
 router.delete("/:id/reactions/:username/:type", async (req, res) => {
   try {
     const results = await lib.deleteReaction(
-      req.app.get("db"),
       req.params.id,
       req.params.username,
       req.params.type
@@ -64,7 +59,7 @@ router.delete("/:id/reactions/:username/:type", async (req, res) => {
 
 router.get("/:id/comments", async (req, res) => {
   try {
-    const results = await lib.getComments(req.app.get("db"), req.params.id);
+    const results = await lib.getComments(req.params.id);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -72,11 +67,7 @@ router.get("/:id/comments", async (req, res) => {
 });
 router.post("/:id/comments", async (req, res) => {
   try {
-    const results = await lib.postComment(
-      req.app.get("db"),
-      req.params.id,
-      req.body
-    );
+    const results = await lib.postComment(req.params.id, req.body);
     res.status(201).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });

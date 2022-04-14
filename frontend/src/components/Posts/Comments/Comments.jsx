@@ -64,6 +64,10 @@ function Comments({ poster, time }) {
       commenter: username,
       content: input,
       commentTime: submitTime,
+      users: {
+        firstname: credentials.firstname,
+        lastname: credentials.lastname,
+      },
     });
     setCommentData(current);
     setTimeout(() => {
@@ -77,7 +81,6 @@ function Comments({ poster, time }) {
     const { data } = await doAPIRequest(`/post/${poster}${time}/comments`, {
       method: "GET",
     });
-
     setCommentData(data);
   }, []);
   return (
@@ -107,7 +110,7 @@ function Comments({ poster, time }) {
             itemLayout="horizontal"
             renderItem={(props) => (
               <Comment
-                author={props.commenter}
+                author={`${props.users.firstname} ${props.users.lastname}`}
                 content={props.content}
                 datetime={new Date(props.commentTime).toLocaleString()}
                 avatar={

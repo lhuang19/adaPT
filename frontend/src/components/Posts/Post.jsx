@@ -12,7 +12,8 @@ import Comments from "./Comments/Comments";
 
 function Post(props) {
   const { data, animate, fetchNewPosts } = props;
-  const { title, body, time, poster, firstname, lastname } = data;
+  const { title, body, time, poster, users } = data;
+  const { firstname, lastname } = users;
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
   return (

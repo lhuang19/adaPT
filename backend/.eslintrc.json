@@ -21,7 +21,8 @@
         {
             "args": "none"
         }
-      ]
+      ],
+      "no-underscore-dangle": 0
     }
   }
   
