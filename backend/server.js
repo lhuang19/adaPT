@@ -6,9 +6,10 @@ const app = express();
 const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
+const dotenv = require("dotenv");
 
-const url =
-  "mongodb+srv://adapt:adapt@cluster0.bmk3y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+dotenv.config();
+const url = process.env.MONGO_URL;
 
 app.use(
   cors({
@@ -26,9 +27,8 @@ app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 
-// Default response for any other request
-app.use((_req, res) => {
-  res.status(404);
+app.get("*", function (_, res) {
+  res.status(404).send("endpoint not found");
 });
 
 // Start server

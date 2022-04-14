@@ -10,6 +10,15 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/returning", async (req, res) => {
+  try {
+    const results = await lib.returning(req.body.token);
+    res.status(201).json({ data: results });
+  } catch (err) {
+    res.status(500).json({ error: "jwt invalid" });
+  }
+});
+
 router.post("/signup", async (req, res) => {
   try {
     const results = await lib.signup(req.body);

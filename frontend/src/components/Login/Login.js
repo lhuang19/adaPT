@@ -4,6 +4,7 @@ import { Row, Col, Form, Input, Button, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
 import { doAPIRequest } from "../../modules/api";
+import { addLoginToken } from "../../modules/storage";
 
 function Login() {
   const { setCredentials } = useContext(AuthUserContext);
@@ -11,13 +12,17 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function loginHandler(values) {
+    console.log("clicked login");
     const { username, password } = values;
     const { data, error } = await doAPIRequest("/login", {
       method: "POST",
       body: { username, password },
     });
+    console.log(data, error);
     if (data) {
-      setCredentials(data);
+      const { token, ...body } = data;
+      setCredentials(body);
+      addLoginToken(token);
       navigate("/");
     } else {
       setErrorMessage(error);

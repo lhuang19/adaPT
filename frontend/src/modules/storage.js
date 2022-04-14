@@ -1,4 +1,4 @@
-const MOCK_LOGIN_TOKEN = false; // change to false if you need multiple ppl logged in at same time.
+const MOCK_LOGIN_TOKEN = true; // change to false if you need multiple ppl logged in at same time.
 
 /**
  *
@@ -8,7 +8,7 @@ const MOCK_LOGIN_TOKEN = false; // change to false if you need multiple ppl logg
  *
  * adaPT_users -- map. K=username, V=temporary value
  */
-const loggedInStorage = "adaPT_loggedIn";
+const loggedInStorage = "supervulnerabletoken";
 const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
@@ -20,8 +20,11 @@ function logout() {
 // ignore for now?
 function checkLoggedIn() {
   const data = localStorage.getItem(loggedInStorage);
-  const parsedJSON = data === null ? null : JSON.parse(data);
-  return MOCK_LOGIN_TOKEN ? parsedJSON : null;
+  return MOCK_LOGIN_TOKEN ? data : null;
+}
+
+function addLoginToken(token) {
+  localStorage.setItem(loggedInStorage, token);
 }
 
 function requestedFriend(username1, username2) {
@@ -139,6 +142,7 @@ function completeExercise(time) {
 }
 
 export {
+  addLoginToken,
   checkLoggedIn,
   logout,
   sendFriendRequest,

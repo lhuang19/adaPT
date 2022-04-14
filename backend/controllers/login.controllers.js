@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const Users = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const secret = "somesecrethash";
 
@@ -24,7 +25,11 @@ const login = async (user) => {
       .exec();
     if (result === null || result.password !== getHash(user.password))
       throw new Error();
-    return removePassword(result);
+    let payload = removePassword(result);
+    const token = jwt.sign(payload, process.env.SECRETKEY, {
+      expiresIn: "15 min",
+    });
+    return { ...removePassword(result), token };
   } catch (err) {
     console.error(err);
     throw new Error("could not login");
@@ -42,14 +47,30 @@ const signup = async (user) => {
       ...user,
       password: getHash(user.password),
     });
-    return removePassword(ret);
+    let payload = removePassword(ret);
+    const token = jwt.sign(payload, process.env.SECRETKEY, {
+      expiresIn: "15 min",
+    });
+    return { ...removePassword(ret), token };
   } catch (err) {
     console.error(err);
     throw new Error("could not create account");
   }
 };
 
+const returning = async (token) => {
+  if (!token) throw new Error("params not filled");
+  try {
+    const payload = jwt.verify(token, process.env.SECRETKEY);
+    return payload;
+  } catch (err) {
+    console.error(err);
+    throw new Error("jwt verification failed");
+  }
+};
+
 module.exports = {
   login,
   signup,
+  returning,
 };

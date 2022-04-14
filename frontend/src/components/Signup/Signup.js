@@ -4,6 +4,7 @@ import { Row, Col, Form, Button, Steps, Result, Alert } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 
 import { doAPIRequest } from "../../modules/api";
+import { addLoginToken } from "../../modules/storage";
 
 import FormData from "./FormData";
 import styles from "./Signup.module.scss";
@@ -17,6 +18,7 @@ function Signup() {
   const [errorMessage, setErrorMessage] = useState("");
   const [userData, setUserData] = useState({});
   const [leave, setLeave] = useState(styles.animateIn);
+  const [token, setToken] = useState();
 
   const [form] = Form.useForm();
   const next = () => {
@@ -50,6 +52,7 @@ function Signup() {
     if (data) {
       setShowForm(false);
       setUserData(formData);
+      setToken(data.token);
     } else {
       setErrorMessage(error);
     }
@@ -170,6 +173,7 @@ function Signup() {
               key="console"
               onClick={() => {
                 setCredentials(userData);
+                addLoginToken(token);
                 navigate("/");
               }}
             >

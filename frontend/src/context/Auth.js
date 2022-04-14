@@ -4,6 +4,7 @@ import { Layout } from "antd";
 
 import NavBar from "../components/NavBar/Navbar";
 import { checkLoggedIn } from "../modules/storage";
+import { doAPIRequest } from "../modules/api";
 
 const { Header, Content } = Layout;
 
@@ -13,10 +14,14 @@ function WithAuth({ children }) {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ username: "" });
   const location = useLocation();
-  useEffect(() => {
-    const loginToken = checkLoggedIn();
-    if (loginToken !== null) {
-      setCredentials(loginToken);
+  useEffect(async () => {
+    const token = checkLoggedIn();
+    const { data } = await doAPIRequest("/login/returning", {
+      method: "POST",
+      body: { token },
+    });
+    if (data) {
+      setCredentials(data);
       if (location.pathname === "/login" || location.pathname === "/signup") {
         navigate("/");
       }
