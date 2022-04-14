@@ -46,6 +46,9 @@ const deletePost = async (postData) => {
       poster: postData.poster,
       time: postData.time,
     }).exec();
+    await Comments.deleteMany({
+      postId: postData.poster + postData.time.toString(),
+    }).exec();
     return await Posts.deleteOne({
       poster: postData.poster,
       time: postData.time,
