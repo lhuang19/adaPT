@@ -168,6 +168,9 @@ function Signup() {
           title="Successfully Created An Account!"
           subTitle={`Welcome ${userData.username}`}
           extra={[
+            <Button key="login" onClick={() => navigate("/login")}>
+              Login
+            </Button>,
             <Button
               type="primary"
               key="console"
@@ -179,9 +182,6 @@ function Signup() {
             >
               Go to Home
             </Button>,
-            // <Button key="login" onClick={() => navigate("/login")}>
-            //   Login
-            // </Button>,
           ]}
         />
       )}

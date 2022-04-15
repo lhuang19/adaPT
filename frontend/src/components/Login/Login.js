@@ -12,7 +12,6 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function loginHandler(values) {
-    console.log("clicked login");
     const { username, password } = values;
     const { data, error } = await doAPIRequest("/login", {
       method: "POST",

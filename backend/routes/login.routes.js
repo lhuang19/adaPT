@@ -6,7 +6,7 @@ router.post("/", async (req, res) => {
     const results = await lib.login(req.body);
     res.status(201).json({ data: results });
   } catch (err) {
-    res.status(500).json({ error: "login failed" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -15,7 +15,7 @@ router.post("/returning", async (req, res) => {
     const results = await lib.returning(req.body.token);
     res.status(201).json({ data: results });
   } catch (err) {
-    res.status(500).json({ error: "jwt invalid" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -24,7 +24,7 @@ router.post("/signup", async (req, res) => {
     const results = await lib.signup(req.body);
     res.status(201).json({ data: results });
   } catch (err) {
-    res.status(500).json({ error: "signup failed" });
+    res.status(500).json({ error: err.message });
   }
 });
 
