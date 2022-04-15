@@ -114,6 +114,10 @@ function Login() {
                   style={{ float: "right" }}
                   className="login-form-forgot"
                   href="/"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    alert("contact site admin to change password");
+                  }}
                 >
                   Forgot password?
                 </Button>
