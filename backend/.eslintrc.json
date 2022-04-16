@@ -1,0 +1,28 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "plugins": ["react", "prettier"],
+    "extends": ["airbnb", "prettier"],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+      "prettier/prettier": "error",
+      "react/prop-types": 0,
+      "react/jsx-filename-extension": 0,
+      "no-unused-vars": [
+        "error",
+        {
+            "args": "none"
+        }
+      ],
+      "no-underscore-dangle": 0
+    }
+  }
+  
