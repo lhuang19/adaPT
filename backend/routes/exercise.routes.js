@@ -28,6 +28,13 @@ router.delete("/", async (req, res) => {
   }
 });
 
-// TODO Add route for changing completed sets counter
+router.post("/counter", async (req, res) => {
+  try {
+    const results = await lib.setSetsCompleted(req.body);
+    res.status(201).json({ data: results });
+  } catch (err) {
+    res.status(500).json({ error: "try again later" });
+  }
+});
 
 module.exports = router;

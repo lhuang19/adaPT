@@ -2,13 +2,12 @@ import React from "react";
 import { Collapse } from "antd";
 import { InfoCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
 
-import { completeExercise } from "../../modules/storage";
-
 const { Panel } = Collapse;
 
 function Exercise(props) {
+  console.log("Creating exercise");
   const { data } = props;
-  const { name, reps, instructions } = data;
+  const { name, sets, reps, instructions, setsCompleted } = data;
   return (
     <div
       style={{
@@ -18,7 +17,7 @@ function Exercise(props) {
       }}
     >
       <Collapse
-        defaultActiveKey={data.completed ? [] : ["1"]}
+        defaultActiveKey={setsCompleted === sets ? [] : ["1"]}
         expandIcon={({ isActive }) =>
           isActive ? (
             <InfoCircleOutlined />
@@ -26,9 +25,9 @@ function Exercise(props) {
             <CheckCircleTwoTone twoToneColor="00ff00" />
           )
         }
-        onChange={() => completeExercise(data.time)}
+        // onChange={() => completeExercise(data.time)}
       >
-        <Panel header={`${name}-${reps}`} key="1">
+        <Panel header={`${name}-${sets}x${reps}`} key="1">
           <p>{instructions}</p>
         </Panel>
       </Collapse>

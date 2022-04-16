@@ -7,10 +7,10 @@ const assignExercise = async (exerciseData) => {
 
   try {
     const pt = await Users.findOne({
-      username: exerciseData.ptUsername,
+      username: exerciseData.pt,
     }).exec();
     const patient = await Users.findOne({
-      username: exerciseData.patientUsername,
+      username: exerciseData.patient,
     }).exec();
     const result = await Exercises.create({
       ...exerciseData,
@@ -25,23 +25,22 @@ const assignExercise = async (exerciseData) => {
   }
 };
 
-const getExercises = async (username) => {
+const getExercises = async (usernameData) => {
+  const { username } = usernameData;
   if (!username) throw new Error("params not filled");
-
   try {
+    const user = await Users.findOne({
+      username,
+    }).exec();
     let result;
-    if (getUserData(username).role === "PT") {
-      result = await Exercises.find({
-        pt: { $in: username },
-      })
-        .populate("users")
-        .exec();
+    if (user.role === "PT") {
+      result = await Exercises.findOne({
+        pt: user,
+      }).exec();
     } else {
       result = await Exercises.find({
-        patient: { $in: username },
-      })
-        .populate("users")
-        .exec();
+        patient: user,
+      }).exec();
     }
     return result;
   } catch (err) {
@@ -65,10 +64,32 @@ const deleteExercise = async (exerciseData) => {
   }
 };
 
-// TODO Add function to modify completed sets counter
+const setSetsCompleted = async (exerciseData) => {
+  if (
+    !exerciseData ||
+    !exerciseData.patient ||
+    !exerciseData.creationTime ||
+    !exerciseData.setsCompleted
+  )
+    throw new Error("params not filled");
+
+  try {
+    return await Exercises.findOneAndUpdate(
+      {
+        patient: exerciseData.pt,
+        creationTime: exerciseData.creationTime,
+      },
+      { $set: { setsCompleted: exerciseData.setsCompleted } }
+    ).exec();
+  } catch (err) {
+    console.error(err);
+    throw new Error("could not set completed sets");
+  }
+};
 
 module.exports = {
   assignExercise,
   getExercises,
   deleteExercise,
+  setSetsCompleted,
 };
