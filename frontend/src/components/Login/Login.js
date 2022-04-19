@@ -17,7 +17,6 @@ function Login() {
       method: "POST",
       body: { username, password },
     });
-    console.log(data, error);
     if (data) {
       const { token, ...body } = data;
       setCredentials(body);
