@@ -14,20 +14,23 @@ function WithAuth({ children }) {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ username: "" });
   const location = useLocation();
-  useEffect(async () => {
-    const token = checkLoggedIn();
-    const { data } = await doAPIRequest("/login/returning", {
-      method: "POST",
-      body: { token },
-    });
-    if (data) {
-      setCredentials(data);
-      if (location.pathname === "/login" || location.pathname === "/signup") {
-        navigate("/");
+  useEffect(() => {
+    async function loadToken() {
+      const token = checkLoggedIn();
+      const { data } = await doAPIRequest("/login/returning", {
+        method: "POST",
+        body: { token },
+      });
+      if (data) {
+        setCredentials(data);
+        if (location.pathname === "/login" || location.pathname === "/signup") {
+          navigate("/");
+        }
+      } else {
+        navigate("/login");
       }
-    } else {
-      navigate("/login");
     }
+    loadToken();
   }, []);
   const passInValue = React.useMemo(
     () => ({

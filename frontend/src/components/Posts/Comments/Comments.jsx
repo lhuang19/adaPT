@@ -77,11 +77,14 @@ function Comments({ poster, time }) {
     }, 100);
   }
 
-  useEffect(async () => {
-    const { data } = await doAPIRequest(`/post/${poster}${time}/comments`, {
-      method: "GET",
-    });
-    setCommentData(data);
+  useEffect(() => {
+    async function makeAPIRequest() {
+      const { data } = await doAPIRequest(`/post/${poster}${time}/comments`, {
+        method: "GET",
+      });
+      setCommentData(data);
+    }
+    makeAPIRequest();
   }, []);
   return (
     <Collapse

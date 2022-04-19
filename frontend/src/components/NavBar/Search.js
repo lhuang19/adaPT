@@ -11,11 +11,14 @@ function Search({ visible, close }) {
   const [usernames, setUsernames] = useState([]);
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  useEffect(async () => {
-    const { data } = await doAPIRequest("/user", {
-      method: "GET",
-    });
-    setUsernames(data);
+  useEffect(() => {
+    async function makeAPIRequest() {
+      const { data } = await doAPIRequest("/user", {
+        method: "GET",
+      });
+      setUsernames(data);
+    }
+    makeAPIRequest();
   }, []);
   function handleSearch(value) {
     let res = [];
