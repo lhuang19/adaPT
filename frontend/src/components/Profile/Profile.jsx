@@ -3,15 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, Avatar, Result, Button, Divider } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 import Posts from "../Posts/Posts";
-import {
-  areFriends,
-  addFriend,
-  getUserData,
-  removeFriend,
-  requestedFriend,
-  deleteFriendRequest,
-  sendFriendRequest,
-} from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
@@ -23,7 +14,6 @@ function Profile() {
   const navigate = useNavigate();
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
-  const [friends, setFriends] = useState(areFriends(username, name));
   const [status, setStatus] = useState(0);
 
   useEffect(async () => {

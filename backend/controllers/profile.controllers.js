@@ -1,17 +1,5 @@
 const Users = require("../models/user");
 
-const getUserData = async (username) => {
-  if (!username) throw new Error("params not filled");
-  try {
-    const result = await Users.findOne({ username }).exec();
-    if (result === null) throw new Error();
-    return result;
-  } catch (err) {
-    console.error(err);
-    throw new Error("could not find user");
-  }
-};
-
 const friendStatus = async (username1, username2) => {
   if (!username1 || !username2) throw new Error("params not filled");
   try {
@@ -107,7 +95,6 @@ const deleteFriend = async (username1, username2) => {
 };
 
 module.exports = {
-  getUserData,
   friendStatus,
   addFriendRequest,
   deleteFriendRequest,
