@@ -70,6 +70,8 @@ const signup = async (user) => {
     ...user,
     password: getHash(user.password),
     registerTime: new Date().toLocaleString(),
+    friends: [],
+    friendRequests: [],
   });
   let payload = removePassword(ret);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
