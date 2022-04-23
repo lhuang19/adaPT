@@ -12,7 +12,10 @@ function ExercisePage() {
     <div style={{ background: "white" }}>
       <div style={{ margin: "auto", display: "block", width: "80%" }}>
         {role === "PT" ? (
-          <ExerciseModal />
+          <div>
+            <Exercises name={username} animate />
+            <ExerciseModal />
+          </div>
         ) : (
           <Exercises name={username} animate />
         )}

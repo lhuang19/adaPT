@@ -1,6 +1,5 @@
 const Users = require("../models/user");
 const Exercises = require("../models/exercises");
-const { getUserData } = require("./user.controllers");
 
 const assignExercise = async (exerciseData) => {
   if (!exerciseData) throw new Error("params not filled");
@@ -20,7 +19,6 @@ const assignExercise = async (exerciseData) => {
     if (result === null) throw new Error();
     return result;
   } catch (err) {
-    console.error(err);
     throw new Error("could not assign exercise");
   }
 };
@@ -34,7 +32,7 @@ const getExercises = async (usernameData) => {
     }).exec();
     let result;
     if (user.role === "PT") {
-      result = await Exercises.findOne({
+      result = await Exercises.find({
         pt: user,
       }).exec();
     } else {
@@ -44,7 +42,6 @@ const getExercises = async (usernameData) => {
     }
     return result;
   } catch (err) {
-    console.error(err);
     throw new Error("could not get exercises");
   }
 };
@@ -59,7 +56,6 @@ const deleteExercise = async (exerciseData) => {
       creationTime: exerciseData.creationTime,
     }).exec();
   } catch (err) {
-    console.error(err);
     throw new Error("could not delete exercise");
   }
 };
@@ -82,7 +78,6 @@ const setSetsCompleted = async (exerciseData) => {
       { $set: { setsCompleted: exerciseData.setsCompleted } }
     ).exec();
   } catch (err) {
-    console.error(err);
     throw new Error("could not set completed sets");
   }
 };
