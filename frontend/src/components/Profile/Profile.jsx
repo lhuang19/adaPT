@@ -14,7 +14,7 @@ function Profile() {
   const navigate = useNavigate();
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
-  const [status, setStatus] = useState(0);
+  const [status, setStatus] = useState(-1);
 
   useEffect(() => {
     async function makeAPIRequest() {
@@ -27,15 +27,14 @@ function Profile() {
         errorMessage.current = error;
         setUserNotFound(true);
       }
-    }
-    const { status, error2 } = await doAPIRequest(`/profile/${username}/${name}`, {
-      method: "GET",
-    });
-    if (status) {
-      setStatus(status);
-    } else {
-      errorMessage.current = error2;
-      setUserNotFound(true);
+      const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
+        method: "GET",
+      });
+      if (status) {
+        setStatus(status);
+      } else {
+        setUserNotFound(true);
+      }
     }
     makeAPIRequest();
   }, [name]);

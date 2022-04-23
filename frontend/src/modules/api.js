@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:5000";
+const baseURL = "http://localhost:8000";
 
 export function getApiURL(path) {
   return baseURL + path;
