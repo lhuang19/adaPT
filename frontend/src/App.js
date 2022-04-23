@@ -21,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile/:name" element={<Profile />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/exercises" element={<ExercisePage />} />
           <Route path="/change_profile/:name" element={<ChangeProfile />} />
           <Route path="*" element={<PageNotFound />} />
