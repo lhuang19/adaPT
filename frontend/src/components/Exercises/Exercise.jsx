@@ -19,8 +19,10 @@ function Exercise(props) {
     pt,
     creationTime,
   } = data;
+
   const { credentials } = useContext(AuthUserContext);
   const { role } = credentials;
+
   return (
     <div
       style={{
@@ -31,7 +33,9 @@ function Exercise(props) {
     >
       <h3>
         <b>{`${name} - ${sets}x${reps} - Assigned ${
-          role === "PT" ? "to ".concat(patient) : "by ".concat(pt)
+          role === "PT"
+            ? "to ".concat(patient.username)
+            : "by ".concat(pt.username)
         }`}</b>
       </h3>
       <p style={{ whiteSpace: "pre-wrap" }}>{instructions}</p>

@@ -34,11 +34,17 @@ const getExercises = async (usernameData) => {
     if (user.role === "PT") {
       result = await Exercises.find({
         pt: user,
-      }).exec();
+      })
+        .populate("patient")
+        .populate("pt")
+        .exec();
     } else {
       result = await Exercises.find({
         patient: user,
-      }).exec();
+      })
+        .populate("patient")
+        .populate("pt")
+        .exec();
     }
     return result;
   } catch (err) {
