@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import { Avatar, Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 
 import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
-import { deletePost } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import ReactionBar from "./ReactionBar/ReactionBar";
 import Comments from "./Comments/Comments";
