@@ -1,11 +1,11 @@
 import React from "react";
-import { Avatar } from "antd"
-import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 function Message(props) {
   const { data } = props;
   const { title, body, time, poster, recipient } = data;
-  
+
   // post is JSON with username, timestamp, text, and imageURL
   // const { username, timestamp, text, imageURL } = post;
   return (
@@ -13,7 +13,7 @@ function Message(props) {
       style={{
         maxWidth: "80vw",
         width: "100%",
-        padding: "20px"
+        padding: "20px",
       }}
     >
       <div

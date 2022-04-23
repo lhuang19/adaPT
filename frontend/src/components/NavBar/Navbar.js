@@ -80,7 +80,7 @@ function NavBar(props) {
                   <TiMessages />
                 </IconWrapper>
               }
-              onClick={() => alert("implement chat")}
+              onClick={() => alert("/chat")}
             />
             <Menu.Item
               key="search_nav_bar"

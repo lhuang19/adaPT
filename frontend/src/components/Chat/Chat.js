@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { List } from "antd";
 import Message from "../Message/Message";
 import { getMessages } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
 // Should this be ./Chat/MessageModal?
@@ -14,6 +15,17 @@ function Chat() {
   async function fetchNewMessages() {
     const newMessages = await getMessages(username);
     setMessages(newMessages);
+    // const messagesToFetch = [];
+    // messagesToFetch.push(profile ? name : username);
+    // if (!profile) {
+    //   const friends = await getFriends(username);
+    //   usernamesToFetch.push(...friends);
+    // }
+    // const { data } = await doAPIRequest("/post/feed", {
+    //   method: "POST",
+    //   body: messagesToFetch,
+    // });
+    // setMessages(data);
   }
   useEffect(() => {
     if (username !== undefined) fetchNewMessages();

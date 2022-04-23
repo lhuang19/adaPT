@@ -6,6 +6,7 @@ const app = express();
 const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
+const messageRouter = require("./routes/message.routes");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/chat", messageRouter);
 
 app.get("*", function (_, res) {
   res.status(404).send("endpoint not found");

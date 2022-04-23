@@ -95,7 +95,7 @@ const postReaction = async (data) => {
     return result;
   } catch (err) {
     console.error(err);
-    throw new Error("could not get reactions");
+    throw new Error("could not post reactions");
   }
 };
 
@@ -139,7 +139,7 @@ const postComment = async (postId, data) => {
     return result;
   } catch (err) {
     console.error(err);
-    throw new Error("could not get comments");
+    throw new Error("could not post comments");
   }
 };
 

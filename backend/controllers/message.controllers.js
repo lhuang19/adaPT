@@ -1,0 +1,37 @@
+const Messages = require("../models/messages");
+
+const postMessage = async (messageData) => {
+  if (!messageData) throw new Error("params not filled");
+
+  try {
+    const result = await Messages.create({
+      ...messageData,
+    });
+    if (result === null) throw new Error();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error("could not add message");
+  }
+};
+
+const getMessages = async (currUser, otherUser) => {
+  if (!currUser || !otherUser) throw new Error("params not filled");
+
+  try {
+    const result = await Messages.find({
+      sender: { $in: { currUser, otherUser } },
+      receiver: { $in: { currUser, otherUser } }, // will this be problematic for ppl sending messages to themselves / can they do that
+    }).exec();
+    result.sort((a, b) => b.time - a.time);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error("could not get messages");
+  }
+};
+
+module.exports = {
+  postMessage,
+  getMessages,
+};

@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Tooltip, Button, Modal, Form, Input } from "antd";
 import { FormOutlined } from "@ant-design/icons";
 import { postMessage } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
 function MessageModal({ fetchNewMessages }) {
@@ -12,6 +13,11 @@ function MessageModal({ fetchNewMessages }) {
   async function onCreate(values) {
     const messageData = values;
     messageData.time = Date.now();
+    messageData.poster = credentials.username;
+    // await doAPIRequest("/chat", {
+    //   method: "POST",
+    //   body: messageData,
+    // });
     await postMessage(credentials.username, messageData);
     setShow(false);
     fetchNewMessages();
