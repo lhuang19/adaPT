@@ -8,7 +8,6 @@ const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
 const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes")
-const dotenv = require("dotenv");
 
 const app = express();
 dotenv.config();
