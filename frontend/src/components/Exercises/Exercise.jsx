@@ -1,16 +1,24 @@
 import React, { useContext } from "react";
-import { Collapse } from "antd";
-import { InfoCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
+import { Button, Rate } from "antd";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
+import { doAPIRequest } from "../../modules/api";
 
-const { Panel } = Collapse;
-
-const uncompletedIcon = <InfoCircleOutlined />;
-const completedIcon = <CheckCircleTwoTone twoToneColor="00ff00" />;
+const setCompletionIcon = <CheckCircleOutlined />;
 
 function Exercise(props) {
   const { data } = props;
-  const { name, sets, reps, instructions, setsCompleted, patient, pt } = data;
+  const { fetchNewExercises } = props;
+  const {
+    name,
+    sets,
+    reps,
+    instructions,
+    setsCompleted,
+    patient,
+    pt,
+    creationTime,
+  } = data;
   const { credentials } = useContext(AuthUserContext);
   const { role } = credentials;
   return (
@@ -21,23 +29,39 @@ function Exercise(props) {
         padding: "20px",
       }}
     >
-      <Collapse
-        defaultActiveKey={setsCompleted === sets ? [] : ["1"]}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        expandIcon={({ isActive }) =>
-          isActive ? uncompletedIcon : completedIcon
-        }
-        // onChange={() => completeExercise(data.time)}
-      >
-        <Panel
-          header={`${name} - ${sets}x${reps} - Assigned ${
-            role === "PT" ? "to ".concat(patient) : "by ".concat(pt)
-          }`}
-          key="1"
-        >
-          <p>{instructions}</p>
-        </Panel>
-      </Collapse>
+      <h3>
+        <b>{`${name} - ${sets}x${reps} - Assigned ${
+          role === "PT" ? "to ".concat(patient) : "by ".concat(pt)
+        }`}</b>
+      </h3>
+      <p style={{ whiteSpace: "pre-wrap" }}>{instructions}</p>
+      {role === "PT" ? (
+        <div style={{ position: "absolute", right: "10px", top: "10px" }}>
+          <Button
+            danger
+            onClick={async () => {
+              await doAPIRequest("/exercise", {
+                method: "DELETE",
+                body: { pt, creationTime },
+              });
+              fetchNewExercises();
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      ) : null}
+      <Rate
+        character={setCompletionIcon}
+        count={sets}
+        defaultValue={setsCompleted}
+        onChange={async (value) => {
+          await doAPIRequest("/exercise/counter", {
+            method: "POST",
+            body: { patient, creationTime, setsCompleted: value },
+          });
+        }}
+      />
     </div>
   );
 }
