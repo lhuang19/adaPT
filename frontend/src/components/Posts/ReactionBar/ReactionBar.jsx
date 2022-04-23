@@ -21,7 +21,7 @@ function ReactionBar({ poster, time, username }) {
     );
     setReactions(data);
   }
-  useEffect(async () => {
+  useEffect(() => {
     makeReactionRequest(poster, time, username);
 
     const periodicRefresh = setInterval(async () => {
