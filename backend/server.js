@@ -6,6 +6,7 @@ const app = express();
 const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
+const profileRouter = require("./routes/profile.routes")
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -26,13 +27,14 @@ app.use(
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/profile", profileRouter)
 
 app.get("*", function (_, res) {
   res.status(404).send("endpoint not found");
 });
 
 // Start server
-const port = process.env.PORT || 5000;
+const port = 8000;
 app.listen(port, async () => {
   try {
     global.db = await mongoose.connect(url);
