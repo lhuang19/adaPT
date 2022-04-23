@@ -16,6 +16,13 @@ function Profile() {
   const errorMessage = useRef("");
   const [status, setStatus] = useState(-1);
 
+  async function updateStatus() {
+    const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
+      method: "GET",
+    });
+    setStatus(status);
+  }
+
   useEffect(() => {
     async function makeAPIRequest() {
       const { data, error } = await doAPIRequest(`/user/${name}`, {
@@ -27,17 +34,12 @@ function Profile() {
         errorMessage.current = error;
         setUserNotFound(true);
       }
-      const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
-        method: "GET",
-      });
-      if (status) {
-        setStatus(status);
-      } else {
-        setUserNotFound(true);
-      }
     }
     makeAPIRequest();
+    updateStatus();
   }, [name]);
+
+  
 
   return userNotFound ? (
     <Result
@@ -81,6 +83,7 @@ function Profile() {
                 await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
                   method: "POST",
                 });
+                updateStatus();
               }}
             >
               Request Friend
@@ -93,9 +96,13 @@ function Profile() {
                 <Button
                   type="primary"
                   onClick={async () => {
-                    await doAPIRequest(`/profile/friend/${username}/${name}`, {
+                    await doAPIRequest(`/profile/friend/${name}/${username}`, {
                       method: "POST",
                     });
+                    await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
+                      method: "DELETE",
+                    });
+                    updateStatus();
                   }}
                 >
                   Accept
@@ -104,9 +111,10 @@ function Profile() {
                 <Button
                   type="primary"
                   onClick={async () => {
-                    await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
+                    await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
                       method: "DELETE",
                     });
+                    updateStatus();
                   }}
                   danger
                 >
@@ -121,6 +129,7 @@ function Profile() {
                 await doAPIRequest(`/profile/friend/${username}/${name}`, {
                   method: "DELETE",
                 });
+                updateStatus();
               }}
               danger
             >

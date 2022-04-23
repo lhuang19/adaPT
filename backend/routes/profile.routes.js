@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const lib = require("../controllers/profile.controllers");
 
-router.post("/:username1/:username2", async (req, res) => {
+router.get("/:username1/:username2", async (req, res) => {
   try {
     const results = await lib.friendStatus(req.params.username1, req.params.username2);
     res.status(200).json({ status: results });
