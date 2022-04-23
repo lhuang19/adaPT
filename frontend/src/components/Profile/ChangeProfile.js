@@ -22,16 +22,19 @@ function ChangeProfile() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  useEffect(async () => {
-    const { data, error } = await doAPIRequest(`/user/${name}`, {
-      method: "GET",
-    });
-    if (data) {
-      setUserData(data);
-    } else {
-      errorMessage.current = error;
-      setUserNotFound(true);
+  useEffect(() => {
+    async function makeAPIRequest() {
+      const { data, error } = await doAPIRequest(`/user/${name}`, {
+        method: "GET",
+      });
+      if (data) {
+        setUserData(data);
+      } else {
+        errorMessage.current = error;
+        setUserNotFound(true);
+      }
     }
+    makeAPIRequest();
   }, [name]);
 
   return userNotFound ? (
