@@ -70,13 +70,12 @@ const setSetsCompleted = async (exerciseData) => {
     throw new Error("params not filled");
 
   try {
-    return await Exercises.findOneAndUpdate(
-      {
-        patient: exerciseData.pt,
-        creationTime: exerciseData.creationTime,
-      },
-      { $set: { setsCompleted: exerciseData.setsCompleted } }
-    ).exec();
+    const exercise = await Exercises.findOne({
+      patient: exerciseData.patient,
+      creationTime: exerciseData.creationTime,
+    });
+    exercise.setsCompleted = exerciseData.setsCompleted;
+    await exercise.save();
   } catch (err) {
     throw new Error("could not set completed sets");
   }
