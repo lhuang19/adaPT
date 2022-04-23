@@ -7,7 +7,7 @@ const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
 const exerciseRouter = require("./routes/exercise.routes");
-const profileRouter = require("./routes/profile.routes")
+const profileRouter = require("./routes/profile.routes");
 
 const app = express();
 dotenv.config();
@@ -29,7 +29,7 @@ app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/exercise", exerciseRouter);
-app.use("/profile", profileRouter)
+app.use("/profile", profileRouter);
 
 app.get("*", (_, res) => {
   res.status(404).send("endpoint not found");
