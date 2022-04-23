@@ -12,6 +12,7 @@ const loggedInStorage = "supervulnerabletoken";
 const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
+const messageStorage = "adaPT_messages";
 
 // ignore for now?
 function logout() {
