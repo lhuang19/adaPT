@@ -11,5 +11,7 @@ const UserSchema = new Schema({
   registerTime: { type: String, required: true, select: false },
   unsuccessfulAttempts: { type: Number, default: 0, select: false },
   timeOut: { type: Number, default: 0, select: false },
+  friends: { type: Array, required: true, default: [] },
+  friendRequests: { type: Array, required: true, default: [] },
 });
 module.exports = mongoose.model("Users", UserSchema, "Users");
