@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Tooltip, Button, Modal, Form, Input } from "antd";
 import { FormOutlined } from "@ant-design/icons";
-import { postPost } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 

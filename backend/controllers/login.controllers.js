@@ -1,11 +1,9 @@
 const crypto = require("crypto");
-const Users = require("../models/user");
 const jwt = require("jsonwebtoken");
-
-const secret = "somesecrethash";
+const Users = require("../models/user");
 
 function getHash(input) {
-  const sha256Hasher = crypto.createHmac("sha256", secret);
+  const sha256Hasher = crypto.createHmac("sha256", process.env.SECRETKEY);
   const hash = sha256Hasher.update(input).digest("hex");
   return hash;
 }
@@ -53,7 +51,7 @@ const login = async (user) => {
     throw new Error("Incorrect password");
   }
 
-  let payload = removePassword(result);
+  const payload = removePassword(result);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
     expiresIn: "15 min",
   });
@@ -73,7 +71,7 @@ const signup = async (user) => {
     friends: [],
     friendRequests: [],
   });
-  let payload = removePassword(ret);
+  const payload = removePassword(ret);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
     expiresIn: "15 min",
   });
