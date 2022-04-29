@@ -4,10 +4,8 @@ import { UserOutlined } from "@ant-design/icons";
 
 function Message(props) {
   const { data } = props;
-  const { title, body, time, poster, recipient } = data;
+  const { body, time, sender, receiver } = data;
 
-  // post is JSON with username, timestamp, text, and imageURL
-  // const { username, timestamp, text, imageURL } = post;
   return (
     <div
       style={{
@@ -24,20 +22,18 @@ function Message(props) {
           paddingBottom: "1vw",
         }}
       >
-        <Avatar size={64} icon={<UserOutlined />} alt={poster.concat("'s profile picture")}/>
+        <Avatar size={64} icon={<UserOutlined />} alt={sender.concat("'s profile picture")}/>
         <div
           style={{
             paddingLeft: "1vw",
           }}
         >
-          <h2>From: {poster} </h2>
           <p>{new Date(time).toLocaleString()}</p>
           {
             // TODO Format timestamp better
           }
         </div>
       </div>
-      <h3><b>{title}</b></h3>
       <p style={{whiteSpace: "pre-wrap"}}>{body}</p>
       {/* {imageURL.length > 0 ? (
         <img src={imageURL} alt={"A post from ".concat(username)} />
