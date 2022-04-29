@@ -8,7 +8,7 @@ const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
 const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes");
-
+const uploadRouter = require("./routes/upload.routes");
 const app = express();
 dotenv.config();
 const url = process.env.MONGO_URL;
@@ -30,6 +30,7 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/exercise", exerciseRouter);
 app.use("/profile", profileRouter);
+app.use("/upload", uploadRouter);
 
 app.get("*", (_, res) => {
   res.status(404).send("endpoint not found");

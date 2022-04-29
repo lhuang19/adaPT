@@ -18,28 +18,30 @@ import { doAPIRequest } from "../../../modules/api";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
-  <>
-    <Form.Item>
-      <TextArea rows={2} onChange={onChange} value={value} />
-    </Form.Item>
-    <Form.Item
-      style={{
-        marginBottom: "0px",
-        paddingBottom: "0px",
-      }}
-    >
-      <Button
-        htmlType="submit"
-        loading={submitting}
-        onClick={onSubmit}
-        type="primary"
+function Editor({ onChange, onSubmit, submitting, value }) {
+  return (
+    <>
+      <Form.Item>
+        <TextArea rows={2} onChange={onChange} value={value} />
+      </Form.Item>
+      <Form.Item
+        style={{
+          marginBottom: "0px",
+          paddingBottom: "0px",
+        }}
       >
-        Add Comment
-      </Button>
-    </Form.Item>
-  </>
-);
+        <Button
+          htmlType="submit"
+          loading={submitting}
+          onClick={onSubmit}
+          type="primary"
+        >
+          Add Comment
+        </Button>
+      </Form.Item>
+    </>
+  );
+}
 
 function Comments({ poster, time }) {
   const { credentials } = useContext(AuthUserContext);
@@ -97,7 +99,7 @@ function Comments({ poster, time }) {
         }, 100);
       }}
     >
-      <Panel header="Comments" forceRender={true}>
+      <Panel header="Comments" forceRender>
         {commentData.length} {commentData.length > 1 ? "replies" : "reply"}
         <Divider style={{ margin: "1px", padding: "0px" }} />
         <div

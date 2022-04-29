@@ -11,5 +11,6 @@ const PostSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
   },
+  media: { type: String },
 });
 module.exports = mongoose.model("Posts", PostSchema, "Posts");

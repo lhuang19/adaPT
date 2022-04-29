@@ -12,9 +12,13 @@ import { doAPIRequest } from "../../../modules/api";
 
 function ReactionBar({ poster, time, username }) {
   const [reactions, setReactions] = useState(null);
-  async function makeReactionRequest(poster, time, username) {
+  async function makeReactionRequest(
+    reactionPoster,
+    reactionTime,
+    reactionUsername
+  ) {
     const { data } = await doAPIRequest(
-      `/post/${poster}${time}/reactions/${username}`,
+      `/post/${reactionPoster}${reactionTime}/reactions/${reactionUsername}`,
       {
         method: "GET",
       }
