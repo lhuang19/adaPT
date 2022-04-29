@@ -34,7 +34,7 @@ app.get("*", function (_, res) {
 });
 
 // Start server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 app.listen(port, async () => {
   try {
     global.db = await mongoose.connect(url);
