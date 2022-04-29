@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const Users = require("../models/user");
 
 function getHash(input) {
-  const sha256Hasher = crypto.createHmac("sha256", process.env.SECRETKEY);
+  const sha256Hasher = crypto.createHmac("sha256", "somesecrethash");
   const hash = sha256Hasher.update(input).digest("hex");
   return hash;
 }
