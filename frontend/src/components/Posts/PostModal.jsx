@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
-import { Tooltip, Button, Modal, Form, Input } from "antd";
-import { FormOutlined } from "@ant-design/icons";
-import { postPost } from "../../modules/storage";
+import React, { useState, useContext, useEffect } from "react";
+import { Tooltip, Button, Modal, Form, Input, Upload } from "antd";
+import { FormOutlined, InboxOutlined } from "@ant-design/icons";
+
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
@@ -9,11 +9,26 @@ function PostModal({ fetchNewPosts }) {
   const [show, setShow] = useState(false);
   const [form] = Form.useForm();
   const { credentials } = useContext(AuthUserContext);
-
+  useEffect(
+    () => () => {
+      const mediaValue = form.getFieldValue("media");
+      if (mediaValue !== undefined) {
+        doAPIRequest(`/upload/${mediaValue.file.name}`, {
+          method: "DELETE",
+        });
+      }
+    },
+    []
+  );
   async function onCreate(values) {
     const postData = values;
     postData.time = Date.now();
     postData.poster = credentials.username;
+    if (postData.media === undefined) {
+      delete postData.media;
+    } else {
+      postData.media = postData.media.file.name;
+    }
     await doAPIRequest("/post", {
       method: "POST",
       body: postData,
@@ -73,6 +88,33 @@ function PostModal({ fetchNewPosts }) {
             ]}
           >
             <Input.TextArea />
+          </Form.Item>
+          <Form.Item
+            label="Media"
+            name="media"
+            valuePropName="media"
+            getValueFromEvent={(e) => e}
+            noStyle
+          >
+            <Upload.Dragger
+              name="file"
+              action="http://localhost:8000/upload"
+              multiple={false}
+              maxCount={1}
+              onRemove={(e) =>
+                doAPIRequest(`/upload/${e.name}`, {
+                  method: "DELETE",
+                })
+              }
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">Share your PT exercises!</p>
+            </Upload.Dragger>
           </Form.Item>
         </Form>
       </Modal>

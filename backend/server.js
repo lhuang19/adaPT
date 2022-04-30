@@ -1,13 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const app = express();
 const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
+const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes");
-const dotenv = require("dotenv");
+const uploadRouter = require("./routes/upload.routes");
+const app = express();
 
 dotenv.config();
 const url = process.env.MONGO_URL;
@@ -27,9 +29,11 @@ app.use(
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/exercise", exerciseRouter);
 app.use("/profile", profileRouter);
+app.use("/upload", uploadRouter);
 
-app.get("*", function (_, res) {
+app.get("*", (_, res) => {
   res.status(404).send("endpoint not found");
 });
 
