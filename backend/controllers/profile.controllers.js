@@ -15,7 +15,7 @@ const friendStatus = async (username1, username2) => {
     const result1 = await Users.findOne({ username: username1 }).exec();
     const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
-
+    
     let status = -1;
 
     result1.friends.forEach((element) => {

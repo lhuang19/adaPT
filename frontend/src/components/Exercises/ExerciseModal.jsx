@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Tooltip, Button, Modal, Form, Input } from "antd";
 import { FormOutlined } from "@ant-design/icons";
-import { addExercise } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
+import { AuthUserContext } from "../../context/Auth";
 
 function ExerciseModal() {
   const [show, setShow] = useState(false);
   const [form] = Form.useForm();
+  const { credentials } = useContext(AuthUserContext);
 
   async function onCreate(values) {
     const exerciseData = values;
-    exerciseData.time = Date.now();
-    exerciseData.completed = false;
-    await addExercise(exerciseData);
+    exerciseData.pt = credentials.username;
+    exerciseData.creationTime = Date.now();
+    exerciseData.setsCompleted = 0;
+    await doAPIRequest("/exercise", {
+      method: "POST",
+      body: exerciseData,
+    });
     setShow(false);
   }
 
@@ -63,6 +69,19 @@ function ExerciseModal() {
               {
                 required: true,
                 message: "Please input a name for the exercise!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Number of Sets to Perform"
+            name="sets"
+            rules={[
+              {
+                required: true,
+                message:
+                  "Please input the number of reps of this exercise this patient should perform!",
               },
             ]}
           >

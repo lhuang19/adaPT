@@ -1,18 +1,16 @@
 import React, { useContext } from "react";
-import { Avatar, Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Image } from "antd";
 
 import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
-import { deletePost } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import ReactionBar from "./ReactionBar/ReactionBar";
 import Comments from "./Comments/Comments";
 
 function Post(props) {
   const { data, animate, fetchNewPosts } = props;
-  const { title, body, time, poster, users } = data;
+  const { title, body, time, poster, users, media } = data;
   const { firstname, lastname } = users;
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
@@ -92,7 +90,17 @@ function Post(props) {
       <h3>
         <b>{title}</b>
       </h3>
-      <p style={{ whiteSpace: "pre-wrap" }}>{body}</p>
+      <div>
+        <p style={{ whiteSpace: "pre-wrap" }}>{body}</p>
+        {media && (
+          <Image
+            width={100}
+            height={100}
+            src={`https://storage.googleapis.com/adaptstorage350/${media}`}
+          />
+        )}
+      </div>
+      <br />
       {username === poster ? (
         <div style={{ position: "absolute", right: "10px", top: "10px" }}>
           <Button

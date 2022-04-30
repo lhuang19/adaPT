@@ -3,7 +3,7 @@ import { List } from "antd";
 import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
-import { getPosts, getFriends } from "../../modules/storage";
+import { getFriends } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import Post from "./Post";
 import PostModal from "./PostModal";
