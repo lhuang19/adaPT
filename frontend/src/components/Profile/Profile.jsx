@@ -16,16 +16,6 @@ function Profile() {
   const errorMessage = useRef("");
   const [status, setStatus] = useState(-1);
 
-  async function getStatus() {
-    if (username.length === 0) {
-      return null;
-    }
-    const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
-      method: "GET",
-    });
-    return status;
-  }
-
   useEffect(() => {
     async function makeAPIRequest() {
       const { data, error } = await doAPIRequest(`/user/${name}`, {
@@ -38,20 +28,19 @@ function Profile() {
         setUserNotFound(true);
       }
     }
-
-    async function updateStatus() {
-      const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
+    async function getStatus() {
+      if (username.length === 0) {
+        setStatus(-1);
+        return;
+      }
+      const { data } = await doAPIRequest(`/profile/${username}/${name}`, {
         method: "GET",
       });
-      setStatus(status);
+      setStatus(data);
     }
-
+    getStatus();
     makeAPIRequest();
-    if (username.length !== 0) {
-      updateStatus();
-    }
-
-  }, [username, name, status]);
+  }, [username, name]);
 
   return userNotFound ? (
     <Result
@@ -92,17 +81,13 @@ function Profile() {
             <Button
               type="primary"
               onClick={async () => {
-                const status = await getStatus();
-                if (status === null) {
-                  return;
-                } else if (status !== -1) {
-                  setStatus(status);
+                if (username.length === 0) {
                   return;
                 }
-                setStatus(1);
-                await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
+                const { data } = await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
                   method: "POST",
                 });
+                setStatus(data);
               }}
             >
               Request Friend
@@ -111,13 +96,13 @@ function Profile() {
             <Button
               type="primary"
               onClick={async () => {
-                const status = await getStatus();
-                if (status === null) {
-                  return;
-                } else if (status !== 1) {
-                  setStatus(status);
+                if (username.length === 0) {
                   return;
                 }
+                const { data } = await doAPIRequest(`/profile/${username}/${name}`, {
+                  method: "GET",
+                });
+                setStatus(data);
               }}
             >
               Requested Friend
@@ -128,19 +113,19 @@ function Profile() {
                 <Button
                   type="primary"
                   onClick={async () => {
-                    const status = await getStatus();
-                    if (status === null) {
+                    if (username.length === 0) {
                       return;
-                    } else if (status !== 2) {
-                      setStatus(status);
+                    }
+                    const { data } = await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
+                      method: "DELETE",
+                    });
+                    if (data !== 100) {
+                      setStatus(data);
                       return;
                     }
                     setStatus(0);
                     await doAPIRequest(`/profile/friend/${name}/${username}`, {
                       method: "POST",
-                    });
-                    await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
-                      method: "DELETE",
                     });
                   }}
                 >
@@ -150,17 +135,13 @@ function Profile() {
                 <Button
                   type="primary"
                   onClick={async () => {
-                    const status = await getStatus();
-                    if (status === null) {
-                      return;
-                    } else if (status !== 2) {
-                      setStatus(status);
+                    if (username.length === 0) {
                       return;
                     }
-                    setStatus(-1);
-                    await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
+                    const { data } = await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
                       method: "DELETE",
                     });
+                    setStatus(-1);
                   }}
                   danger
                 >
@@ -172,17 +153,17 @@ function Profile() {
             <Button
               type="primary"
               onClick={async () => {
-                const status = await getStatus();
-                if (status === null) {
+                if (username.length === 0) {
                   return;
-                } else if (status !== 0) {
-                  setStatus(status);
+                }
+                const { data } = await doAPIRequest(`/profile/friend/${username}/${name}`, {
+                  method: "DELETE",
+                });
+                if (data !== 100) {
+                  setStatus(data);
                   return;
                 }
                 setStatus(-1);
-                await doAPIRequest(`/profile/friend/${username}/${name}`, {
-                  method: "DELETE",
-                });
               }}
               danger
             >

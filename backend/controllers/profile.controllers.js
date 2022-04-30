@@ -9,33 +9,35 @@ function getHash(input) {
   return hash;
 }
 
-const friendStatus = async (username1, username2) => {
+const friendStatus = (user1, user2) => {
+  let status = -1;
+
+  user1.friends.forEach((element) => {
+    if (element === user2.username) {
+      status = 0;
+    }
+  });
+  user1.friendRequests.forEach((element) => {
+    if (element === user2.username) {
+      status = 1;
+    }
+  });
+  user2.friendRequests.forEach((element) => {
+    if (element === user1.username) {
+      status = 2;
+    }
+  });
+  return status;
+};
+
+const getFriendStatus = async (username1, username2) => {
   if (!username1 || !username2) throw new Error("params not filled");
   try {
     const result1 = await Users.findOne({ username: username1 }).exec();
     const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
-
-    let status = -1;
-
-    result1.friends.forEach((element) => {
-      if (element === result2.username) {
-        status = 0;
-      }
-    });
-    result1.friendRequests.forEach((element) => {
-      if (element === result2.username) {
-        status = 1;
-      }
-    });
-    result2.friendRequests.forEach((element) => {
-      if (element === result1.username) {
-        status = 2;
-      }
-    });
-    return status;
+    return friendStatus(result1, result2);
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -43,14 +45,19 @@ const friendStatus = async (username1, username2) => {
 const addFriendRequest = async (username1, username2) => {
   if (!username1 || !username2) throw new Error("params not filled");
   try {
-    const result1 = await Users.findOne({ username1 }).exec();
-    const result2 = await Users.findOne({ username2 }).exec();
+    const result1 = await Users.findOne({ username: username1 }).exec();
+    const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
+    const status = friendStatus(result1, result2);
+    if (status !== -1) {
+      return status;
+    }
     result1.friendRequests.push(username2);
     await Users.updateOne(
       { username: username1 },
       { friendRequests: result1.friendRequests }
     );
+    return 1;
   } catch (err) {
     console.error(err);
     throw new Error("could not find user");
@@ -63,10 +70,15 @@ const deleteFriendRequest = async (username1, username2) => {
     const result1 = await Users.findOne({ username: username1 }).exec();
     const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
+    const status = friendStatus(result1, result2);
+    if (status !== 1) {
+      return status;
+    }
     const newFR = result1.friendRequests.filter(
       (value, index, arr) => value !== username2
     );
     await Users.updateOne({ username: username1 }, { friendRequests: newFR });
+    return 100;
   } catch (err) {
     console.error(err);
     throw new Error("could not find user");
@@ -101,6 +113,10 @@ const deleteFriend = async (username1, username2) => {
     const result1 = await Users.findOne({ username: username1 }).exec();
     const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
+    const status = friendStatus(result1, result2);
+    if (status !== 0) {
+      return status;
+    }
     const newF1 = result1.friends.filter(
       (value, index, arr) => value !== username2
     );
@@ -109,6 +125,7 @@ const deleteFriend = async (username1, username2) => {
     );
     await Users.updateOne({ username: username1 }, { friends: newF1 });
     await Users.updateOne({ username: username2 }, { friends: newF2 });
+    return 100;
   } catch (err) {
     console.error(err);
     throw new Error("could not find user");
@@ -166,7 +183,7 @@ const authenticateUser = async (user, password) => {
 };
 
 module.exports = {
-  friendStatus,
+  getFriendStatus,
   addFriendRequest,
   deleteFriendRequest,
   addFriend,
