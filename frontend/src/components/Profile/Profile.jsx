@@ -16,15 +16,19 @@ function Profile() {
   const errorMessage = useRef("");
   const [status, setStatus] = useState(-1);
 
-  async function updateStatus() {
+  async function getStatus() {
+    if (username.length === 0) {
+      return null;
+    }
     const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
       method: "GET",
     });
-    setStatus(status);
+    return status;
   }
 
   useEffect(() => {
     async function makeAPIRequest() {
+      console.log("API");
       const { data, error } = await doAPIRequest(`/user/${name}`, {
         method: "GET",
       });
@@ -35,11 +39,21 @@ function Profile() {
         setUserNotFound(true);
       }
     }
-    makeAPIRequest();
-    updateStatus();
-  }, [name]);
 
-  
+    async function updateStatus() {
+      const { status } = await doAPIRequest(`/profile/${username}/${name}`, {
+        method: "GET",
+      });
+      setStatus(status);
+    }
+
+    makeAPIRequest();
+    if (username.length !== 0) {
+      console.log("UPDATED");
+      updateStatus();
+    }
+
+  }, [username, name, status]);
 
   return userNotFound ? (
     <Result
@@ -80,29 +94,56 @@ function Profile() {
             <Button
               type="primary"
               onClick={async () => {
+                const status = await getStatus();
+                if (status === null) {
+                  return;
+                } else if (status !== -1) {
+                  setStatus(status);
+                  return;
+                }
+                setStatus(1);
                 await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
                   method: "POST",
                 });
-                updateStatus();
               }}
             >
               Request Friend
             </Button>
           ) : status === 1 ? (
-            <Button type="primary">Requested Friend</Button>
+            <Button
+              type="primary"
+              onClick={async () => {
+                const status = await getStatus();
+                if (status === null) {
+                  return;
+                } else if (status !== 1) {
+                  setStatus(status);
+                  return;
+                }
+              }}
+            >
+              Requested Friend
+            </Button>
           ) : status === 2 ? (
             <div className="buttons">
               <div className="action_btn">
                 <Button
                   type="primary"
                   onClick={async () => {
+                    const status = await getStatus();
+                    if (status === null) {
+                      return;
+                    } else if (status !== 2) {
+                      setStatus(status);
+                      return;
+                    }
+                    setStatus(0);
                     await doAPIRequest(`/profile/friend/${name}/${username}`, {
                       method: "POST",
                     });
                     await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
                       method: "DELETE",
                     });
-                    updateStatus();
                   }}
                 >
                   Accept
@@ -111,10 +152,17 @@ function Profile() {
                 <Button
                   type="primary"
                   onClick={async () => {
+                    const status = await getStatus();
+                    if (status === null) {
+                      return;
+                    } else if (status !== 2) {
+                      setStatus(status);
+                      return;
+                    }
+                    setStatus(-1);
                     await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
                       method: "DELETE",
                     });
-                    updateStatus();
                   }}
                   danger
                 >
@@ -126,10 +174,17 @@ function Profile() {
             <Button
               type="primary"
               onClick={async () => {
+                const status = await getStatus();
+                if (status === null) {
+                  return;
+                } else if (status !== 0) {
+                  setStatus(status);
+                  return;
+                }
+                setStatus(-1);
                 await doAPIRequest(`/profile/friend/${username}/${name}`, {
                   method: "DELETE",
                 });
-                updateStatus();
               }}
               danger
             >

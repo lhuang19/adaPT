@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Col, Row, Avatar, Result, Button, Input, Form } from "antd";
+import { Col, Row, Avatar, Result, Button, Input, Form, Alert, } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { AuthUserContext } from "../../context/Auth";
 import { doAPIRequest } from "../../modules/api";
@@ -13,14 +13,7 @@ function ChangeProfile() {
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   const [userNotFound, setUserNotFound] = useState(false);
-  const errorMessage = useRef("");
-
-  const [newUsername, setNewUsername] = useState("");
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function makeAPIRequest() {
@@ -36,6 +29,28 @@ function ChangeProfile() {
     }
     makeAPIRequest();
   }, [name]);
+
+  async function changeProfileHandler(values) {
+    let { first, last, newPassword, password } = values;
+    if (first === undefined) first = userData.firstname;
+    if (last === undefined) last = userData.lastname;
+    const { data, error } = await doAPIRequest(`/profile/authenticate/${username}/${password}`, {
+      method: "GET",
+    });
+    if (data) {
+      await doAPIRequest("/profile/update", {
+        method: "POST",
+        body: {
+          username: userData.username,
+          firstname: first,
+          lastname: last,
+          password: newPassword,
+        },
+      });
+    } else {
+      setErrorMessage("Incorrect Password");
+    }
+  }
 
   return userNotFound ? (
     <Result
@@ -67,12 +82,26 @@ function ChangeProfile() {
           <h1 style={{ marginBottom: "10px" }}>
             {userData.firstname} {userData.lastname} ({username})
           </h1>
+          <Alert
+            message={errorMessage}
+            type="error"
+            style={{
+              display: errorMessage ? "" : "none",
+              height: "40px",
+              fontWeight: "bolder",
+            }}
+            showIcon
+          />
           <Form
             name="editProfile"
             labelCol={{ span: 10 }}
-            wrapperCol={{ span: 12 }}
+            wrapperCol={{ span: 14 }}
             initialValues={{ remember: true }}
             autoComplete="off"
+            onFinish={(values) => {
+              changeProfileHandler(values);
+              navigate(`/profile/${username}`);
+            }}
           >
             <Form.Item
               label="First Name"
@@ -101,25 +130,8 @@ function ChangeProfile() {
             </Form.Item>
 
             <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                {
-                  pattern: /^[a-zA-Z0-9]*$/,
-                  message: "Must be alphanumeric",
-                },
-                {
-                  pattern: /^.{5,10}$/,
-                  message: "Must be between 5 and 10 characters in length",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
               label="New Password"
-              name="password"
+              name="newPassword"
               rules={[
                 {
                   pattern: /^.{5,10}$/,
@@ -139,9 +151,23 @@ function ChangeProfile() {
             </Form.Item>
 
             <Form.Item
-              label="Current Password"
-              name="password"
-              rules={[{ required: true, message: "Confirm Password" }]}
+              label="Confirm Password"
+              dependencies={["password"]}
+              name="confirm"
+              rules={[
+                {
+                  required: true,
+                  message: "Confirm Password"
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Passwords must match!'));
+                  },
+                }),
+              ]}
             >
               <Input.Password />
             </Form.Item>

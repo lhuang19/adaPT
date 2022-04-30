@@ -1,4 +1,13 @@
 const Users = require("../models/user");
+const crypto = require("crypto");
+
+const secret = "somesecrethash";
+
+function getHash(input) {
+  const sha256Hasher = crypto.createHmac("sha256", secret);
+  const hash = sha256Hasher.update(input).digest("hex");
+  return hash;
+}
 
 const friendStatus = async (username1, username2) => {
   if (!username1 || !username2) throw new Error("params not filled");
@@ -7,7 +16,7 @@ const friendStatus = async (username1, username2) => {
     const result2 = await Users.findOne({ username: username2 }).exec();
     if (result1 === null || result2 === null) throw new Error();
 
-    var status = -1;
+    let status = -1;
 
     result1.friends.forEach(element => {
       if (element === result2.username) {
@@ -97,10 +106,56 @@ const deleteFriend = async (username1, username2) => {
   }
 };
 
+const deleteProfile = async (user) => {
+  if (!username) throw new Error("params not filled");
+  try {
+    await Users.deleteOne({ username: user }).exec();
+  } catch (err) {
+    console.error(err);
+    throw new Error("could not find user");
+  }
+}
+
+const updateProfile = async (user) => {
+  if (!user || !user.username)
+    throw new Error("params not filled");
+  if ((await Users.findOne({ username: user.username }).exec()) === null)
+    throw new Error();
+  if (!user.password) {
+    await Users.updateOne({ username: user.username }, {
+      firstname: user.firstname,
+      lastname: user.lastname,
+    });
+  } else {
+    await Users.updateOne({ username: user.username }, {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      password: getHash(user.password),
+    });
+  }
+}
+
+const authenticateUser = async (user, password) => {
+  if (!user || !password) throw new Error("params not filled");
+  try {
+    const result = await Users.findOne({ username: user }).select("+password").exec();
+    if (result === null) throw new Error();
+    const hashed = getHash(password);
+    if (hashed === result.password) return true;
+    return false;
+  } catch (err) {
+    console.error(err);
+    throw new Error("could not find user");
+  }
+}
+
 module.exports = {
   friendStatus,
   addFriendRequest,
   deleteFriendRequest,
   addFriend,
   deleteFriend,
+  deleteProfile,
+  updateProfile,
+  authenticateUser,
 };
