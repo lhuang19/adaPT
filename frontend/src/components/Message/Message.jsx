@@ -4,7 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 function Message(props) {
   const { data } = props;
-  const { body, time, sender } = data;
+  const { body, time, sender, receiver} = data;
 
   return (
     <div
@@ -28,6 +28,8 @@ function Message(props) {
             paddingLeft: "1vw",
           }}
         >
+          {/* need to make receiver a user object and not string username from chat.js */}
+          <p>{sender.firstname}</p>
           <p>{new Date(time).toLocaleString()}</p>
           {
             // TODO Format timestamp better

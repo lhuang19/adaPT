@@ -21,7 +21,7 @@ const getMessages = async (currUser, otherUser) => {
   try {
     const result = await Messages.find({
       sender: { $in: { currUser, otherUser } },
-      receiver: { $in: { currUser, otherUser } }, // will this be problematic for ppl sending messages to themselves / can they do that
+      receiver: { $in: { currUser, otherUser } },
     }).exec();
     result.sort((a, b) => b.time - a.time);
     return result;

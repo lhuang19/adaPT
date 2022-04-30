@@ -11,9 +11,9 @@ import MessageModal from "./MessageModal";
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
-  const [otherUser, setOtherUser] = useState(""); // the friend that current user is chatting with
+  const [otherUser, setOtherUser] = useState("sherie"); // hard code this for now
   const [messages, setMessages] = useState([]);
-  const { Content, Sider } = Layout;
+  const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
@@ -102,6 +102,7 @@ function Chat() {
               style={{
                 margin: "24px 16px 0",
                 overflow: "initial",
+                // minHeight: "80vh",
               }}
             >
               <div
@@ -110,20 +111,31 @@ function Chat() {
                   padding: 24,
                 }}
               >
-                Messages to appear here
-                {/* <List
-        style={{ width: "80%" }}
-        dataSource={messages}
-        renderItem={(message) => (
-          <List.Item>
-            <Message key={`${message.time}`} data={message} />
-          </List.Item>
-        )}
-      /> */}
+                <List
+                  style={{ width: "80%" }}
+                  dataSource={messages}
+                  renderItem={(message) => (
+                    <List.Item key={`${message.sender}-${message.time}`}>
+                      <Message data={message} />
+                    </List.Item>
+                  )}
+                />
               </div>
             </Content>
+          </Layout>
+        </Layout>
+        <Layout
+          style={{
+            padding: "0 24px 24px",
+            marginLeft: 200,
+          }}
+        >
+          <Footer style={{ position: "sticky", bottom: "0" }}>
             <Form.Item>
-              <TextArea onChange={(e) => setInput(e.target.value)} />
+              <TextArea
+                autoSize={{ minRows: 1, maxRows: 6 }}
+                onChange={(e) => setInput(e.target.value)}
+              />
             </Form.Item>
             <Form.Item
               style={{
@@ -139,7 +151,7 @@ function Chat() {
                 Send
               </Button>
             </Form.Item>
-          </Layout>
+          </Footer>
         </Layout>
       </Layout>
       {/* <MessageModal fetchNewMessages={() => fetchNewMessages()} /> */}
