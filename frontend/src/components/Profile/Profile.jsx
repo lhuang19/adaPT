@@ -28,7 +28,6 @@ function Profile() {
 
   useEffect(() => {
     async function makeAPIRequest() {
-      console.log("API");
       const { data, error } = await doAPIRequest(`/user/${name}`, {
         method: "GET",
       });
@@ -49,7 +48,6 @@ function Profile() {
 
     makeAPIRequest();
     if (username.length !== 0) {
-      console.log("UPDATED");
       updateStatus();
     }
 

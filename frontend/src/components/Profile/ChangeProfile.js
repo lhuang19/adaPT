@@ -1,13 +1,12 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Col, Row, Avatar, Result, Button, Input, Form, Alert, } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Col, Row, Avatar, Result, Button, Input, Form, Alert } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
 function ChangeProfile() {
-  let { name } = useParams();
+  const { name } = useParams();
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
   const [userData, setUserData] = useState({});
@@ -31,12 +30,16 @@ function ChangeProfile() {
   }, [name]);
 
   async function changeProfileHandler(values) {
-    let { first, last, newPassword, password } = values;
+    let { first, last } = values;
+    const { newPassword, password } = values;
     if (first === undefined) first = userData.firstname;
     if (last === undefined) last = userData.lastname;
-    const { data, error } = await doAPIRequest(`/profile/authenticate/${username}/${password}`, {
-      method: "GET",
-    });
+    const { data } = await doAPIRequest(
+      `/profile/authenticate/${username}/${password}`,
+      {
+        method: "GET",
+      }
+    );
     if (data) {
       await doAPIRequest("/profile/update", {
         method: "POST",
@@ -76,7 +79,7 @@ function ChangeProfile() {
         <div style={{ textAlign: "center" }}>
           <Avatar
             size={128}
-            icon={<UserOutlined />}
+            src={`https://joeschmoe.io/api/v1/${name}`}
             alt={name.concat("'s profile picture")}
           />
           <h1 style={{ marginBottom: "10px" }}>
@@ -101,6 +104,7 @@ function ChangeProfile() {
             onFinish={(values) => {
               changeProfileHandler(values);
               navigate(`/profile/${username}`);
+              navigate(0);
             }}
           >
             <Form.Item
@@ -157,14 +161,14 @@ function ChangeProfile() {
               rules={[
                 {
                   required: true,
-                  message: "Confirm Password"
+                  message: "Confirm Password",
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
+                    if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Passwords must match!'));
+                    return Promise.reject(new Error("Passwords must match!"));
                   },
                 }),
               ]}
