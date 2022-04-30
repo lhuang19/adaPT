@@ -11,7 +11,7 @@ import MessageModal from "./MessageModal";
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
-  const otherUser = useRef(""); // the friend that current user is chatting with
+  const [otherUser, setOtherUser] = useState(""); // the friend that current user is chatting with
   const [messages, setMessages] = useState([]);
   const { Content, Sider } = Layout;
   const { TextArea } = Input;
@@ -23,62 +23,44 @@ function Chat() {
     label: `friend ${key}`,
   }));
 
-  async function fetchNewMessages() {
-    const newMessages = await getMessages(username);
-    setMessages(newMessages);
-    // const messagesToFetch = [];
-    // messagesToFetch.push(profile ? name : username);
-    // if (!profile) {
-    //   const friends = await getFriends(username);
-    //   usernamesToFetch.push(...friends);
-    // }
-    // const { data } = await doAPIRequest("/post/feed", {
-    //   method: "POST",
-    //   body: messagesToFetch,
-    // });
-    // setMessages(data);
+  // async function fetchNewMessages() {
+  //   const newMessages = await getMessages(username);
+  //   setMessages(newMessages);
+  // }
+  // useEffect(() => {
+  //   if (username !== undefined) fetchNewMessages();
+  // }, [username]);
+
+  function onSendMessageHandler() {
+    doAPIRequest(`/chat`, {
+      method: "POST",
+      body: {
+        body: input,
+        time: Date.now(),
+        sender: credentials.username,
+        receiver: otherUser,
+      },
+    });
+    const current = [...messages];
+    current.push({
+      body: input,
+      time: Date.now(),
+      sender: credentials.username,
+      receiver: otherUser,
+    });
+    setMessages(current);
+    setInput("");
   }
   useEffect(() => {
-    if (username !== undefined) fetchNewMessages();
-  }, [username]);
-
-  // THIS IS FROM COMMENTS: MODIFY THIS TO FIT MESSAGES
-  // function onSendMessageHandler() {
-  //   setInput("");
-  //   const sendTime = Date.now();
-  //   // postComment(poster, time, username, input, Date.now());
-  //   doAPIRequest(`/post/${poster}${time}/comments`, {
-  //     method: "POST",
-  //     body: { commenter: username, content: input, commentTime: Date.now() },
-  //   });
-  //   const current = [...commentData];
-  //   current.push({
-  //     postid: poster + time,
-  //     commenter: username,
-  //     content: input,
-  //     commentTime: submitTime,
-  //     users: {
-  //       firstname: credentials.firstname,
-  //       lastname: credentials.lastname,
-  //     },
-  //   });
-  //   setCommentData(current);
-  //   setTimeout(() => {
-  //     if (ref.current != null) {
-  //       ref.current.scrollTop = ref.current.scrollHeight;
-  //     }
-  //   }, 100);
-  // }
-
-  // useEffect(() => {
-  //   async function makeAPIRequest() {
-  //     const { data } = await doAPIRequest(`/post/${poster}${time}/comments`, {
-  //       method: "GET",
-  //     });
-  //     setCommentData(data);
-  //   }
-  //   makeAPIRequest();
-  // }, []);
+    async function makeAPIRequest() {
+      const { data } = await doAPIRequest(`/chat`, {
+        method: "GET",
+        body: { currUser: credentials.username, otherUser },
+      });
+      setMessages(data);
+    }
+    makeAPIRequest();
+  }, []);
 
   return (
     <div
@@ -103,7 +85,7 @@ function Chat() {
             }}
           >
             <Menu
-              theme="dark"
+              theme="light"
               mode="inline"
               defaultSelectedKeys={["1"]}
               items={menuItems}
@@ -141,10 +123,7 @@ function Chat() {
               </div>
             </Content>
             <Form.Item>
-              <TextArea
-                onChange={(e) => setInput(e.target.value)}
-                // onSubmit={() => sendMessageHandler()} TODO: PUT THIS IN WHEN IMPLEMENTED
-              />
+              <TextArea onChange={(e) => setInput(e.target.value)} />
             </Form.Item>
             <Form.Item
               style={{
@@ -154,14 +133,7 @@ function Chat() {
             >
               <Button
                 htmlType="submit"
-                onClick={async () => {
-                  await doAPIRequest("/chat", {
-                    method: "POST",
-                    // TODO: edit body params - add sender, receiver, body of message
-                    body: { time: Date.now() },
-                  });
-                  fetchNewMessages();
-                }}
+                onClick={() => onSendMessageHandler()}
                 type="primary"
               >
                 Send
@@ -170,7 +142,7 @@ function Chat() {
           </Layout>
         </Layout>
       </Layout>
-      <MessageModal fetchNewMessages={() => fetchNewMessages()} />
+      {/* <MessageModal fetchNewMessages={() => fetchNewMessages()} /> */}
     </div>
   );
 }

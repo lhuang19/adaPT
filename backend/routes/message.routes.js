@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:otherUser", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const results = await lib.getMessages(
       req.params.currUser,

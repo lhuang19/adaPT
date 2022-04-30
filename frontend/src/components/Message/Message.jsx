@@ -4,7 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 function Message(props) {
   const { data } = props;
-  const { body, time, sender, receiver } = data;
+  const { body, time, sender } = data;
 
   return (
     <div
