@@ -10,18 +10,34 @@ function MessageModal({ fetchNewMessages }) {
   const [form] = Form.useForm();
   const { credentials } = useContext(AuthUserContext);
 
+  useEffect(
+    () => () => {
+      const mediaValue = form.getFieldValue("media");
+      if (mediaValue !== undefined) {
+        doAPIRequest(`/upload/${mediaValue.file.name}`, {
+          method: "DELETE",
+        });
+      }
+    },
+    []
+  );
   async function onCreate(values) {
     const messageData = values;
     messageData.time = Date.now();
     messageData.poster = credentials.username;
-    // await doAPIRequest("/chat", {
-    //   method: "POST",
-    //   body: messageData,
-    // });
-    await postMessage(credentials.username, messageData);
+    if (messageData.media === undefined) {
+      delete messageData.media;
+    } else {
+      messageData.media = messageData.media.file.name;
+    }
+    await doAPIRequest("/post", {
+      method: "POST",
+      body: messageData,
+    });
     setShow(false);
     fetchNewMessages();
   }
+
 
   return (
     <>
