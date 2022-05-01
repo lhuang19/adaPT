@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const Users = require("../models/user");
 
 const secret = "somesecrethash";
@@ -182,6 +183,26 @@ const authenticateUser = async (user, password) => {
   }
 };
 
+const updateToken = async (user, fname, lname) => {
+  if (!user || !fname || !lname) throw new Error("params not filled");
+  try {
+    const result = await Users.findOne({ username: user })
+      .select("+unsuccessfulAttempts +timeOut")
+      .exec();
+    if (result === null) throw new Error();
+    result.firstname = fname;
+    result.lastname = lname;
+    const copy = { ...result._doc };
+    const token = jwt.sign(copy, process.env.SECRETKEY, {
+      expiresIn: "15 min",
+    });
+    return token;
+  } catch (err) {
+    console.log(err);
+    throw new Error("Could not find user");
+  }
+};
+
 module.exports = {
   getFriendStatus,
   addFriendRequest,
@@ -191,4 +212,5 @@ module.exports = {
   deleteProfile,
   updateProfile,
   authenticateUser,
+  updateToken,
 };

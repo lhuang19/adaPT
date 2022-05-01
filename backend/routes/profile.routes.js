@@ -80,4 +80,13 @@ router.get("/authenticate/:username/:password", async (req, res) => {
   }
 });
 
+router.post("/token/:username", async (req, res) => {
+  try {
+    const result = await lib.updateToken(req.params.username, req.body.firstname, req.body.lastname);
+    res.status(200).json({ token: result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

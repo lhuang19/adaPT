@@ -16,20 +16,22 @@ function Profile() {
   const errorMessage = useRef("");
   const [status, setStatus] = useState(-1);
 
-  useEffect(() => {
-    async function makeAPIRequest() {
-      const { data, error } = await doAPIRequest(`/user/${name}`, {
-        method: "GET",
-      });
-      if (data) {
-        setUserData(data);
-      } else {
-        errorMessage.current = error;
-        setUserNotFound(true);
-      }
+  async function makeAPIRequest() {
+    const { data, error } = await doAPIRequest(`/user/${name}`, {
+      method: "GET",
+    });
+    if (data) {
+      setUserData(data);
+    } else {
+      errorMessage.current = error;
+      setUserNotFound(true);
     }
+  }
+
+  useEffect(() => {
+    console.log(userData);
     async function getStatus() {
-      if (username.length === 0) {
+      if (username === undefined || username.length === 0) {
         setStatus(-1);
         return;
       }
@@ -74,7 +76,12 @@ function Profile() {
           </h1>
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
-            <Button onClick={() => navigate(`/change_profile/${username}`)}>
+            <Button
+              onClick={() => {
+                navigate(`/change_profile/${username}`);
+                makeAPIRequest();
+              }}
+            >
               Edit Profile
             </Button>
           ) : status === -1 ? (

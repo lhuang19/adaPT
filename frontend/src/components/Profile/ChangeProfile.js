@@ -3,11 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, Avatar, Result, Button, Input, Form, Alert } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 import { doAPIRequest } from "../../modules/api";
+import { addLoginToken } from "../../modules/storage";
 import "./Profile.css";
 
 function ChangeProfile() {
   const { name } = useParams();
-  const { credentials } = useContext(AuthUserContext);
+  const { credentials, setCredentials } = useContext(AuthUserContext);
   const { username } = credentials;
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
@@ -34,6 +35,10 @@ function ChangeProfile() {
     const { newPassword, password } = values;
     if (first === undefined) first = userData.firstname;
     if (last === undefined) last = userData.lastname;
+    let newCred = credentials;
+    newCred.firstname = first;
+    newCred.lastname = last;
+    setCredentials(newCred);
     const { data } = await doAPIRequest(
       `/profile/authenticate/${username}/${password}`,
       {
@@ -41,6 +46,14 @@ function ChangeProfile() {
       }
     );
     if (data) {
+      const { token } = await doAPIRequest(`/profile/token/${username}`, {
+        method: "POST",
+        body: {
+          firstname: newCred.firstname,
+          lastname: newCred.lastname,
+        },
+      });
+      addLoginToken(token);
       await doAPIRequest("/profile/update", {
         method: "POST",
         body: {
@@ -104,7 +117,6 @@ function ChangeProfile() {
             onFinish={(values) => {
               changeProfileHandler(values);
               navigate(`/profile/${username}`);
-              navigate(0);
             }}
           >
             <Form.Item

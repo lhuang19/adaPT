@@ -71,6 +71,7 @@ const signup = async (user) => {
     friends: [],
     friendRequests: [],
   });
+
   const payload = removePassword(ret);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
     expiresIn: "15 min",
