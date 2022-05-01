@@ -7,7 +7,7 @@ import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
 function Profile() {
-  let { name } = useParams();
+  const { name } = useParams();
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
   const [userData, setUserData] = useState({});
@@ -91,9 +91,12 @@ function Profile() {
                 if (username.length === 0) {
                   return;
                 }
-                const { data } = await doAPIRequest(`/profile/friendRequest/${username}/${name}`, {
-                  method: "POST",
-                });
+                const { data } = await doAPIRequest(
+                  `/profile/friendRequest/${username}/${name}`,
+                  {
+                    method: "POST",
+                  }
+                );
                 setStatus(data);
               }}
             >
@@ -106,9 +109,12 @@ function Profile() {
                 if (username.length === 0) {
                   return;
                 }
-                const { data } = await doAPIRequest(`/profile/${username}/${name}`, {
-                  method: "GET",
-                });
+                const { data } = await doAPIRequest(
+                  `/profile/${username}/${name}`,
+                  {
+                    method: "GET",
+                  }
+                );
                 setStatus(data);
               }}
             >
@@ -123,9 +129,12 @@ function Profile() {
                     if (username.length === 0) {
                       return;
                     }
-                    const { data } = await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
-                      method: "DELETE",
-                    });
+                    const { data } = await doAPIRequest(
+                      `/profile/friendRequest/${name}/${username}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
                     if (data !== 100) {
                       setStatus(data);
                       return;
@@ -145,9 +154,12 @@ function Profile() {
                     if (username.length === 0) {
                       return;
                     }
-                    const { data } = await doAPIRequest(`/profile/friendRequest/${name}/${username}`, {
-                      method: "DELETE",
-                    });
+                    await doAPIRequest(
+                      `/profile/friendRequest/${name}/${username}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
                     setStatus(-1);
                   }}
                   danger
@@ -163,9 +175,12 @@ function Profile() {
                 if (username.length === 0) {
                   return;
                 }
-                const { data } = await doAPIRequest(`/profile/friend/${username}/${name}`, {
-                  method: "DELETE",
-                });
+                const { data } = await doAPIRequest(
+                  `/profile/friend/${username}/${name}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
                 if (data !== 100) {
                   setStatus(data);
                   return;

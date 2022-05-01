@@ -9,6 +9,7 @@ const postRouter = require("./routes/post.routes");
 const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes");
 const uploadRouter = require("./routes/upload.routes");
+
 const app = express();
 
 dotenv.config();

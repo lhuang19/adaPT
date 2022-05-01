@@ -35,7 +35,7 @@ function ChangeProfile() {
     const { newPassword, password } = values;
     if (first === undefined) first = userData.firstname;
     if (last === undefined) last = userData.lastname;
-    let newCred = credentials;
+    const newCred = credentials;
     newCred.firstname = first;
     newCred.lastname = last;
     setCredentials(newCred);
