@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { List, Layout, Menu, Form, Input, Button } from "antd";
-import Message from "../Message/Message";
+import Messages from "../Message/Messages";
 import { getMessages } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
@@ -41,26 +41,26 @@ function Chat() {
         receiver: otherUser,
       },
     });
-    const current = [...messages];
-    current.push({
-      body: input,
-      time: Date.now(),
-      sender: credentials.username,
-      receiver: otherUser,
-    });
-    setMessages(current);
+    // const current = [...messages];
+    // current.push({
+    //   body: input,
+    //   time: Date.now(),
+    //   sender: credentials.username,
+    //   receiver: otherUser,
+    // });
+    // setMessages(current);
     setInput("");
   }
-  useEffect(() => {
-    async function makeAPIRequest() {
-      const { data } = await doAPIRequest(`/chat`, {
-        method: "GET",
-        body: { currUser: credentials.username, otherUser },
-      });
-      setMessages(data);
-    }
-    makeAPIRequest();
-  }, []);
+  // useEffect(() => {
+  //   async function makeAPIRequest() {
+  //     const { data } = await doAPIRequest(`/chat`, {
+  //       method: "GET",
+  //       body: { currUser: credentials.username, otherUser },
+  //     });
+  //     setMessages(data);
+  //   }
+  //   makeAPIRequest();
+  // }, []);
 
   return (
     <div
@@ -111,15 +111,7 @@ function Chat() {
                   padding: 24,
                 }}
               >
-                <List
-                  style={{ width: "80%" }}
-                  dataSource={messages}
-                  renderItem={(message) => (
-                    <List.Item key={`${message.sender}-${message.time}`}>
-                      <Message data={message} />
-                    </List.Item>
-                  )}
-                />
+                <Messages currUser={username} otherUser={otherUser} />
               </div>
             </Content>
           </Layout>
