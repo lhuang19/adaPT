@@ -29,7 +29,7 @@ function Message(props) {
           }}
         >
           {/* need to make receiver a user object and not string username from chat.js */}
-          <p>{sender.firstname}</p>
+          <p>{sender}</p>
           <p>{new Date(time).toLocaleString()}</p>
           {
             // TODO Format timestamp better

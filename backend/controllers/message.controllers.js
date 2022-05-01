@@ -20,14 +20,15 @@ const getMessages = async (currUser, otherUser) => {
 
   try {
     const result = await Messages.find({
-      sender: { $in: [currUser, otherUser] },
-      receiver: { $in: [currUser, otherUser] },
+      $or: [
+        { sender: { $in: [currUser, otherUser] } },
+        { receiver: { $in: [currUser, otherUser] } },
+      ],
     }).exec();
     result.sort((a, b) => a.time - b.time);
     return result;
   } catch (err) {
     console.error(err);
-    console.log("123");
     throw new Error("could not get messages");
   }
 };
