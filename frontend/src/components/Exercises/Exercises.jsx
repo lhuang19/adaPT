@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import { List } from "antd";
 import { Parallax } from "rc-scroll-anim";
 
-import { getExercises } from "../../modules/storage";
+import { doAPIRequest } from "../../modules/api";
 import Exercise from "./Exercise";
 
 function Exercises({ name, animate }) {
   const [exercises, setExercises] = useState([]);
 
   async function fetchNewExercises() {
-    const newExercises = await getExercises(name);
-    setExercises(newExercises);
+    const { data } = await doAPIRequest("/exercise/feed", {
+      method: "POST",
+      body: { username: name },
+    });
+    setExercises(data);
   }
   useEffect(() => {
     if (name !== undefined) fetchNewExercises();
@@ -19,7 +22,7 @@ function Exercises({ name, animate }) {
     <List
       dataSource={exercises}
       renderItem={(exercise) => (
-        <List.Item key={`${exercise.name}-${exercise.reps}`}>
+        <List.Item key={`${exercise.name}-${exercise.sets}x${exercise.reps}`}>
           {animate ? (
             <Parallax
               animation={[
@@ -45,8 +48,8 @@ function Exercises({ name, animate }) {
             </Parallax>
           ) : (
             <Exercise
-              data={Exercise}
-              fetchNewPosts={() => fetchNewExercises()}
+              data={exercise}
+              fetchNewExercises={() => fetchNewExercises()}
             />
           )}
         </List.Item>

@@ -3,52 +3,46 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Col, Row, Avatar, Result, Button, Divider } from "antd";
 import { AuthUserContext } from "../../context/Auth";
 import Posts from "../Posts/Posts";
-import {
-  areFriends,
-  addFriend,
-  getUserData,
-  removeFriend,
-  requestedFriend,
-  deleteFriendRequest,
-  sendFriendRequest,
-} from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import "./Profile.css";
 
 function Profile() {
-  let { name } = useParams();
+  const { name } = useParams();
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   const [userNotFound, setUserNotFound] = useState(false);
   const errorMessage = useRef("");
-  const [friends, setFriends] = useState(areFriends(username, name));
-  const [request, setRequest] = useState(requestedFriend(username, name));
+  const [status, setStatus] = useState(-1);
+
+  async function makeAPIRequest() {
+    const { data, error } = await doAPIRequest(`/user/${name}`, {
+      method: "GET",
+    });
+    if (data) {
+      setUserData(data);
+    } else {
+      errorMessage.current = error;
+      setUserNotFound(true);
+    }
+  }
 
   useEffect(() => {
-    const periodicRefresh = setInterval(() => {
-      setFriends(areFriends(username, name));
-      setRequest(requestedFriend(username, name));
-    }, 2000);
-
-    return () => clearInterval(periodicRefresh);
-  }, []);
-
-  useEffect(() => {
-    async function makeAPIRequest() {
-      const { data, error } = await doAPIRequest(`/user/${name}`, {
+    console.log(userData);
+    async function getStatus() {
+      if (username === undefined || username.length === 0) {
+        setStatus(-1);
+        return;
+      }
+      const { data } = await doAPIRequest(`/profile/${username}/${name}`, {
         method: "GET",
       });
-      if (data) {
-        setUserData(data);
-      } else {
-        errorMessage.current = error;
-        setUserNotFound(true);
-      }
+      setStatus(data);
     }
+    getStatus();
     makeAPIRequest();
-  }, [name]);
+  }, [username, name]);
 
   return userNotFound ? (
     <Result
@@ -82,31 +76,73 @@ function Profile() {
           </h1>
           <p style={{ color: "grey" }}>({userData.username})</p>
           {name === username ? (
-            <Button onClick={() => navigate(`/change_profile/${username}`)}>
+            <Button
+              onClick={() => {
+                navigate(`/change_profile/${username}`);
+                makeAPIRequest();
+              }}
+            >
               Edit Profile
             </Button>
-          ) : !friends && request === 0 ? (
+          ) : status === -1 ? (
             <Button
               type="primary"
-              onClick={() => {
-                setRequest(1);
-                sendFriendRequest(username, name);
+              onClick={async () => {
+                if (username.length === 0) {
+                  return;
+                }
+                const { data } = await doAPIRequest(
+                  `/profile/friendRequest/${username}/${name}`,
+                  {
+                    method: "POST",
+                  }
+                );
+                setStatus(data);
               }}
             >
               Request Friend
             </Button>
-          ) : !friends && request === 1 ? (
-            <Button type="primary">Requested Friend</Button>
-          ) : !friends && request === 2 ? (
+          ) : status === 1 ? (
+            <Button
+              type="primary"
+              onClick={async () => {
+                if (username.length === 0) {
+                  return;
+                }
+                const { data } = await doAPIRequest(
+                  `/profile/${username}/${name}`,
+                  {
+                    method: "GET",
+                  }
+                );
+                setStatus(data);
+              }}
+            >
+              Requested Friend
+            </Button>
+          ) : status === 2 ? (
             <div className="buttons">
               <div className="action_btn">
                 <Button
                   type="primary"
-                  onClick={() => {
-                    setRequest(0);
-                    setFriends(true);
-                    deleteFriendRequest(name, username);
-                    addFriend(username, name);
+                  onClick={async () => {
+                    if (username.length === 0) {
+                      return;
+                    }
+                    const { data } = await doAPIRequest(
+                      `/profile/friendRequest/${name}/${username}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
+                    if (data !== 100) {
+                      setStatus(data);
+                      return;
+                    }
+                    setStatus(0);
+                    await doAPIRequest(`/profile/friend/${name}/${username}`, {
+                      method: "POST",
+                    });
                   }}
                 >
                   Accept
@@ -114,9 +150,17 @@ function Profile() {
 
                 <Button
                   type="primary"
-                  onClick={() => {
-                    setRequest(0);
-                    deleteFriendRequest(name, username);
+                  onClick={async () => {
+                    if (username.length === 0) {
+                      return;
+                    }
+                    await doAPIRequest(
+                      `/profile/friendRequest/${name}/${username}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
+                    setStatus(-1);
                   }}
                   danger
                 >
@@ -127,9 +171,21 @@ function Profile() {
           ) : (
             <Button
               type="primary"
-              onClick={() => {
-                setFriends(false);
-                removeFriend(name, username);
+              onClick={async () => {
+                if (username.length === 0) {
+                  return;
+                }
+                const { data } = await doAPIRequest(
+                  `/profile/friend/${username}/${name}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
+                if (data !== 100) {
+                  setStatus(data);
+                  return;
+                }
+                setStatus(-1);
               }}
               danger
             >

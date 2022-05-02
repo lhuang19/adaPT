@@ -12,7 +12,7 @@ function IconButton({
   initialState,
   count,
 }) {
-  const [selected, setSelected] = useState(initialState ? initialState : false);
+  const [selected, setSelected] = useState(initialState);
   const [num, setNum] = useState(count);
   function reactionHandler() {
     if (selected) {

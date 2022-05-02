@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 
 import { AuthUserContext } from "../../context/Auth";
+import Dashboard from "./Dashboard";
 import Exercises from "./Exercises";
 import ExerciseModal from "./ExerciseModal";
 
@@ -12,7 +13,10 @@ function ExercisePage() {
     <div style={{ background: "white" }}>
       <div style={{ margin: "auto", display: "block", width: "80%" }}>
         {role === "PT" ? (
-          <ExerciseModal />
+          <div>
+            <Dashboard name={username} animate />
+            <ExerciseModal />
+          </div>
         ) : (
           <Exercises name={username} animate />
         )}

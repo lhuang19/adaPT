@@ -1,11 +1,9 @@
 const crypto = require("crypto");
-const Users = require("../models/user");
 const jwt = require("jsonwebtoken");
-
-const secret = "somesecrethash";
+const Users = require("../models/user");
 
 function getHash(input) {
-  const sha256Hasher = crypto.createHmac("sha256", secret);
+  const sha256Hasher = crypto.createHmac("sha256", "somesecrethash");
   const hash = sha256Hasher.update(input).digest("hex");
   return hash;
 }
@@ -22,6 +20,10 @@ const login = async (user) => {
   const result = await Users.findOne({ username: user.username })
     .select("+password +unsuccessfulAttempts +timeOut")
     .exec();
+  
+  if (result === null) {
+    throw new Error("Incorrect password");
+  }
 
   const currTime = new Date().getTime();
   if (result.unsuccessfulAttempts >= 2 || result.timeOut > currTime) {
@@ -45,7 +47,7 @@ const login = async (user) => {
       `Too many unsuccessful attempts. Time out: ${diff.getMinutes()}m ${diff.getSeconds()}s`
     );
   }
-  if (result === null || result.password !== getHash(user.password)) {
+  if (result.password !== getHash(user.password)) {
     await Users.findOneAndUpdate(
       { username: user.username },
       { unsuccessfulAttempts: result.unsuccessfulAttempts + 1 }
@@ -53,7 +55,7 @@ const login = async (user) => {
     throw new Error("Incorrect password");
   }
 
-  let payload = removePassword(result);
+  const payload = removePassword(result);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
     expiresIn: "15 min",
   });
@@ -70,8 +72,11 @@ const signup = async (user) => {
     ...user,
     password: getHash(user.password),
     registerTime: new Date().toLocaleString(),
+    friends: [],
+    friendRequests: [],
   });
-  let payload = removePassword(ret);
+
+  const payload = removePassword(ret);
   const token = jwt.sign(payload, process.env.SECRETKEY, {
     expiresIn: "15 min",
   });
