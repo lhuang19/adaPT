@@ -4,3 +4,5 @@ adaPT-Mobile/package.json
 .expo/settings.json
 .expo/README.md
 adaPT-Mobile/package-lock.json
+adaPT-Mobile/package-lock.json
+*.json
