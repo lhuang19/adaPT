@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function HomeScreen({ userData }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
       <Text style={{ margin: 50 }}>
-        Home
+        Hello, {userData.firstname} {userData.lastname}
       </Text>
     </View>
   );

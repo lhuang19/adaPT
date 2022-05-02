@@ -20,6 +20,10 @@ const login = async (user) => {
   const result = await Users.findOne({ username: user.username })
     .select("+password +unsuccessfulAttempts +timeOut")
     .exec();
+  
+  if (result === null) {
+    throw new Error("Incorrect password");
+  }
 
   const currTime = new Date().getTime();
   if (result.unsuccessfulAttempts >= 2 || result.timeOut > currTime) {
@@ -43,7 +47,7 @@ const login = async (user) => {
       `Too many unsuccessful attempts. Time out: ${diff.getMinutes()}m ${diff.getSeconds()}s`
     );
   }
-  if (result === null || result.password !== getHash(user.password)) {
+  if (result.password !== getHash(user.password)) {
     await Users.findOneAndUpdate(
       { username: user.username },
       { unsuccessfulAttempts: result.unsuccessfulAttempts + 1 }

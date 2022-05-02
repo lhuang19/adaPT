@@ -3,11 +3,35 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 
 import { Button, TextInput, Text } from 'react-native-paper';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 
-function LoginScreen() {
+import axios from 'axios';
+
+const baseUrl = 'http://10.102.227.130:8000';
+
+function LoginScreen({ navigation }) {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  async function loginHandler(values) {
+    const { username, password } = values;
+
+    const json = JSON.stringify({ username: username.toLowerCase(), password: password.toLowerCase() });
+    const res = await axios.post(`${baseUrl}/login`, json, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .catch((error) => {
+      alert(error.response.data.error);
+    });
+    if (res) {
+      console.log(res.data.data);
+      navigation.navigate("Start", {
+        userData: res.data.data
+      })
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,7 +57,9 @@ function LoginScreen() {
       />
       <Button
         mode="contained"
-        onPress={() => console.log('Pressed')}
+        onPress={() => {
+          loginHandler({ username, password });
+        }}
         style={styles.button}
       >
         Login
@@ -44,10 +70,10 @@ function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.8,
+    flex: 1,
     justifyContent: "center",
     backgroundColor: "#fff",
-    padding: 100,
+    padding: 10,
     margin: 10,
   },
   title: {
