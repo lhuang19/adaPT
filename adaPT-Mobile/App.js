@@ -1,0 +1,54 @@
+import 'react-native-gesture-handler';
+ 
+import * as React from 'react';
+
+import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper';
+ 
+import HomeScreen from './pages/HomeScreen';
+import MessageScreen from './pages/MessageScreen';
+import ProfileScreen from './pages/ProfileScreen';
+import ExerciseScreen from './pages/ExerciseScreen';
+
+import LoginScreen from './pages/LoginScreen';
+
+const HomeRoute = () => <HomeScreen />;
+const MessageRoute = () => <MessageScreen />;
+const ExerciseRoute = () => <ProfileScreen />;
+const ProfileRoute = () => <ExerciseScreen />;
+
+function App() {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'home', title: 'Home', icon: 'home' },
+    { key: 'message', title: 'Messages', icon: 'forum' },
+    { key: 'exercise', title: 'Exercise', icon: 'dumbbell' },
+    { key: 'profile', title: 'Profile', icon: 'account' },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    message: MessageRoute,
+    exercise: ExerciseRoute,
+    profile: ProfileRoute,
+  });
+
+  if (index === 0) {
+    return (
+      <PaperProvider>
+        <LoginScreen />
+      </PaperProvider>
+    );
+  }
+
+  return (
+    <PaperProvider>
+      <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+      />
+    </PaperProvider>
+  );
+};
+
+export default App;
