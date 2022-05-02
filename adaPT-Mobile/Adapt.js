@@ -6,11 +6,13 @@ import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper'
 
 import HomeScreen from './pages/HomeScreen';
 import MessageScreen from './pages/MessageScreen';
-import ProfileScreen from './pages/ProfileScreen';
+import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
+import ProfileScreen from './pages/ProfileScreen';
+
 const MessageRoute = () => <MessageScreen />;
-const ExerciseRoute = () => <ProfileScreen />;
-const ProfileRoute = () => <ExerciseScreen />;
+const ExerciseRoute = () => <ExerciseScreen />;
+const SearchRoute = () => <SearchScreen />;
 
 function Adapt({ route, navigation }) {
   const { userData } = route.params;
@@ -19,6 +21,7 @@ function Adapt({ route, navigation }) {
     { key: 'home', title: 'Home', icon: 'home' },
     { key: 'message', title: 'Messages', icon: 'forum' },
     { key: 'exercise', title: 'Exercise', icon: 'dumbbell' },
+    { key: 'search', title: 'Search', icon: 'account-search' },
     { key: 'profile', title: 'Profile', icon: 'account' },
   ]);
 
@@ -26,7 +29,8 @@ function Adapt({ route, navigation }) {
     home: () => <HomeScreen userData={userData} />,
     message: MessageRoute,
     exercise: ExerciseRoute,
-    profile: ProfileRoute,
+    search: () => <SearchScreen userData={userData} />,
+    profile: () => <ProfileScreen userData={userData} profile={userData.username} />,
   });
 
   return (
