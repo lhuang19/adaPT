@@ -9,8 +9,8 @@ import MessageScreen from './pages/MessageScreen';
 import ProfileScreen from './pages/ProfileScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 const MessageRoute = () => <MessageScreen />;
-const ExerciseRoute = () => <ProfileScreen />;
-const ProfileRoute = () => <ExerciseScreen />;
+const ExerciseRoute = () => <ExerciseScreen />;
+const ProfileRoute = () => <ProfileScreen />;
 
 function Adapt({ route, navigation }) {
   const { userData } = route.params;
