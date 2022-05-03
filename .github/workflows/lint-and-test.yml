@@ -17,6 +17,11 @@ jobs:
     - run: npm install
     - run: npm run lint
     - run: npm run test
+      env: 
+        MONGO_TEST_URL: ${{ env.MONGOTEST_URL }}
+        GOOGLE_CLOUD_PROJECT: adapt-348705
+        GCLOUD_STORAGE_BUCKET: adaptstorage350
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
     
   frontend-checks:
       name: Frontend Checks
