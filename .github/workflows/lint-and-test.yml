@@ -18,10 +18,11 @@ jobs:
     - run: npm run lint
     - run: npm run test
       env: 
-        MONGO_TEST_URL: ${{ env.MONGO_TEST_URL }}
+        MONGO_TEST_URL: ${{ secrets.MONGO_TEST_URL }}
+        SECRETKEY: somesecret109248120938u109
         GOOGLE_CLOUD_PROJECT: adapt-348705
         GCLOUD_STORAGE_BUCKET: adaptstorage350
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
     
   frontend-checks:
       name: Frontend Checks
