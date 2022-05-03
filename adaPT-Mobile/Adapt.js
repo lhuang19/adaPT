@@ -42,7 +42,7 @@ function Adapt({ route }) {
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute(userData),
     message: MessageRoute,
-    exercise: ExerciseRoute,
+    exercise: ExerciseRoute(userData),
     profile: ProfileRoute,
   });
 
