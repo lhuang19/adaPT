@@ -20,7 +20,7 @@ const login = async (user) => {
   const result = await Users.findOne({ username: user.username })
     .select("+password +unsuccessfulAttempts +timeOut")
     .exec();
-  
+
   if (result === null) {
     throw new Error("Incorrect password");
   }

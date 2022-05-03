@@ -39,6 +39,8 @@ function WithAuth({ children }) {
     }),
     [credentials]
   );
+
+  console.log("CREDENTIALS: ", credentials);
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>
