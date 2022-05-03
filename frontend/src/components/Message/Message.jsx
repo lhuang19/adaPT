@@ -4,7 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 function Message(props) {
   const { data } = props;
-  const { body, time, sender, receiver} = data;
+  const { body, time, sender, senderFirstname } = data;
 
   return (
     <div
@@ -22,27 +22,22 @@ function Message(props) {
           paddingBottom: "1vw",
         }}
       >
-        <Avatar size={64} icon={<UserOutlined />} alt={sender.concat("'s profile picture")}/>
+        <Avatar
+          size={64}
+          icon={<UserOutlined />}
+          alt={sender.concat("'s profile picture")}
+          src={`https://joeschmoe.io/api/v1/${sender}`}
+        />
         <div
           style={{
             paddingLeft: "1vw",
           }}
         >
-          {/* need to make receiver a user object and not string username from chat.js */}
-          <p>{sender}</p>
+          <p>{senderFirstname}</p>
           <p>{new Date(time).toLocaleString()}</p>
-          {
-            // TODO Format timestamp better
-          }
         </div>
       </div>
-      <p style={{whiteSpace: "pre-wrap"}}>{body}</p>
-      {/* {imageURL.length > 0 ? (
-        <img src={imageURL} alt={"A post from ".concat(username)} />
-      ) : null} */}
-      {
-        // TODO Figure out how to make image fit neatly in div
-      }
+      <p style={{ whiteSpace: "pre-wrap" }}>{body}</p>
     </div>
   );
 }

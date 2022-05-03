@@ -7,5 +7,6 @@ const MessageSchema = new Schema({
   time: { type: Number, required: true },
   sender: { type: String, required: true, maxLength: 100 },
   receiver: { type: String, required: true, maxLength: 100 },
+  senderFirstname: { type: String, required: true, maxLength: 100 },
 });
 module.exports = mongoose.model("Messages", MessageSchema, "Messages");

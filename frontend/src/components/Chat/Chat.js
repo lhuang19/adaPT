@@ -7,16 +7,16 @@ import { AuthUserContext } from "../../context/Auth";
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
-  const [otherUser, setOtherUser] = useState("sherie"); // hard code this for now
+  const [currChattingUser, setCurrChattingUser] = useState("sherie"); // hard code this for now
   const [messages, setMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
   async function fetchNewMessages() {
-    if (username !== undefined && otherUser !== undefined) {
+    if (username !== undefined && currChattingUser !== undefined) {
       const { data } = await doAPIRequest(
-        `/chat/${credentials.username}/${otherUser}`,
+        `/chat/${credentials.username}/${currChattingUser}`,
         {
           method: "GET",
         }
@@ -46,7 +46,8 @@ function Chat() {
         body: input,
         time: Date.now(),
         sender: credentials.username,
-        receiver: otherUser,
+        receiver: currChattingUser,
+        senderFirstname: credentials.firstname,
       },
     });
     setInput("");
@@ -105,9 +106,7 @@ function Chat() {
                   style={{ width: "80%" }}
                   dataSource={messages}
                   renderItem={(message) => (
-                    <List.Item
-                      key={`${message.sender.username}-${message.time}`}
-                    >
+                    <List.Item key={`${message.sender}-${message.time}`}>
                       <Message data={message} />
                     </List.Item>
                   )}
