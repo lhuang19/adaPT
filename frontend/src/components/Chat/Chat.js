@@ -136,6 +136,7 @@ function Chat() {
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 6 }}
                 onChange={(e) => setInput(e.target.value)}
+                value={input}
               />
             </Form.Item>
             <Form.Item
