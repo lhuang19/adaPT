@@ -7,6 +7,8 @@ import { AuthUserContext } from "../../context/Auth";
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
   const { username } = credentials;
+  const [friends, setFriends] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [currChattingUser, setCurrChattingUser] = useState("sherie"); // hard code this for now
   const [messages, setMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
@@ -24,7 +26,6 @@ function Chat() {
       setMessages(data);
     }
   }
-
   useEffect(() => {
     fetchNewMessages();
     const periodicRefresh = setInterval(async () => {
@@ -33,11 +34,21 @@ function Chat() {
     return () => clearInterval(periodicRefresh);
   }, [messages]);
 
-  // temporary, need to change to actual friends
-  const menuItems = ["1", "2", "3"].map((key) => ({
-    key,
-    label: `friend ${key}`,
-  }));
+  async function getFriends() {
+    if (username !== undefined && currChattingUser !== undefined) {
+      const { data } = await doAPIRequest(`/user/${credentials.username}`, {
+        method: "GET",
+      });
+      setFriends(data.friends);
+    }
+  }
+  useEffect(() => {
+    getFriends();
+    console.log(friends);
+    const items = friends.map((name) => ({ key: name, label: name }));
+    setMenuItems(items);
+    console.log(menuItems);
+  }, [messages]);
 
   function onSendMessageHandler() {
     doAPIRequest(`/chat`, {
@@ -78,7 +89,7 @@ function Chat() {
             <Menu
               theme="light"
               mode="inline"
-              defaultSelectedKeys={["1"]}
+              // defaultSelectedKeys={["1"]}
               items={menuItems}
             />
           </Sider>
