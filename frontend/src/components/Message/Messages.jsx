@@ -2,11 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { List } from "antd";
 // import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
-
-import { getFriends } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import Message from "./Message";
-// import PostModal from "./PostModal";
 
 function Messages({ currUser, otherUser }) {
   const { credentials } = useContext(AuthUserContext);
@@ -23,9 +20,20 @@ function Messages({ currUser, otherUser }) {
     );
     setMessages(data);
   }
+  // useEffect(() => {
+  //   if (username !== undefined && otherUser !== undefined) fetchNewMessages();
+  // }, [otherUser]);
+
   useEffect(() => {
-    if (username !== undefined && otherUser !== undefined) fetchNewMessages();
-  }, [otherUser]);
+    // if (username !== undefined && otherUser !== undefined) {
+      fetchNewMessages();
+      const periodicRefresh = setInterval(async () => {
+        fetchNewMessages();
+      }, 100000);
+      return () => clearInterval(periodicRefresh);
+    // }
+  }, []);
+
   return (
     <List
       style={{ width: "80%" }}

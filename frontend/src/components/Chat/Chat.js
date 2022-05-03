@@ -1,12 +1,8 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { List, Layout, Menu, Form, Input, Button } from "antd";
-import Messages from "../Message/Messages";
-import { getMessages } from "../../modules/storage";
+import Message from "../Message/Message";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
-
-// Should this be ./Chat/MessageModal?
-import MessageModal from "./MessageModal";
 
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
@@ -17,19 +13,31 @@ function Chat() {
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
+  async function fetchNewMessages() {
+    const { data } = await doAPIRequest(
+      `/chat/${credentials.username}/${otherUser}`,
+      {
+        method: "GET",
+      }
+    );
+    setMessages(data);
+  }
+
+  useEffect(() => {
+    // if (username !== undefined && otherUser !== undefined) {
+    fetchNewMessages();
+    const periodicRefresh = setInterval(async () => {
+      fetchNewMessages();
+    }, 100000);
+    return () => clearInterval(periodicRefresh);
+    // }
+  }, []);
+
   // temporary, need to change to actual friends
   const menuItems = ["1", "2", "3"].map((key) => ({
     key,
     label: `friend ${key}`,
   }));
-
-  // async function fetchNewMessages() {
-  //   const newMessages = await getMessages(username);
-  //   setMessages(newMessages);
-  // }
-  // useEffect(() => {
-  //   if (username !== undefined) fetchNewMessages();
-  // }, [username]);
 
   function onSendMessageHandler() {
     doAPIRequest(`/chat`, {
@@ -51,16 +59,6 @@ function Chat() {
     // setMessages(current);
     setInput("");
   }
-  // useEffect(() => {
-  //   async function makeAPIRequest() {
-  //     const { data } = await doAPIRequest(`/chat`, {
-  //       method: "GET",
-  //       body: { currUser: credentials.username, otherUser },
-  //     });
-  //     setMessages(data);
-  //   }
-  //   makeAPIRequest();
-  // }, []);
 
   return (
     <div
@@ -111,7 +109,18 @@ function Chat() {
                   padding: 24,
                 }}
               >
-                <Messages currUser={username} otherUser={otherUser} />
+                <List
+                  style={{ width: "80%" }}
+                  dataSource={messages}
+                  renderItem={(message) => (
+                    <List.Item
+                      key={`${message.sender.username}-${message.time}`}
+                    >
+                      <Message data={message} />
+                    </List.Item>
+                  )}
+                />
+                {/* <Messages currUser={username} otherUser={otherUser} /> */}
               </div>
             </Content>
           </Layout>
@@ -146,7 +155,6 @@ function Chat() {
           </Footer>
         </Layout>
       </Layout>
-      {/* <MessageModal fetchNewMessages={() => fetchNewMessages()} /> */}
     </div>
   );
 }

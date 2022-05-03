@@ -7,7 +7,6 @@ const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
 const messageRouter = require("./routes/message.routes");
-const dotenv = require("dotenv");
 const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes");
 const uploadRouter = require("./routes/upload.routes");
