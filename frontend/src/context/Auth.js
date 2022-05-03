@@ -32,13 +32,19 @@ function WithAuth({ children }) {
     }
     loadToken();
   }, []);
-  const passInValue = React.useMemo(
-    () => ({
-      credentials,
-      setCredentials,
-    }),
-    [credentials]
-  );
+  // const passInValue = React.useMemo(
+  //   () => ({
+  //     credentials,
+  //     setCredentials,
+  //   }),
+  //   [credentials]
+  // );
+  const passInValue = {
+    credentials,
+    setCredentials,
+  };
+
+  console.log("CREDENTIALS: ", credentials);
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>
