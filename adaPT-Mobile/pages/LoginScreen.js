@@ -7,7 +7,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.227.130:8000';
+const baseUrl = 'http://localhost:8000';
 
 function LoginScreen({ navigation }) {
   const [username, setUsername] = React.useState("");
