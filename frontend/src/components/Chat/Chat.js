@@ -14,24 +14,24 @@ function Chat() {
   const [input, setInput] = useState("");
 
   async function fetchNewMessages() {
-    const { data } = await doAPIRequest(
-      `/chat/${credentials.username}/${otherUser}`,
-      {
-        method: "GET",
-      }
-    );
-    setMessages(data);
+    if (username !== undefined && otherUser !== undefined) {
+      const { data } = await doAPIRequest(
+        `/chat/${credentials.username}/${otherUser}`,
+        {
+          method: "GET",
+        }
+      );
+      setMessages(data);
+    }
   }
 
   useEffect(() => {
-    // if (username !== undefined && otherUser !== undefined) {
     fetchNewMessages();
     const periodicRefresh = setInterval(async () => {
       fetchNewMessages();
-    }, 100000);
+    }, 100);
     return () => clearInterval(periodicRefresh);
-    // }
-  }, []);
+  }, [messages]);
 
   // temporary, need to change to actual friends
   const menuItems = ["1", "2", "3"].map((key) => ({
@@ -49,14 +49,6 @@ function Chat() {
         receiver: otherUser,
       },
     });
-    // const current = [...messages];
-    // current.push({
-    //   body: input,
-    //   time: Date.now(),
-    //   sender: credentials.username,
-    //   receiver: otherUser,
-    // });
-    // setMessages(current);
     setInput("");
   }
 
