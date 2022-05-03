@@ -10,41 +10,37 @@ const bucketName = process.env.GCLOUD_STORAGE_BUCKET;
 const bucket = storage.bucket(bucketName);
 
 const upload = async (req, res) => {
-  if (!req.file) throw new Error("params not filled");
-  try {
-    const blob = bucket.file(req.file.originalname);
-    const blobStream = blob.createWriteStream();
+  if (!req || !req.file) throw new Error("params not filled");
+  const blob = bucket.file(req.file.originalname);
+  const blobStream = blob.createWriteStream();
 
-    blobStream.on("error", (err) =>
-      res.status(500).send({
-        message: `Upload not successful`,
-      })
+  blobStream.on("error", (err) =>
+    res.status(500).send({
+      message: `Upload not successful`,
+    })
+  );
+
+  blobStream.on("finish", async () => {
+    // The public URL can be used to directly access the file via HTTP.
+    const publicUrl = format(
+      `https://storage.googleapis.com/${bucket.name}/${blob.name}`
     );
-
-    blobStream.on("finish", async () => {
-      // The public URL can be used to directly access the file via HTTP.
-      const publicUrl = format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-      try {
-        // Make the file public
-        await bucket.file(req.file.originalname).makePublic();
-      } catch (e) {
-        return res.status(500).send({
-          message: `Uploaded the file successfully: ${req.file.originalname}, but public access is denied!`,
-          url: publicUrl,
-        });
-      }
-      res.status(200).send({
-        message: `Uploaded the file successfully: ${req.file.originalname}`,
+    try {
+      // Make the file public
+      await bucket.file(req.file.originalname).makePublic();
+    } catch (e) {
+      return res.status(500).send({
+        message: `Uploaded the file successfully: ${req.file.originalname}, but public access is denied!`,
         url: publicUrl,
       });
-      return 0;
+    }
+    res.status(200).send({
+      message: `Uploaded the file successfully: ${req.file.originalname}`,
+      url: publicUrl,
     });
-    blobStream.end(req.file.buffer);
-  } catch (err) {
-    throw new Error("something went wrong");
-  }
+    return 0;
+  });
+  blobStream.end(req.file.buffer);
 };
 
 const deleteFile = async (fileName) => {

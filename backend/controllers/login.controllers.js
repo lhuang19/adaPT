@@ -20,11 +20,9 @@ const login = async (user) => {
   const result = await Users.findOne({ username: user.username })
     .select("+password +unsuccessfulAttempts +timeOut")
     .exec();
-
   if (result === null) {
-    throw new Error("Incorrect password");
+    throw new Error("User not found");
   }
-
   const currTime = new Date().getTime();
   if (result.unsuccessfulAttempts >= 2 || result.timeOut > currTime) {
     if (result.unsuccessfulAttempts >= 2) {
@@ -33,7 +31,7 @@ const login = async (user) => {
         { unsuccessfulAttempts: 0 }
       );
     }
-    let timoutUntil = new Date(currTime + 1 * 60000).getTime();
+    let timoutUntil = new Date(currTime + 3 * 60000).getTime();
     if (result.timeOut > currTime) {
       timoutUntil = result.timeOut;
     } else {
@@ -66,7 +64,7 @@ const signup = async (user) => {
   if (!user || !user.password || !user.username)
     throw new Error("params not filled");
   if ((await Users.findOne({ username: user.username }).exec()) != null)
-    throw new Error();
+    throw new Error("user exists");
 
   const ret = await Users.create({
     ...user,
@@ -85,17 +83,13 @@ const signup = async (user) => {
 
 const returning = async (token) => {
   if (!token) throw new Error("params not filled");
-  try {
-    const payload = jwt.verify(token, process.env.SECRETKEY);
-    return payload;
-  } catch (err) {
-    console.error(err);
-    throw new Error("jwt verification failed");
-  }
+  const payload = jwt.verify(token, process.env.SECRETKEY);
+  return payload;
 };
 
 module.exports = {
   login,
   signup,
   returning,
+  getHash,
 };
