@@ -105,112 +105,68 @@ function Chat() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100%",
-        minWidth: "100%",
-      }}
-    >
+    <Layout style={{ height: "100%", width: "100%" }}>
+      <Sider
+        style={{
+          overflow: "auto",
+          height: "100%",
+        }}
+      >
+        <Menu
+          theme="light"
+          mode="inline"
+          selectedKeys={[currChattingUser]}
+          items={menuItems}
+          onSelect={(e) => {
+            console.log(e.key);
+            setCurrChattingUser(e.key);
+            setMessages([]);
+          }}
+        />
+      </Sider>
       <Layout>
-        <Layout hasSider>
-          <Sider
-            style={{
-              overflow: "auto",
-              height: "100vh",
-              position: "fixed",
-              left: 0,
-              top: 0,
-              bottom: 0,
-            }}
-          >
-            <Menu
-              theme="light"
-              mode="inline"
-              selectedKeys={[currChattingUser]}
-              items={menuItems}
-              onSelect={(e) => {
-                console.log(e.key);
-                setCurrChattingUser(e.key);
-                setMessages([]);
-              }}
-            />
-          </Sider>
-          <Layout
-            style={{
-              padding: "0 24px 24px",
-              marginLeft: 200,
-            }}
-          >
-            <Content
-              className="site-layout-background"
-              style={{
-                margin: "24px 16px 0",
-                overflow: "initial",
-                // minHeight: "80vh",
-              }}
-            >
-              <div
-                className="site-layout-background"
-                style={{
-                  padding: 24,
-                }}
-              >
-                <List
-                  style={{ width: "80%" }}
-                  dataSource={messages}
-                  renderItem={(message) => (
-                    <List.Item key={`${message.sender}-${message.time}`}>
-                      <Message data={message} />
-                    </List.Item>
-                  )}
-                />
-              </div>
-            </Content>
-          </Layout>
-        </Layout>
-        <Layout
+        <Content
+          className="site-layout-background"
           style={{
-            padding: "0 24px 24px",
-            marginLeft: 200,
+            overflow: "initial",
           }}
         >
-          <div
+          <List
+            dataSource={messages}
+            renderItem={(message) => (
+              <List.Item key={`${message.sender}-${message.time}`}>
+                <Message data={message} />
+              </List.Item>
+            )}
+          />
+          {/* <Messages currUser={username} otherUser={otherUser} /> */}
+        </Content>
+
+        <Footer style={{ position: "sticky", bottom: "0" }}>
+          <Form.Item>
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+            />
+          </Form.Item>
+          <Form.Item
             style={{
-              position: "fixed",
-              bottom: "0",
-              width: "60%",
-              backgroundColor: "#f0f2f5",
+              marginBottom: "0px",
+              paddingBottom: "0px",
             }}
           >
-            <Form.Item>
-              <TextArea
-                autoSize={{ minRows: 1, maxRows: 6 }}
-                onChange={(e) => setInput(e.target.value)}
-                value={input}
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginBottom: "0px",
-                paddingBottom: "0px",
-              }}
+            <Button
+              htmlType="submit"
+              onClick={() => onSendMessageHandler()}
+              type="primary"
             >
-              <Button
-                htmlType="submit"
-                onClick={() => onSendMessageHandler()}
-                type="primary"
-              >
-                Send
-              </Button>
-            </Form.Item>
-            <br></br>
-          </div>
-        </Layout>
+              Send
+            </Button>
+          </Form.Item>
+        </Footer>
       </Layout>
-    </div>
+    </Layout>
   );
 }
 
