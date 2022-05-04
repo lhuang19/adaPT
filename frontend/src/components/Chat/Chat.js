@@ -1,66 +1,106 @@
-import React, { useState, useContext, useEffect } from "react";
-import { List, Layout, Menu, Form, Input, Button } from "antd";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { List, Layout, Menu, Form, Input, Button, notification } from "antd";
 import Message from "../Message/Message";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
-  const { username } = credentials;
-  const [friends, setFriends] = useState([]);
+  const { username, firstname } = credentials;
   const [menuItems, setMenuItems] = useState([]);
-  const [currChattingUser, setCurrChattingUser] = useState("sinas"); // hard code this for now
+  const [currChattingUser, setCurrChattingUser] = useState("");
   const [messages, setMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
-  async function fetchNewMessages() {
-    if (username !== undefined && currChattingUser !== undefined) {
+  async function fetchNewMessages(notifications) {
+    if (username.length > 0 && currChattingUser !== undefined) {
       const { data } = await doAPIRequest(
         `/chat/${credentials.username}/${currChattingUser}`,
         {
           method: "GET",
         }
       );
+
+      if (notifications && data.length > messages.length) {
+        notification.open({
+          message: "adaPT",
+          description: "New Messages Loaded!",
+          duration: 3000,
+        });
+      }
       setMessages(data);
     }
   }
   useEffect(() => {
-    fetchNewMessages();
-    const periodicRefresh = setInterval(async () => {
-      fetchNewMessages();
-    }, 100);
-    return () => clearInterval(periodicRefresh);
-  }, [messages]);
+    fetchNewMessages(false);
+  }, [username, currChattingUser]);
+  useInterval(async () => {
+    fetchNewMessages(true);
+  }, 10000);
 
   async function getFriends() {
-    if (username !== undefined && currChattingUser !== undefined) {
-      const { data } = await doAPIRequest(`/user/${credentials.username}`, {
+    if (username.length > 0) {
+      const { data } = await doAPIRequest(`/user/${username}`, {
         method: "GET",
       });
-      setFriends(data.friends);
+      const friendList = data.friends;
+      friendList.filter((friend) => friend !== username);
+      const items = friendList.map((name) => ({ key: name, label: name }));
+      setMenuItems(items);
+      if (friendList.length > 0) {
+        setCurrChattingUser(items[0].key);
+      }
     }
   }
   useEffect(() => {
     getFriends();
-    console.log(friends);
-    const items = friends.map((name) => ({ key: name, label: name }));
-    setMenuItems(items);
-    console.log(menuItems);
-  }, [messages]);
+  }, [username]);
 
   function onSendMessageHandler() {
+    const time = Date.now();
     doAPIRequest(`/chat`, {
       method: "POST",
       body: {
         body: input,
-        time: Date.now(),
-        sender: credentials.username,
+        time,
+        sender: username,
         receiver: currChattingUser,
-        senderFirstname: credentials.firstname,
+        senderFirstname: firstname,
       },
     });
+    // optimistic UI. Assume the message sends and update UI right away.
+    setMessages([
+      ...messages,
+      {
+        body: input,
+        time,
+        sender: username,
+        receiver: currChattingUser,
+        senderFirstname: firstname,
+      },
+    ]);
     setInput("");
   }
 
@@ -89,8 +129,13 @@ function Chat() {
             <Menu
               theme="light"
               mode="inline"
-              // defaultSelectedKeys={["1"]}
+              selectedKeys={[currChattingUser]}
               items={menuItems}
+              onSelect={(e) => {
+                console.log(e.key);
+                setCurrChattingUser(e.key);
+                setMessages([]);
+              }}
             />
           </Sider>
           <Layout
@@ -122,7 +167,6 @@ function Chat() {
                     </List.Item>
                   )}
                 />
-                {/* <Messages currUser={username} otherUser={otherUser} /> */}
               </div>
             </Content>
           </Layout>
