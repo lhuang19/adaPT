@@ -113,6 +113,7 @@ function Chat() {
         }}
       >
         <Menu
+          height="100%"
           theme="light"
           mode="inline"
           selectedKeys={[currChattingUser]}
@@ -128,7 +129,7 @@ function Chat() {
         <Content
           className="site-layout-background"
           style={{
-            overflow: "initial",
+            overflow: "auto",
           }}
         >
           <List
@@ -142,7 +143,16 @@ function Chat() {
           {/* <Messages currUser={username} otherUser={otherUser} /> */}
         </Content>
 
-        <Footer style={{ position: "sticky", bottom: "0" }}>
+        <div
+          style={{
+            position: "fixed",
+            bottom: "0",
+            width: "100%",
+            backgroundColor: "#f0f2f5",
+            overflow: "auto",
+          }}
+        >
+          <br></br>
           <Form.Item>
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
@@ -164,7 +174,8 @@ function Chat() {
               Send
             </Button>
           </Form.Item>
-        </Footer>
+          <br></br>
+        </div>
       </Layout>
     </Layout>
   );
