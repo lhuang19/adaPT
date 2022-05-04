@@ -9,7 +9,7 @@ function Chat() {
   const { username } = credentials;
   const [friends, setFriends] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [currChattingUser, setCurrChattingUser] = useState("sherie"); // hard code this for now
+  const [currChattingUser, setCurrChattingUser] = useState("sinas"); // hard code this for now
   const [messages, setMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
@@ -133,7 +133,14 @@ function Chat() {
             marginLeft: 200,
           }}
         >
-          <Footer style={{ position: "sticky", bottom: "0" }}>
+          <div
+            style={{
+              position: "fixed",
+              bottom: "0",
+              width: "60%",
+              backgroundColor: "#f0f2f5",
+            }}
+          >
             <Form.Item>
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 6 }}
@@ -155,7 +162,8 @@ function Chat() {
                 Send
               </Button>
             </Form.Item>
-          </Footer>
+            <br></br>
+          </div>
         </Layout>
       </Layout>
     </div>
