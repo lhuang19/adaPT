@@ -1,164 +1,171 @@
-import React, { useState, useContext, useEffect } from "react";
-import { List, Layout, Menu, Form, Input, Button } from "antd";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { List, Layout, Menu, Form, Input, Button, notification } from "antd";
 import Message from "../Message/Message";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
-  const { username } = credentials;
-  const [friends, setFriends] = useState([]);
+  const { username, firstname } = credentials;
   const [menuItems, setMenuItems] = useState([]);
-  const [currChattingUser, setCurrChattingUser] = useState("sherie"); // hard code this for now
+  const [currChattingUser, setCurrChattingUser] = useState("");
   const [messages, setMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
-  async function fetchNewMessages() {
-    if (username !== undefined && currChattingUser !== undefined) {
+  async function fetchNewMessages(notifications) {
+    if (username.length > 0 && currChattingUser !== undefined) {
       const { data } = await doAPIRequest(
         `/chat/${credentials.username}/${currChattingUser}`,
         {
           method: "GET",
         }
       );
+
+      if (notifications && data.length > messages.length) {
+        notification.open({
+          message: "adaPT",
+          description: "New Messages Loaded!",
+          duration: 3000,
+        });
+      }
       setMessages(data);
     }
   }
   useEffect(() => {
-    fetchNewMessages();
-    const periodicRefresh = setInterval(async () => {
-      fetchNewMessages();
-    }, 100);
-    return () => clearInterval(periodicRefresh);
-  }, [messages]);
-
+    fetchNewMessages(false);
+  }, [username, currChattingUser]);
+  useInterval(async () => {
+    fetchNewMessages(true);
+  }, 10000);
   async function getFriends() {
-    if (username !== undefined && currChattingUser !== undefined) {
-      const { data } = await doAPIRequest(`/user/${credentials.username}`, {
+    if (username.length > 0) {
+      const { data } = await doAPIRequest(`/user/${username}`, {
         method: "GET",
       });
-      setFriends(data.friends);
+      const friendList = data.friends;
+      friendList.filter((friend) => friend !== username);
+      const items = friendList.map((name) => ({ key: name, label: name }));
+      setMenuItems(items);
+      if (friendList.length > 0) {
+        setCurrChattingUser(items[0].key);
+      }
     }
   }
   useEffect(() => {
     getFriends();
-    console.log(friends);
-    const items = friends.map((name) => ({ key: name, label: name }));
-    setMenuItems(items);
-    console.log(menuItems);
-  }, [messages]);
+  }, [username]);
 
   function onSendMessageHandler() {
+    const time = Date.now();
     doAPIRequest(`/chat`, {
       method: "POST",
       body: {
         body: input,
-        time: Date.now(),
-        sender: credentials.username,
+        time: time,
+        sender: username,
         receiver: currChattingUser,
-        senderFirstname: credentials.firstname,
+        senderFirstname: firstname,
       },
     });
+    // optimistic UI. Assume the message sends and update UI right away.
+    setMessages([
+      ...messages,
+      {
+        body: input,
+        time: time,
+        sender: username,
+        receiver: currChattingUser,
+        senderFirstname: firstname,
+      },
+    ]);
     setInput("");
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100%",
-        minWidth: "100%",
-      }}
-    >
+    <Layout style={{ height: "100%", width: "100%" }}>
+      <Sider
+        style={{
+          overflow: "auto",
+          height: "100%",
+        }}
+      >
+        <Menu
+          theme="light"
+          mode="inline"
+          selectedKeys={[currChattingUser]}
+          items={menuItems}
+          onSelect={(e) => {
+            console.log(e.key);
+            setCurrChattingUser(e.key);
+            setMessages([]);
+          }}
+        />
+      </Sider>
       <Layout>
-        <Layout hasSider>
-          <Sider
-            style={{
-              overflow: "auto",
-              height: "100vh",
-              position: "fixed",
-              left: 0,
-              top: 0,
-              bottom: 0,
-            }}
-          >
-            <Menu
-              theme="light"
-              mode="inline"
-              // defaultSelectedKeys={["1"]}
-              items={menuItems}
-            />
-          </Sider>
-          <Layout
-            style={{
-              padding: "0 24px 24px",
-              marginLeft: 200,
-            }}
-          >
-            <Content
-              className="site-layout-background"
-              style={{
-                margin: "24px 16px 0",
-                overflow: "initial",
-                // minHeight: "80vh",
-              }}
-            >
-              <div
-                className="site-layout-background"
-                style={{
-                  padding: 24,
-                }}
-              >
-                <List
-                  style={{ width: "80%" }}
-                  dataSource={messages}
-                  renderItem={(message) => (
-                    <List.Item key={`${message.sender}-${message.time}`}>
-                      <Message data={message} />
-                    </List.Item>
-                  )}
-                />
-                {/* <Messages currUser={username} otherUser={otherUser} /> */}
-              </div>
-            </Content>
-          </Layout>
-        </Layout>
-        <Layout
+        <Content
+          className="site-layout-background"
           style={{
-            padding: "0 24px 24px",
-            marginLeft: 200,
+            overflow: "initial",
           }}
         >
-          <Footer style={{ position: "sticky", bottom: "0" }}>
-            <Form.Item>
-              <TextArea
-                autoSize={{ minRows: 1, maxRows: 6 }}
-                onChange={(e) => setInput(e.target.value)}
-                value={input}
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginBottom: "0px",
-                paddingBottom: "0px",
-              }}
+          <List
+            dataSource={messages}
+            renderItem={(message) => (
+              <List.Item key={`${message.sender}-${message.time}`}>
+                <Message data={message} />
+              </List.Item>
+            )}
+          />
+          {/* <Messages currUser={username} otherUser={otherUser} /> */}
+        </Content>
+
+        <Footer style={{ position: "sticky", bottom: "0" }}>
+          <Form.Item>
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+            />
+          </Form.Item>
+          <Form.Item
+            style={{
+              marginBottom: "0px",
+              paddingBottom: "0px",
+            }}
+          >
+            <Button
+              htmlType="submit"
+              onClick={() => onSendMessageHandler()}
+              type="primary"
             >
-              <Button
-                htmlType="submit"
-                onClick={() => onSendMessageHandler()}
-                type="primary"
-              >
-                Send
-              </Button>
-            </Form.Item>
-          </Footer>
-        </Layout>
+              Send
+            </Button>
+          </Form.Item>
+        </Footer>
       </Layout>
-    </div>
+    </Layout>
   );
 }
 
