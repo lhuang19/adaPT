@@ -59,6 +59,10 @@ function Chat() {
   useInterval(async () => {
     fetchNewMessages(true);
   }, 10000);
+  setTimeout(() => {
+    var element = document.getElementById("scrollable");
+    element.scrollTop = element.scrollHeight;
+  }, 100);
 
   async function getFriends() {
     if (username.length > 0) {
@@ -102,10 +106,6 @@ function Chat() {
       },
     ]);
     setInput("");
-    setTimeout(() => {
-      var element = document.getElementById("scrollable");
-      element.scrollTop = element.scrollHeight;
-    }, 100);
   }
 
   return (
