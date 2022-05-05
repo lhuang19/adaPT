@@ -142,7 +142,13 @@ function Chat() {
           />
           {/* <Messages currUser={username} otherUser={otherUser} /> */}
         </Content>
-
+        <div
+          style={{
+            lineHeight: 10,
+          }}
+        >
+          <br></br>
+        </div>
         <div
           style={{
             position: "fixed",
@@ -160,6 +166,7 @@ function Chat() {
               value={input}
             />
           </Form.Item>
+
           <Form.Item
             style={{
               marginBottom: "0px",
