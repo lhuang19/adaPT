@@ -102,6 +102,10 @@ function Chat() {
       },
     ]);
     setInput("");
+    setTimeout(() => {
+      var element = document.getElementById("scrollable");
+      element.scrollTop = element.scrollHeight;
+    }, 100);
   }
 
   return (
@@ -127,6 +131,7 @@ function Chat() {
       </Sider>
       <Layout>
         <Content
+          id="scrollable"
           className="site-layout-background"
           style={{
             overflow: "auto",
