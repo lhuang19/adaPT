@@ -31,7 +31,7 @@ function Chat() {
   const [currChattingUser, setCurrChattingUser] = useState("");
   const [allMessages, setAllMessages] = useState([]);
   const [currMessages, setCurrMessages] = useState([]);
-  const { Content, Sider, Footer } = Layout;
+  const { Content, Sider } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
@@ -65,11 +65,15 @@ function Chat() {
   }, [username, currChattingUser]);
   useInterval(async () => {
     fetchNewMessages(true);
-  }, 10000);
+  }, 1000);
   setTimeout(() => {
     var element = document.getElementById("scrollable");
     element.scrollTop = element.scrollHeight;
   }, 100);
+  // useEffect(() => {
+  //   var element = document.getElementById("scrollable");
+  //   element.scrollTop = element.scrollHeight;
+  // }, [currMessages, currChattingUser]);
 
   async function getFriends() {
     if (username.length > 0) {
