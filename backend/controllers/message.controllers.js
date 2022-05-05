@@ -20,7 +20,7 @@ const getMessages = async (currUser, otherUser) => {
 
   try {
     const result = await Messages.find({
-      $or: [
+      $and: [
         { sender: { $in: [currUser, otherUser] } },
         { receiver: { $in: [currUser, otherUser] } },
       ],
