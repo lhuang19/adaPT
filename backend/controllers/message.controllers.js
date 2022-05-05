@@ -15,15 +15,12 @@ const postMessage = async (messageData) => {
   }
 };
 
-const getMessages = async (currUser, otherUser) => {
-  if (!currUser || !otherUser) throw new Error("params not filled");
+const getMessages = async (username) => {
+  if (!username) throw new Error("params not filled");
 
   try {
     const result = await Messages.find({
-      $and: [
-        { sender: { $in: [currUser, otherUser] } },
-        { receiver: { $in: [currUser, otherUser] } },
-      ],
+      $or: [{ sender: username }, { receiver: username }],
     }).exec();
     result.sort((a, b) => a.time - b.time);
     return result;

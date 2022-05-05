@@ -10,12 +10,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:currUser/:otherUser", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try {
-    const results = await lib.getMessages(
-      req.params.currUser,
-      req.params.otherUser
-    );
+    const results = await lib.getMessages(req.params.username);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });

@@ -29,28 +29,35 @@ function Chat() {
   const { username, firstname } = credentials;
   const [menuItems, setMenuItems] = useState([]);
   const [currChattingUser, setCurrChattingUser] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
+  const [currMessages, setCurrMessages] = useState([]);
   const { Content, Sider, Footer } = Layout;
   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
   async function fetchNewMessages(notifications) {
     if (username.length > 0 && currChattingUser !== undefined) {
-      const { data } = await doAPIRequest(
-        `/chat/${credentials.username}/${currChattingUser}`,
-        {
-          method: "GET",
-        }
-      );
+      const { data } = await doAPIRequest(`/chat/${credentials.username}`, {
+        method: "GET",
+      });
 
-      if (notifications && data.length > messages.length) {
+      if (notifications && data.length > allMessages.length) {
         notification.open({
           message: "adaPT",
-          description: "New Messages Loaded!",
+          description: "You have new messages!",
           duration: 3000,
         });
       }
-      setMessages(data);
+      setAllMessages(data);
+      setCurrMessages(
+        allMessages.filter(
+          (message) =>
+            (message.sender === username &&
+              message.receiver === currChattingUser) ||
+            (message.sender === currChattingUser &&
+              message.receiver === username)
+        )
+      );
     }
   }
   useEffect(() => {
@@ -91,8 +98,18 @@ function Chat() {
       },
     });
     // optimistic UI. Assume the message sends and update UI right away.
-    setMessages([
-      ...messages,
+    setCurrMessages([
+      ...currMessages,
+      {
+        body: input,
+        time,
+        sender: username,
+        receiver: currChattingUser,
+        senderFirstname: firstname,
+      },
+    ]);
+    setAllMessages([
+      ...allMessages,
       {
         body: input,
         time,
@@ -125,7 +142,7 @@ function Chat() {
           onSelect={(e) => {
             console.log(e.key);
             setCurrChattingUser(e.key);
-            setMessages([]);
+            setCurrMessages([]);
           }}
         />
       </Sider>
@@ -138,7 +155,7 @@ function Chat() {
           }}
         >
           <List
-            dataSource={messages}
+            dataSource={currMessages}
             renderItem={(message) => (
               <List.Item key={`${message.sender}-${message.time}`}>
                 <Message data={message} />
