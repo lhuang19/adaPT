@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { List, Layout, Menu, Form, Input, Button, notification } from "antd";
-import Message from "../Message/Message";
+import Message from "./Message";
 import { doAPIRequest } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
@@ -18,7 +18,7 @@ function useInterval(callback, delay) {
       savedCallback.current();
     }
     if (delay !== null) {
-      let id = setInterval(tick, delay);
+      const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
   }, [delay]);
@@ -67,13 +67,9 @@ function Chat() {
     fetchNewMessages(true);
   }, 1000);
   setTimeout(() => {
-    var element = document.getElementById("scrollable");
+    const element = document.getElementById("scrollable");
     element.scrollTop = element.scrollHeight;
   }, 100);
-  // useEffect(() => {
-  //   var element = document.getElementById("scrollable");
-  //   element.scrollTop = element.scrollHeight;
-  // }, [currMessages, currChattingUser]);
 
   async function getFriends() {
     if (username.length > 0) {
@@ -166,14 +162,13 @@ function Chat() {
               </List.Item>
             )}
           />
-          {/* <Messages currUser={username} otherUser={otherUser} /> */}
         </Content>
         <div
           style={{
             lineHeight: 10,
           }}
         >
-          <br></br>
+          <br />
         </div>
         <div
           style={{
@@ -184,7 +179,7 @@ function Chat() {
             overflow: "auto",
           }}
         >
-          <br></br>
+          <br />
           <Form.Item>
             <TextArea
               autoSize={{ minRows: 1, maxRows: 3 }}
@@ -207,7 +202,7 @@ function Chat() {
               Send
             </Button>
           </Form.Item>
-          <br></br>
+          <br />
         </div>
       </Layout>
     </Layout>
