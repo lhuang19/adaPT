@@ -1,20 +1,13 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const Users = require("../models/user");
-
 const lib = require("../controllers/login.controllers");
-
-dotenv.config();
-
-const sleep = (ms) =>
-  new Promise((r) => {
-    setTimeout(r, ms);
-  });
+const { connectToDB, disconnectDB, createUser, sleep } = require("./utils");
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_TEST_URL);
+  await connectToDB();
 });
-
+afterAll(async () => {
+  await disconnectDB();
+});
 beforeEach(async () => {
   const result = await Users.findOne({});
   if (result !== null) {
@@ -22,19 +15,6 @@ beforeEach(async () => {
   }
   await sleep(20);
 });
-
-async function createUser() {
-  return Users.create({
-    username: "tester",
-    firstname: "first",
-    lastname: "last",
-    role: "PT",
-    password: lib.getHash("some password"),
-    registerTime: new Date().toLocaleString(),
-    friends: [],
-    friendRequests: [],
-  });
-}
 
 describe("login", () => {
   test("params not filled", async () => {

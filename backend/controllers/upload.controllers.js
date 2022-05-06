@@ -10,48 +10,52 @@ const bucketName = process.env.GCLOUD_STORAGE_BUCKET;
 const bucket = storage.bucket(bucketName);
 
 const upload = async (req, res) => {
-  if (!req || !req.file) throw new Error("params not filled");
-  const blob = bucket.file(req.file.originalname);
-  const blobStream = blob.createWriteStream();
-
-  blobStream.on("error", (err) =>
-    res.status(500).send({
-      message: `Upload not successful`,
-    })
-  );
-
-  blobStream.on("finish", async () => {
-    // The public URL can be used to directly access the file via HTTP.
-    const publicUrl = format(
-      `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-    );
-    try {
-      // Make the file public
-      await blob.makePublic();
-      if (res === undefined) return;
-      res.status(200).send({
-        message: `Uploaded the file successfully: ${req.file.originalname}`,
-        url: publicUrl,
-      });
-    } catch (e) {
-      if (res === undefined) return;
-      res.status(500).send({
-        message: `Uploaded the file successfully: ${req.file.originalname}, but public access is denied!`,
-        url: publicUrl,
-      });
-    }
-  });
-  blobStream.end(req.file.buffer);
-};
-
-const deleteFile = async (fileName) => {
   try {
-    await storage.bucket(bucketName).file(fileName).delete();
+    if (!req || !req.file) {
+      throw new Error("params not filled");
+    }
+    const blob = bucket.file(req.file.originalname);
+    const blobStream = blob.createWriteStream();
+
+    blobStream.on("error", (err) => {
+      console.log(err.message);
+      throw new Error("Upload not successful");
+    });
+
+    blobStream.on("finish", async () => {
+      // The public URL can be used to directly access the file via HTTP.
+      const publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      );
+      try {
+        // Make the file public
+        await blob.makePublic();
+        res.status(200).send({
+          message: `Uploaded the file successfully: ${req.file.originalname}`,
+          url: publicUrl,
+        });
+      } catch (e) {
+        throw new Error(
+          `Uploaded the file successfully: ${req.file.originalname}, but public access is denied!`
+        );
+      }
+    });
+    blobStream.end(req.file.buffer);
   } catch (e) {
-    // ehh it didnt work
+    res.status(500).send({
+      message: e.message,
+    });
   }
 };
 
-const getFile = async (fileName) => storage.bucket(bucketName).file(fileName);
+const deleteFile = async (fileName) => {
+  await storage.bucket(bucketName).file(fileName).delete();
+};
 
-module.exports = { upload, deleteFile, getFile };
+// const getFile = async (fileName) => storage.bucket(bucketName).file(fileName);
+
+module.exports = {
+  upload,
+  deleteFile,
+  // getFile
+};

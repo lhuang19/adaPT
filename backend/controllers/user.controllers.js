@@ -7,7 +7,6 @@ const getUserData = async (username) => {
     if (result === null) throw new Error();
     return result;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -15,12 +14,11 @@ const getUserData = async (username) => {
 const getUsers = async () => {
   try {
     const result = await Users.find({}).exec();
-    if (result === null) throw new Error();
+    if (result === null || result.length === 0) throw new Error();
     const usernameList = [];
     result.forEach((doc) => usernameList.push(doc.username));
     return usernameList;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find users");
   }
 };

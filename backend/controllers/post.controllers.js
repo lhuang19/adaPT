@@ -16,11 +16,23 @@ const postPost = async (postData) => {
   return result;
 };
 
-const getPosts = async (usernamesToFetch) => {
-  if (!usernamesToFetch) throw new Error("params not filled");
+const getPosts = async (username) => {
+  if (!username || username.length === 0) throw new Error("params not filled");
 
   const result = await Posts.find({
-    poster: { $in: usernamesToFetch },
+    poster: username,
+  })
+    .populate("users")
+    .exec();
+  result.sort((a, b) => b.time - a.time);
+  return result;
+};
+
+const getPostsAll = async (username) => {
+  if (!username || username.length === 0) throw new Error("params not filled");
+  const friends = await Users.findOne({ username }).select("friends");
+  const result = await Posts.find({
+    poster: { $in: [username, ...friends.friends] },
   })
     .populate("users")
     .exec();
@@ -107,6 +119,7 @@ const postComment = async (postId, data) => {
 module.exports = {
   postPost,
   getPosts,
+  getPostsAll,
   deletePost,
   getReactions,
   postReaction,

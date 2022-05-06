@@ -9,7 +9,7 @@ export function getApiURL(path) {
  * @param data (request body)
  * @returns data and error
  */
-export function doAPIRequest(path, data) {
+export async function doAPIRequest(path, data) {
   const formattedData = data;
   formattedData.headers = formattedData.headers || {};
   formattedData.mode = "cors";

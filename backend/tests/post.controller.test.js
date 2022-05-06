@@ -1,21 +1,24 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const Users = require("../models/user");
 const Posts = require("../models/posts");
 const Comments = require("../models/comments");
 const Reactions = require("../models/reactions");
+const {
+  connectToDB,
+  disconnectDB,
+  createUser,
+  createPost,
+  createReaction,
+  createComment,
+  sleep,
+} = require("./utils");
 
 const lib = require("../controllers/post.controllers");
 
-dotenv.config();
-
-const sleep = (ms) =>
-  new Promise((r) => {
-    setTimeout(r, ms);
-  });
-
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_TEST_URL);
+  await connectToDB();
+});
+afterAll(async () => {
+  await disconnectDB();
 });
 
 beforeEach(async () => {
@@ -33,46 +36,6 @@ beforeEach(async () => {
   }
   await sleep(10);
 });
-
-async function createUser(username) {
-  return Users.create({
-    username: username || "tester",
-    firstname: "first",
-    lastname: "last",
-    role: "PT",
-    password: "some password",
-    registerTime: new Date().toLocaleString(),
-    friends: [],
-    friendRequests: [],
-  });
-}
-async function createPost(id, poster, time) {
-  return Posts.create({
-    title: "test title",
-    body: "test body",
-    time: time || new Date(),
-    poster: poster || "test poster",
-    users: id,
-  });
-}
-async function createReaction(poster, time, type, username) {
-  return Reactions.create({
-    postid: poster + time.toString(),
-    poster: "test poster",
-    username: username || "some rando",
-    time: time || 1,
-    type: type || "like",
-  });
-}
-async function createComment(poster, time, usersId, username) {
-  return Comments.create({
-    postId: poster + time.toString(),
-    commenter: username || "test poster",
-    content: "test content",
-    commentTime: 1,
-    users: usersId,
-  });
-}
 
 describe("Posts", () => {
   describe("post Post", () => {
@@ -108,21 +71,36 @@ describe("Posts", () => {
     });
   });
 
-  describe("get Posts", () => {
+  describe("get Posts both ways", () => {
     test("params not filled", async () => {
       await expect(lib.getPosts()).rejects.toThrow("params not filled");
     });
     test("get one user post", async () => {
       const user = await createUser();
 
-      await createPost(user._id);
-      const result = await lib.getPosts(["test poster"]);
+      await createPost(user._id, "tester");
+      const result = await lib.getPosts("tester");
       expect(result).toMatchObject([
         {
           title: "test title",
           body: "test body",
-          poster: "test poster",
-          users: user._id,
+          poster: "tester",
+        },
+      ]);
+    });
+    test("params not filled all", async () => {
+      await expect(lib.getPostsAll()).rejects.toThrow("params not filled");
+    });
+    test("get post with freinds", async () => {
+      const user = await createUser();
+
+      await createPost(user._id, "tester");
+      const result = await lib.getPostsAll("tester");
+      expect(result).toMatchObject([
+        {
+          title: "test title",
+          body: "test body",
+          poster: "tester",
         },
       ]);
     });
