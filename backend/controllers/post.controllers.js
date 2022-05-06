@@ -106,21 +106,6 @@ const postComment = async (postId, data) => {
   if (!postId || !data || !data.commenter || !data.content || !data.commentTime)
     throw new Error("params not filled");
 
-<<<<<<< HEAD
-  try {
-    const user = await Users.findOne({ username: data.commenter }).exec();
-    const result = await Comments.create({
-      ...data,
-      postId,
-      users: user._id,
-    });
-
-    return result;
-  } catch (err) {
-    console.error(err);
-    throw new Error("could not post comments");
-  }
-=======
   const user = await Users.findOne({ username: data.commenter }).exec();
   const result = await Comments.create({
     ...data,
@@ -129,7 +114,6 @@ const postComment = async (postId, data) => {
   });
 
   return result;
->>>>>>> main
 };
 
 module.exports = {
