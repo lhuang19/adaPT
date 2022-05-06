@@ -1,7 +1,50 @@
 const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-
+/**
+ * @openapi
+ * components:
+ *    schemas:
+ *      user:
+ *        type: object
+ *        required:
+ *          - username
+ *          - password
+ *          - firstname
+ *          - lastname
+ *          - role
+ *          - registerTime
+ *          - friends
+ *          - friendRequests
+ *        properties:
+ *          username:
+ *            type: string
+ *            example: TonyPT
+ *          password:
+ *            type: string
+ *            example: SomePassword
+ *          firstname:
+ *            type: string
+ *            example: Tony
+ *          lastname:
+ *            type: string
+ *            example: Grabiec
+ *          role:
+ *            type: string
+ *            example: PT
+ *          registerTime:
+ *            type: number
+ *            example: 1
+ *          friends:
+ *            type: array
+ *            items:
+ *              type: string
+ *          friendRequests:
+ *            type: array
+ *            items:
+ *              type: string
+ *
+ */
 const UserSchema = new Schema({
   username: { type: String, required: true, maxLength: 100 },
   password: { type: String, required: true, select: false },

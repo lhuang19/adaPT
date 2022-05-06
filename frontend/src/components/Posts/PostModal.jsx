@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Tooltip, Button, Modal, Form, Input, Upload } from "antd";
 import { FormOutlined, InboxOutlined } from "@ant-design/icons";
 
-import { doAPIRequest } from "../../modules/api";
+import { doAPIRequest, getApiURL } from "../../modules/api";
 import { AuthUserContext } from "../../context/Auth";
 
 function PostModal({ fetchNewPosts }) {
@@ -98,7 +98,7 @@ function PostModal({ fetchNewPosts }) {
           >
             <Upload.Dragger
               name="file"
-              action="http://localhost:8000/upload"
+              action={getApiURL("/upload")}
               multiple={false}
               maxCount={1}
               onRemove={(e) =>

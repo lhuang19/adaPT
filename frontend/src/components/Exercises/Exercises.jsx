@@ -22,7 +22,7 @@ function Exercises({ name, animate }) {
     <List
       dataSource={exercises}
       renderItem={(exercise) => (
-        <List.Item key={`${exercise.name}-${exercise.sets}x${exercise.reps}`}>
+        <List.Item key={exercise.creationTime}>
           {animate ? (
             <Parallax
               animation={[

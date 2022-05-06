@@ -32,7 +32,7 @@ function ReactionBar({ poster, time, username }) {
 
     const periodicRefresh = setInterval(async () => {
       makeReactionRequest(poster, time, username);
-    }, 100);
+    }, 30000);
 
     return () => clearInterval(periodicRefresh);
   }, [username]);
