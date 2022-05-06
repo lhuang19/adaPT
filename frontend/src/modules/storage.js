@@ -152,7 +152,6 @@ function getMessages(username) {
   return filtered;
 }
 
-
 function postMessage(username, messageData) {
   const data = localStorage.getItem(messageStorage);
   const parsedJSON = data === null ? [] : JSON.parse(data);
