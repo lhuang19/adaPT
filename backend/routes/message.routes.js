@@ -1,0 +1,22 @@
+const router = require("express").Router();
+const lib = require("../controllers/message.controllers");
+
+router.post("/", async (req, res) => {
+  try {
+    const results = await lib.postMessage(req.body);
+    res.status(201).json({ data: results });
+  } catch (err) {
+    res.status(500).json({ error: "try again later" });
+  }
+});
+
+router.get("/:username", async (req, res) => {
+  try {
+    const results = await lib.getMessages(req.params.username);
+    res.status(200).json({ data: results });
+  } catch (err) {
+    res.status(500).json({ error: "try again later" });
+  }
+});
+
+module.exports = router;
