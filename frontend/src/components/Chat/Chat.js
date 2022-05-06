@@ -24,6 +24,13 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
+function scrollToBottom() {
+  setTimeout(() => {
+    const element = document.getElementById("scrollable");
+    element.scrollTop = element.scrollHeight;
+  }, 100);
+}
+
 function Chat() {
   const { credentials } = useContext(AuthUserContext);
   const { username, firstname } = credentials;
@@ -40,7 +47,14 @@ function Chat() {
       const { data } = await doAPIRequest(`/chat/${credentials.username}`, {
         method: "GET",
       });
-
+      setAllMessages(data);
+      setCurrMessages(
+        data.filter(
+          (message) =>
+            message.receiver === currChattingUser ||
+            message.sender === currChattingUser
+        )
+      );
       if (notifications && data.length > allMessages.length) {
         notification.open({
           message: "adaPT",
@@ -48,28 +62,18 @@ function Chat() {
           duration: 3000,
         });
       }
-      setAllMessages(data);
-      setCurrMessages(
-        allMessages.filter(
-          (message) =>
-            (message.sender === username &&
-              message.receiver === currChattingUser) ||
-            (message.sender === currChattingUser &&
-              message.receiver === username)
-        )
-      );
     }
   }
   useEffect(() => {
     fetchNewMessages(false);
+    scrollToBottom();
   }, [username, currChattingUser]);
   useInterval(async () => {
     fetchNewMessages(true);
-  }, 1000);
-  setTimeout(() => {
-    const element = document.getElementById("scrollable");
-    element.scrollTop = element.scrollHeight;
-  }, 100);
+  }, 5000);
+  useEffect(() => {
+    scrollToBottom();
+  }, [currMessages]);
 
   async function getFriends() {
     if (username.length > 0) {
@@ -142,7 +146,14 @@ function Chat() {
           onSelect={(e) => {
             console.log(e.key);
             setCurrChattingUser(e.key);
-            setCurrMessages([]);
+            setCurrMessages(
+              allMessages.filter(
+                (message) =>
+                  message.receiver === currChattingUser ||
+                  message.sender === currChattingUser
+              )
+            );
+            scrollToBottom();
           }}
         />
       </Sider>
@@ -152,6 +163,7 @@ function Chat() {
           className="site-layout-background"
           style={{
             overflow: "auto",
+            scrollBehavior: "smooth",
           }}
         >
           <List
