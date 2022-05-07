@@ -50,14 +50,14 @@ router.post("/", async (req, res) => {
 
 /**
  * @openapi
- * /login/returning/{:token}:
+ * /login/returning/{token}:
  *  get:
  *    tags:
  *      - login
  *    summary: Check login token
  *    description: Verify JWT token and return user parameters if successful
  *    parameters:
- *      - name: JWT token
+ *      - name: token
  *        in: path
  *        description: JWT token with returning information
  *        required: true
