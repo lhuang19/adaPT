@@ -30,7 +30,11 @@ const multer = Multer({
  *      404:
  *        description: bad input parameter
  *    requestBody:
- *      description: image data
+ *      description: image data (multipart/form-data)
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: string
  */
 router.post("/", multer.single("file"), lib.upload);
 

@@ -35,8 +35,7 @@ const lib = require("../controllers/profile.controllers");
  *        content:
  *          application/json:
  *            schema:
- *              status:
- *                type: number
+ *              type: number
  *      404:
  *        description: bad input parameter
  */
@@ -220,6 +219,13 @@ router.delete("/friend/:username1/:username2", async (req, res) => {
  *      - profile
  *    summary: Delete user
  *    description: Deletes user
+ *    parameters:
+ *      - name: user
+ *        in: path
+ *        description: username
+ *        required: true
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: ok
@@ -249,11 +255,11 @@ router.delete("/delete/:user", async (req, res) => {
  *      404:
  *        description: bad input
  *    requestBody:
+ *      description: new user information
  *      content:
  *        application/json:
  *          schema:
  *            $ref: "#/components/schemas/user"
- *          description: new user information
  */
 router.post("/update", async (req, res) => {
   try {

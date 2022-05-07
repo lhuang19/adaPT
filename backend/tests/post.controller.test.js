@@ -140,7 +140,7 @@ describe("Posts", () => {
       expect((await Posts.find({})).length).toBe(1);
       expect((await Reactions.find({})).length).toBe(1);
       expect((await Comments.find({})).length).toBe(1);
-      await lib.deletePost({ poster: post.poster, time: post.time });
+      await lib.deletePost(post.poster, post.time);
       expect((await Posts.find({})).length).toBe(0);
       expect((await Reactions.find({})).length).toBe(0);
       expect((await Comments.find({})).length).toBe(0);

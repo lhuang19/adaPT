@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
 
 /**
  * @openapi
- * /login/returning:
+ * /login/returning/{:token}:
  *  get:
  *    tags:
  *      - login
@@ -100,11 +100,11 @@ router.get("/returning/:token", async (req, res) => {
  *      404:
  *        description: bad input
  *    requestBody:
+ *      description: Username and password used to login
  *      content:
  *        application/json:
  *          schema:
  *            $ref: "#/components/schemas/user"
- *          description: Username and password used to login
  */
 router.post("/signup", async (req, res) => {
   try {

@@ -115,34 +115,34 @@ router.post("/", async (req, res) => {
 
 /**
  * @openapi
- * /post/:
+ * /post/{username}/{time}:
  *  delete:
  *    tags:
  *      - posts
  *    summary: Delete post
  *    description: Deletes a post resource
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        description: poster's username
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: time
+ *        in: path
+ *        description: time of post
+ *        required: true
+ *        schema:
+ *          type: number
  *    responses:
  *      200:
  *        description: ok
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              poster:
- *                type: string
- *                example: TonyPT
- *              time:
- *                type: number
- *                example: 10
- *      description: post data
  */
-router.delete("/", async (req, res) => {
+router.delete("/:username/:time", async (req, res) => {
   try {
-    const results = await lib.deletePost(req.body);
+    const results = await lib.deletePost(req.params.username, req.params.time);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -282,19 +282,6 @@ router.post("/reactions", async (req, res) => {
  *        description: ok
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              poster:
- *                type: string
- *                example: TonyPT
- *              time:
- *                type: number
- *                example: 10
- *      description: post data
  */
 router.delete("/:id/reactions/:username/:type", async (req, res) => {
   try {
@@ -351,6 +338,13 @@ router.get("/:id/comments", async (req, res) => {
  *      - posts
  *    summary: Create a comment
  *    description: Creates a comment resource
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        description: post id
+ *        required: true
+ *        schema:
+ *          type: string
  *    responses:
  *      201:
  *        description: comment data

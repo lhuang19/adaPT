@@ -40,20 +40,26 @@ const getPostsAll = async (username) => {
   return result;
 };
 
-const deletePost = async (postData) => {
-  if (!postData || !postData.poster || !postData.time)
+const deletePost = async (username, time) => {
+  if (
+    !username ||
+    !time ||
+    !(await Posts.findOne({
+      poster: username,
+      time,
+    }))
+  )
     throw new Error("params not filled");
 
   await Reactions.deleteMany({
-    poster: postData.poster,
-    time: postData.time,
+    postid: username + time.toString(),
   }).exec();
   await Comments.deleteMany({
-    postId: postData.poster + postData.time.toString(),
+    postId: username + time.toString(),
   }).exec();
   return Posts.deleteOne({
-    poster: postData.poster,
-    time: postData.time,
+    poster: username,
+    time,
   }).exec();
 };
 

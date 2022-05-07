@@ -51,7 +51,7 @@ describe("/ endpoint tests", () => {
       { path: "/feed/:username", method: "get" },
       { path: "/feed/:username/all", method: "get" },
       { path: "/", method: "post" },
-      { path: "/", method: "delete" },
+      { path: "/:username/:time", method: "delete" },
       { path: "/:id/reactions/:username", method: "get" },
       { path: "/reactions", method: "post" },
       { path: "/:id/reactions/:username/:type", method: "delete" },
@@ -96,18 +96,12 @@ describe("/ endpoint tests", () => {
       .expect(201);
   });
 
-  test("DELETE / endpoint status code and response 500", async () =>
-    request(app).delete("/").send({}).expect(500));
+  test("DELETE /:username/:time endpoint status code and response 500", async () =>
+    request(app).delete("/somerando/1").send({}).expect(500));
   test("DELETE /  endpoint status code and response 200", async () => {
     const response = await createUser();
     await createPost(response._id, "tester", 1);
-    return request(app)
-      .delete("/")
-      .send({
-        poster: "tester",
-        time: 1,
-      })
-      .expect(200);
+    return request(app).delete("/tester/1").expect(200);
   });
 
   test("GET /:id/reactions/:username endpoint status code and response 404", async () =>
