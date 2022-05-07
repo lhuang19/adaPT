@@ -4,7 +4,10 @@ import { Rate } from 'antd-mobile';
 import { CheckCircleOutline } from 'antd-mobile-icons';
 
 // eslint-disable-next-line import/no-relative-packages
-import { doAPIRequest } from '../../frontend/src/modules/api';
+
+import axios from 'axios';
+
+const baseUrl = 'http://10.102.196.128:8000';
 
 const setCompletionIcon = <CheckCircleOutline />;
 
@@ -37,9 +40,11 @@ function Exercise({ data }) {
         count={sets}
         defaultValue={setsCompleted}
         onChange={async (value) => {
-          await doAPIRequest('/exercise/counter', {
-            method: 'POST',
-            body: { patient, creationTime, setsCompleted: value },
+          const json = JSON.stringify({ patient, creationTime, setsCompleted: value });
+          await axios.post(`${baseUrl}/exercise/counter`, json, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
           });
         }}
       />
