@@ -12,7 +12,6 @@ import ProfileScreen from './pages/ProfileScreen';
 
 const MessageRoute = () => <MessageScreen />;
 const ExerciseRoute = () => <ExerciseScreen />;
-const SearchRoute = () => <SearchScreen />;
 
 function Adapt({ route, navigation }) {
   const { userData } = route.params;

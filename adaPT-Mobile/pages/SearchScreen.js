@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import { Searchbar, List } from 'react-native-paper';
 import ProfileScreen from './ProfileScreen';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.227.130:8000';
+const baseUrl = 'http://10.102.196.128:8000';
 
 const styles = StyleSheet.create({
   item: {
@@ -15,10 +15,10 @@ const styles = StyleSheet.create({
 });
 
 export default function SearchScreen({ userData }) {
-  const [query, setQuery] = React.useState("");
-  const [results, setResults] = React.useState([]);
-  const [usernames, setUsernames] = React.useState([]);
-  const [profile, setProfile] = React.useState("");
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [usernames, setUsernames] = useState([]);
+  const [profile, setProfile] = useState("");
 
   async function doAPIRequest() {
     const res = await axios.get(`${baseUrl}/user`)
@@ -81,7 +81,7 @@ export default function SearchScreen({ userData }) {
     <SafeAreaView>
       <Searchbar
         placeholder="Search..."
-        onChangeText={(value) => handleChangeText(value.toLowerCase())}
+        onChangeText={(value) => handleChangeText(value)}
         value={query}
       />
       {renderResults()}

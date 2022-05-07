@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, Text, StyleSheet, View } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { Text, StyleSheet, View } from 'react-native'
 import { Button } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.227.130:8000';
+const baseUrl = 'http://10.102.196.128:8000';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
+    height: "100%",
   },
   picture: {
     marginTop: 50,
@@ -29,14 +30,13 @@ const styles = StyleSheet.create({
     fontWeight: '200',
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: "row",
   },
 });
 
 export default function ProfileScreen({ userData, profile }) {
-  const [profileData, setProfileData] = React.useState([]);
-  const [status, setStatus] = React.useState(-2);
+  const [profileData, setProfileData] = useState([]);
+  const [status, setStatus] = useState(-2);
 
   useEffect(() => {
     if (userData.username !== profile) {
@@ -58,8 +58,6 @@ export default function ProfileScreen({ userData, profile }) {
   }, []);
 
   function renderButton() {
-    console.log("Rendering...", userData.username, profile);
-    console.log(profileData);
     if (userData.username === profile) {
       return (
         <Button
@@ -85,8 +83,6 @@ export default function ProfileScreen({ userData, profile }) {
     }
     doAPIRequest();
 
-    console.log("Status: ", status);
-
     if (status === -2) {
       return (
         <Button
@@ -100,7 +96,16 @@ export default function ProfileScreen({ userData, profile }) {
       return (
         <Button
         mode="contained"
-        onPress={() => alert("Implement friends")}
+        onPress={async () => {
+          if (userData.length === 0) {
+            return;
+          }
+          const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+          .catch((error) => {
+            alert(error);
+          });
+          setStatus(res.data.data);
+        }}
         color={"#1890FF"}
         >
           Request Friend
@@ -110,7 +115,17 @@ export default function ProfileScreen({ userData, profile }) {
       return (
         <Button
         mode="contained"
-        onPress={() => alert("Implement friends")}
+        onPress={async () => {
+          const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+          .catch((error) => {
+            alert(error);
+          });
+          if (res.data.data !== 100) {
+            setStatus(res.data.data);
+            return;
+          }
+          setStatus(-1);
+        }}
         color={"#FF7875"}
         >
           Remove Friend
@@ -120,6 +135,13 @@ export default function ProfileScreen({ userData, profile }) {
       return (
         <Button
         mode="contained"
+        onPress={async () => {
+          const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+          .catch((error) => {
+            alert(error);
+          });
+          setStatus(res.data.data);
+        }}
         color={"#1890FF"}
         >
           Requested Friend
@@ -130,17 +152,37 @@ export default function ProfileScreen({ userData, profile }) {
         <View style={styles.buttonContainer}>
           <Button
           mode="contained"
-          onPress={() => alert("Implement friends")}
-          color={"#FF7875"}
-          >
-            Decline
-          </Button>
-          <Button
-          mode="contained"
-          onPress={() => alert("Implement friends")}
+          onPress={async () => {
+            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            .catch((error) => {
+              alert(error);
+            });
+            if (res.data.data !== 100) {
+              setStatus(res.data.data);
+              return;
+            }
+            setStatus(0);
+            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+            .catch((error) => {
+              alert(error);
+            });
+          }}
           color={"#1890FF"}
           >
             Accept
+          </Button>
+          <Button
+          mode="contained"
+          onPress={async () => {
+            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            .catch((error) => {
+              alert(error);
+            });
+            setStatus(-1);
+          }}
+          color={"#FF7875"}
+          >
+            Decline
           </Button>
         </View>
       );
