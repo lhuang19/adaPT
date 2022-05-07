@@ -64,6 +64,10 @@ app.get("/api/*", (_, res) => {
   res.status(404).send("endpoint not found");
 });
 
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.js"));
+});
+
 // Start server
 const port = process.env.PORT || 8000;
 app.listen(port, async () => {
