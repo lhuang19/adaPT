@@ -58,7 +58,7 @@ app.get("*", (_, res) => {
 });
 
 // Start server
-const port = 8000;
+const port = process.env.PORT || 8000;
 app.listen(port, async () => {
   try {
     if (mongoose.connection.readyState === 0)
