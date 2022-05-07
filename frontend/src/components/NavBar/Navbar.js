@@ -74,6 +74,7 @@ function NavBar(props) {
               onClick={() => alert("implement friends")}
             />
             <Menu.Item
+              id="chat_nav_bar"
               key="/chat_nav_bar"
               icon={
                 <IconWrapper>
@@ -83,6 +84,7 @@ function NavBar(props) {
               onClick={() => navigate("/chat")}
             />
             <Menu.Item
+              id="search_nav_bar"
               key="search_nav_bar"
               icon={
                 <IconWrapper>
