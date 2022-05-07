@@ -1,29 +1,28 @@
 import 'react-native-gesture-handler';
  
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import { Button, TextInput, Text } from 'react-native-paper';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:8000';
+const baseUrl = 'http://10.102.196.128:8000';
 
 function LoginScreen({ navigation }) {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  async function loginHandler(values) {
-    const { username, password } = values;
-
-    const json = JSON.stringify({ username: username.toLowerCase(), password: password.toLowerCase() });
+  async function loginHandler(login) {
+    const json = JSON.stringify(login);
     const res = await axios.post(`${baseUrl}/login`, json, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
     .catch((error) => {
-      alert(error.response.data.error);
+      console.log(error.response.data);
+      alert(error);
     });
     if (res) {
       console.log(res.data.data);
@@ -58,7 +57,7 @@ function LoginScreen({ navigation }) {
       <Button
         mode="contained"
         onPress={() => {
-          loginHandler({ username, password });
+          loginHandler({ username: username, password: password });
         }}
         style={styles.button}
       >
