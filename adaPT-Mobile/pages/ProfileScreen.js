@@ -5,7 +5,7 @@ import { SvgUri } from 'react-native-svg';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+const baseUrl = 'http://110.102.250.188:8000';
 
 const styles = StyleSheet.create({
   container: {
