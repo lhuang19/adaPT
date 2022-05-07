@@ -1,4 +1,7 @@
-const baseURL = "http://localhost:8000";
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://adapt-350.herokuapp.com/api"
+    : "http://localhost:8000/api";
 
 export function getApiURL(path) {
   return baseURL + path;
@@ -9,7 +12,7 @@ export function getApiURL(path) {
  * @param data (request body)
  * @returns data and error
  */
-export function doAPIRequest(path, data) {
+export async function doAPIRequest(path, data) {
   const formattedData = data;
   formattedData.headers = formattedData.headers || {};
   formattedData.mode = "cors";

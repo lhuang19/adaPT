@@ -56,14 +56,10 @@ const deleteExercise = async (exerciseData) => {
   if (!exerciseData || !exerciseData.pt || !exerciseData.creationTime)
     throw new Error("params not filled");
 
-  try {
-    return await Exercises.deleteOne({
-      pt: exerciseData.pt,
-      creationTime: exerciseData.creationTime,
-    }).exec();
-  } catch (err) {
-    throw new Error("could not delete exercise");
-  }
+  return Exercises.deleteOne({
+    pt: exerciseData.pt,
+    creationTime: exerciseData.creationTime,
+  }).exec();
 };
 
 const setSetsCompleted = async (exerciseData) => {
@@ -81,7 +77,7 @@ const setSetsCompleted = async (exerciseData) => {
       creationTime: exerciseData.creationTime,
     });
     exercise.setsCompleted = exerciseData.setsCompleted;
-    await exercise.save();
+    return await exercise.save();
   } catch (err) {
     throw new Error("could not set completed sets");
   }

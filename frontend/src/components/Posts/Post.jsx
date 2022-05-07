@@ -106,9 +106,8 @@ function Post(props) {
           <Button
             danger
             onClick={async () => {
-              await doAPIRequest("/post", {
+              await doAPIRequest(`/post/${poster}/${time}`, {
                 method: "DELETE",
-                body: { poster, time },
               });
               fetchNewPosts();
             }}

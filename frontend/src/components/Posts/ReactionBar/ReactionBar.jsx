@@ -17,23 +17,25 @@ function ReactionBar({ poster, time, username }) {
     reactionTime,
     reactionUsername
   ) {
-    const { data } = await doAPIRequest(
-      `/post/${reactionPoster}${reactionTime}/reactions/${reactionUsername}`,
-      {
-        method: "GET",
-      }
-    );
-    setReactions(data);
+    if (reactionUsername !== "") {
+      const { data } = await doAPIRequest(
+        `/post/${reactionPoster}${reactionTime}/reactions/${reactionUsername}`,
+        {
+          method: "GET",
+        }
+      );
+      setReactions(data);
+    }
   }
   useEffect(() => {
     makeReactionRequest(poster, time, username);
 
     const periodicRefresh = setInterval(async () => {
       makeReactionRequest(poster, time, username);
-    }, 100000);
+    }, 30000);
 
     return () => clearInterval(periodicRefresh);
-  }, []);
+  }, [username]);
 
   return reactions ? (
     <Space>

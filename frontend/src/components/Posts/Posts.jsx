@@ -3,7 +3,6 @@ import { List } from "antd";
 import { Parallax } from "rc-scroll-anim";
 import { AuthUserContext } from "../../context/Auth";
 
-import { getFriends } from "../../modules/storage";
 import { doAPIRequest } from "../../modules/api";
 import Post from "./Post";
 import PostModal from "./PostModal";
@@ -15,20 +14,16 @@ function Posts({ profile, name, animate, allowPosting }) {
   const [posts, setPosts] = useState([]);
 
   async function fetchNewPosts() {
-    const usernamesToFetch = [];
-    usernamesToFetch.push(profile ? name : username);
-    if (!profile) {
-      const friends = await getFriends(username);
-      usernamesToFetch.push(...friends);
-    }
-    const { data } = await doAPIRequest("/post/feed", {
-      method: "POST",
-      body: usernamesToFetch,
-    });
+    const { data } = await doAPIRequest(
+      profile ? `/post/feed/${name}` : `/post/feed/${username}/all`,
+      {
+        method: "GET",
+      }
+    );
     setPosts(data);
   }
   useEffect(() => {
-    if (username !== undefined) fetchNewPosts();
+    if (username.length > 0) fetchNewPosts();
   }, [username, name]);
   return (
     <>

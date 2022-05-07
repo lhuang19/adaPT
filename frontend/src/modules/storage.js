@@ -12,6 +12,7 @@ const loggedInStorage = "supervulnerabletoken";
 const exerciseStorage = "adaPT_exercises";
 const friendsList = "adaPT_friends";
 const friendRequestList = "adaPT_friendRequests";
+const messageStorage = "adaPT_messages";
 
 // ignore for now?
 function logout() {
@@ -141,6 +142,27 @@ function completeExercise(time) {
   localStorage.setItem(exerciseStorage, JSON.stringify(changedJSON));
 }
 
+function getMessages(username) {
+  const data = localStorage.getItem(messageStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const filtered = parsedJSON.filter(
+    (message) => message.recipient === username
+  );
+  filtered.sort((a, b) => b.time - a.time);
+  return filtered;
+}
+
+function postMessage(username, messageData) {
+  const data = localStorage.getItem(messageStorage);
+  const parsedJSON = data === null ? [] : JSON.parse(data);
+  const completeMessageData = {
+    ...messageData,
+    poster: username,
+  };
+  parsedJSON.push(completeMessageData);
+  localStorage.setItem(messageStorage, JSON.stringify(parsedJSON));
+}
+
 export {
   addLoginToken,
   checkLoggedIn,
@@ -155,4 +177,6 @@ export {
   getExercises,
   addExercise,
   completeExercise,
+  getMessages,
+  postMessage,
 };

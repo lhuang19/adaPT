@@ -1,4 +1,6 @@
-$width: 5 / 100;
+@use "sass:math";
+
+$width: math.div(5, 100);
 $duration: 0.4s;
 
 .animateIn {

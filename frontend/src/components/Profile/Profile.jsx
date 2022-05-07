@@ -44,18 +44,22 @@ function Profile() {
     makeAPIRequest();
   }, [username, name]);
 
-  return userNotFound ? (
-    <Result
-      status="404"
-      title="Hmmmm"
-      subTitle={errorMessage.current}
-      extra={
-        <Button type="primary" onClick={() => navigate("/")}>
-          Back Home
-        </Button>
-      }
-    />
-  ) : (
+  if (userNotFound) {
+    return (
+      <Result
+        status="404"
+        title="Hmmmm"
+        subTitle={errorMessage.current}
+        extra={
+          <Button type="primary" onClick={() => navigate("/")}>
+            Back Home
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
     <Row style={{ width: "100%", height: "100%" }}>
       <Col
         span={10}
@@ -75,54 +79,21 @@ function Profile() {
             {userData.firstname} {userData.lastname}
           </h1>
           <p style={{ color: "grey" }}>({userData.username})</p>
-          {name === username ? (
-            <Button
-              onClick={() => {
-                navigate(`/change_profile/${username}`);
-                makeAPIRequest();
-              }}
-            >
-              Edit Profile
-            </Button>
-          ) : status === -1 ? (
-            <Button
-              type="primary"
-              onClick={async () => {
-                if (username.length === 0) {
-                  return;
-                }
-                const { data } = await doAPIRequest(
-                  `/profile/friendRequest/${username}/${name}`,
-                  {
-                    method: "POST",
-                  }
-                );
-                setStatus(data);
-              }}
-            >
-              Request Friend
-            </Button>
-          ) : status === 1 ? (
-            <Button
-              type="primary"
-              onClick={async () => {
-                if (username.length === 0) {
-                  return;
-                }
-                const { data } = await doAPIRequest(
-                  `/profile/${username}/${name}`,
-                  {
-                    method: "GET",
-                  }
-                );
-                setStatus(data);
-              }}
-            >
-              Requested Friend
-            </Button>
-          ) : status === 2 ? (
-            <div className="buttons">
-              <div className="action_btn">
+          {(() => {
+            if (name === username) {
+              return (
+                <Button
+                  onClick={() => {
+                    navigate(`/change_profile/${username}`);
+                    makeAPIRequest();
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              );
+            }
+            if (status === -1) {
+              return (
                 <Button
                   type="primary"
                   onClick={async () => {
@@ -130,68 +101,118 @@ function Profile() {
                       return;
                     }
                     const { data } = await doAPIRequest(
-                      `/profile/friendRequest/${name}/${username}`,
+                      `/profile/friendRequest/${username}/${name}`,
                       {
-                        method: "DELETE",
+                        method: "POST",
                       }
                     );
-                    if (data !== 100) {
-                      setStatus(data);
-                      return;
-                    }
-                    setStatus(0);
-                    await doAPIRequest(`/profile/friend/${name}/${username}`, {
-                      method: "POST",
-                    });
+                    setStatus(data);
                   }}
                 >
-                  Accept
+                  Request Friend
                 </Button>
-
+              );
+            }
+            if (status === 1) {
+              return (
                 <Button
                   type="primary"
                   onClick={async () => {
                     if (username.length === 0) {
                       return;
                     }
-                    await doAPIRequest(
-                      `/profile/friendRequest/${name}/${username}`,
+                    const { data } = await doAPIRequest(
+                      `/profile/${username}/${name}`,
                       {
-                        method: "DELETE",
+                        method: "GET",
                       }
                     );
-                    setStatus(-1);
+                    setStatus(data);
                   }}
-                  danger
                 >
-                  Decline
+                  Requested Friend
                 </Button>
-              </div>
-            </div>
-          ) : (
-            <Button
-              type="primary"
-              onClick={async () => {
-                if (username.length === 0) {
-                  return;
-                }
-                const { data } = await doAPIRequest(
-                  `/profile/friend/${username}/${name}`,
-                  {
-                    method: "DELETE",
+              );
+            }
+            if (status === 2) {
+              return (
+                <div className="buttons">
+                  <div className="action_btn">
+                    <Button
+                      type="primary"
+                      onClick={async () => {
+                        if (username.length === 0) {
+                          return;
+                        }
+                        const { data } = await doAPIRequest(
+                          `/profile/friendRequest/${name}/${username}`,
+                          {
+                            method: "DELETE",
+                          }
+                        );
+                        if (data !== 100) {
+                          setStatus(data);
+                          return;
+                        }
+                        setStatus(0);
+                        await doAPIRequest(
+                          `/profile/friend/${name}/${username}`,
+                          {
+                            method: "POST",
+                          }
+                        );
+                      }}
+                    >
+                      Accept
+                    </Button>
+
+                    <Button
+                      type="primary"
+                      onClick={async () => {
+                        if (username.length === 0) {
+                          return;
+                        }
+                        await doAPIRequest(
+                          `/profile/friendRequest/${name}/${username}`,
+                          {
+                            method: "DELETE",
+                          }
+                        );
+                        setStatus(-1);
+                      }}
+                      danger
+                    >
+                      Decline
+                    </Button>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Button
+                type="primary"
+                onClick={async () => {
+                  if (username.length === 0) {
+                    return;
                   }
-                );
-                if (data !== 100) {
-                  setStatus(data);
-                  return;
-                }
-                setStatus(-1);
-              }}
-              danger
-            >
-              Remove Friend
-            </Button>
-          )}
+                  const { data } = await doAPIRequest(
+                    `/profile/friend/${username}/${name}`,
+                    {
+                      method: "DELETE",
+                    }
+                  );
+                  if (data !== 100) {
+                    setStatus(data);
+                    return;
+                  }
+                  setStatus(-1);
+                }}
+                danger
+              >
+                Remove Friend
+              </Button>
+            );
+          })()}
         </div>
         <Divider type="vertical" />
       </Col>

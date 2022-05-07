@@ -60,7 +60,6 @@ const addFriendRequest = async (username1, username2) => {
     );
     return 1;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -81,7 +80,6 @@ const deleteFriendRequest = async (username1, username2) => {
     await Users.updateOne({ username: username1 }, { friendRequests: newFR });
     return 100;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -98,12 +96,11 @@ const addFriend = async (username1, username2) => {
       { username: username1 },
       { friends: result1.friends }
     );
-    await Users.updateOne(
+    return await Users.updateOne(
       { username: username2 },
       { friends: result2.friends }
     );
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -128,7 +125,6 @@ const deleteFriend = async (username1, username2) => {
     await Users.updateOne({ username: username2 }, { friends: newF2 });
     return 100;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -136,9 +132,10 @@ const deleteFriend = async (username1, username2) => {
 const deleteProfile = async (user) => {
   if (!user) throw new Error("params not filled");
   try {
-    await Users.deleteOne({ username: user }).exec();
+    const result = await Users.deleteOne({ username: user }).exec();
+    if (result.deletedCount === 0) throw new Error();
+    return result;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };
@@ -165,6 +162,7 @@ const updateProfile = async (user) => {
       }
     );
   }
+  return true;
 };
 
 const authenticateUser = async (user, password) => {
@@ -178,7 +176,6 @@ const authenticateUser = async (user, password) => {
     if (hashed === result.password) return true;
     return false;
   } catch (err) {
-    console.error(err);
     throw new Error("could not find user");
   }
 };

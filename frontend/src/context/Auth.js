@@ -17,9 +17,8 @@ function WithAuth({ children }) {
   useEffect(() => {
     async function loadToken() {
       const token = checkLoggedIn();
-      const { data } = await doAPIRequest("/login/returning", {
-        method: "POST",
-        body: { token },
+      const { data } = await doAPIRequest(`/login/returning/${token}`, {
+        method: "GET",
       });
       if (data) {
         setCredentials(data);
@@ -39,6 +38,8 @@ function WithAuth({ children }) {
     }),
     [credentials]
   );
+
+  console.log("CREDENTIALS: ", credentials);
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>

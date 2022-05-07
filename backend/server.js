@@ -2,10 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+const path = require("path");
 
 const loginRouter = require("./routes/login.routes");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
+const messageRouter = require("./routes/message.routes");
 const exerciseRouter = require("./routes/exercise.routes");
 const profileRouter = require("./routes/profile.routes");
 const uploadRouter = require("./routes/upload.routes");
@@ -23,22 +27,49 @@ app.use(
   })
 );
 
-app.use("/login", loginRouter);
-app.use("/user", userRouter);
-app.use("/post", postRouter);
-app.use("/exercise", exerciseRouter);
-app.use("/profile", profileRouter);
-app.use("/upload", uploadRouter);
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-app.get("*", (_, res) => {
+app.use("/api/login", loginRouter);
+app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
+app.use("/api/chat", messageRouter);
+app.use("/api/exercise", exerciseRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/upload", uploadRouter);
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "AdaPT",
+      version: "1.0.0",
+      description: "API",
+    },
+  },
+  apis: ["./routes/*.js", "./models/*.js"],
+};
+const openapiSpecification = swaggerJsdoc(options);
+app.use(
+  "/api/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapiSpecification)
+);
+
+app.get("/api/api-docs.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(openapiSpecification);
+});
+
+app.get("/api/*", (_, res) => {
   res.status(404).send("endpoint not found");
 });
 
 // Start server
-const port = 8000;
+const port = process.env.PORT || 8000;
 app.listen(port, async () => {
   try {
-    global.db = await mongoose.connect(url);
+    if (mongoose.connection.readyState === 0)
+      global.db = await mongoose.connect(url);
   } catch (error) {
     console.error(error);
   }
