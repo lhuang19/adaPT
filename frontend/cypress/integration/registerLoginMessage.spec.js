@@ -113,7 +113,7 @@ describe("register, login, message", () => {
     cy.get(".ant-input").type("im a goat");
     cy.get(".ant-btn").click();
 
-    cy.wait(1000);
+    cy.wait(5000);
   });
 
   it("login 2 and check message", () => {
