@@ -27,7 +27,7 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
