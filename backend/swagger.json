@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "AdaPT", "version": "1.0.0" },
+  "paths": {
+    "/": {
+      "post": {
+        "summary": "Login",
+        "description": "Login user and create login tokin",
+        "responses": { "201": { "description": "Some response" } }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}
