@@ -26,13 +26,15 @@ app.use(
   })
 );
 
-app.use("/login", loginRouter);
-app.use("/user", userRouter);
-app.use("/post", postRouter);
-app.use("/chat", messageRouter);
-app.use("/exercise", exerciseRouter);
-app.use("/profile", profileRouter);
-app.use("/upload", uploadRouter);
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api/login", loginRouter);
+app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
+app.use("/api/chat", messageRouter);
+app.use("/api/exercise", exerciseRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/upload", uploadRouter);
 
 const options = {
   definition: {
@@ -46,14 +48,18 @@ const options = {
   apis: ["./routes/*.js", "./models/*.js"],
 };
 const openapiSpecification = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+app.use(
+  "/api/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapiSpecification)
+);
 
-app.get("/api-docs.json", (req, res) => {
+app.get("/api/api-docs.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(openapiSpecification);
 });
 
-app.get("*", (_, res) => {
+app.get("/api/*", (_, res) => {
   res.status(404).send("endpoint not found");
 });
 

@@ -1,4 +1,7 @@
-const baseURL = "http://localhost:8000";
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://adapt-350.herokuapp.com/api"
+    : "http://localhost:8000/api";
 
 export function getApiURL(path) {
   return baseURL + path;
