@@ -29,7 +29,7 @@ beforeEach(async () => {
 describe("/ endpoint tests", () => {
   test("has routes", () => {
     const routes = [
-      { path: "/feed", method: "post" },
+      { path: "/feed/:username", method: "get" },
       { path: "/", method: "post" },
       { path: "/", method: "delete" },
       { path: "/counter", method: "put" },
@@ -43,25 +43,15 @@ describe("/ endpoint tests", () => {
     });
   });
 
-  test("POST /feed endpoint status code and response 500", async () =>
-    request(app).post("/feed").send({}).expect(500));
-  test("POST /feed endpoint status code and response 500 second error", async () =>
-    request(app).post("/feed").send({ username: "tester" }).expect(500));
-  test("POST /feed  endpoint status code and response 200", async () => {
+  test("GET /feed/:username endpoint status code and response 500", async () =>
+    request(app).get("/feed/").expect(500));
+  test("GET /feed/:username endpoint status code and response 500 second error", async () =>
+    request(app).get("/feed/tester").expect(500));
+  test("GET /feed/:username endpoint status code and response 200", async () => {
     await createUser();
-    await request(app)
-      .post("/feed")
-      .send({
-        username: "tester",
-      })
-      .expect(200);
+    await request(app).get("/feed/tester").expect(200);
     await createUser("tester2", "Patient");
-    return request(app)
-      .post("/feed")
-      .send({
-        username: "tester2",
-      })
-      .expect(200);
+    return request(app).get("/feed/tester2").expect(200);
   });
 
   test("POST / endpoint status code and response 500", async () =>
