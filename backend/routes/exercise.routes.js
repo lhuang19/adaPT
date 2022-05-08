@@ -79,32 +79,37 @@ router.post("/", async (req, res) => {
 
 /**
  * @openapi
- * /exercise/:
+ * /exercise/{pt}/{creationTime}:
  *  delete:
  *    tags:
  *      - exercise
  *    summary: Delete exercise
  *    description: Deletes a exercise resource
+ *    parameters:
+ *      - name: pt
+ *        in: path
+ *        description: the pt who assigned the exercise to be deleted
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: creationTime
+ *        in: path
+ *        description: creation time of exercise
+ *        required: true
+ *        schema:
+ *          type: number
  *    responses:
  *      200:
  *        description: ok
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              pt:
- *                type: string
- *              creationTime:
- *                type: number
- *      description: post data
  */
-router.delete("/", async (req, res) => {
+router.delete("/:pt/:creationTime", async (req, res) => {
   try {
-    const results = await lib.deleteExercise(req.body);
+    const results = await lib.deleteExercise(
+      req.params.pt,
+      req.params.creationTime
+    );
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });

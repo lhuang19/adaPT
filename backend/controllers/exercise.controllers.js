@@ -51,13 +51,20 @@ const getExercises = async (username) => {
   }
 };
 
-const deleteExercise = async (exerciseData) => {
-  if (!exerciseData || !exerciseData.pt || !exerciseData.creationTime)
+const deleteExercise = async (pt, creationTime) => {
+  if (
+    !pt ||
+    !creationTime ||
+    !(await Exercises.findOne({
+      pt,
+      creationTime,
+    }))
+  )
     throw new Error("params not filled");
 
   return Exercises.deleteOne({
-    pt: exerciseData.pt,
-    creationTime: exerciseData.creationTime,
+    pt,
+    creationTime,
   }).exec();
 };
 

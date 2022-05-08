@@ -31,7 +31,7 @@ describe("/ endpoint tests", () => {
     const routes = [
       { path: "/feed/:username", method: "get" },
       { path: "/", method: "post" },
-      { path: "/", method: "delete" },
+      { path: "/:pt/:creationTime", method: "delete" },
       { path: "/counter", method: "put" },
     ];
 
@@ -56,8 +56,8 @@ describe("/ endpoint tests", () => {
 
   test("POST / endpoint status code and response 500", async () =>
     request(app).post("/").send({}).expect(500));
-  test("DELETE / endpoint status code and response 500", async () =>
-    request(app).delete("/").send({}).expect(500));
+  test("DELETE /:pt/:creationTime endpoint status code and response 500", async () =>
+    request(app).delete("/somerando/1").expect(500));
   test("POST / endpoint status code and response 500 not found", async () => {
     await createUser();
     await request(app)
@@ -95,13 +95,7 @@ describe("/ endpoint tests", () => {
       .put("/counter")
       .send({ patient: result.patient, creationTime: 121, setsCompleted: 1 })
       .expect(201);
-    return request(app)
-      .delete("/")
-      .send({
-        pt: result.pt,
-        creationTime: 121,
-      })
-      .expect(200);
+    return request(app).delete(`/${result.pt}/121`).expect(200);
   });
 
   test("PUT /counter endpoint status code and response 500", async () =>
