@@ -1,30 +1,32 @@
 import React, { useState } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import { Searchbar, List } from 'react-native-paper';
-import ProfileScreen from './ProfileScreen';
-
 import axios from 'axios';
+
+import ProfileScreen from './ProfileScreen';
 
 const baseUrl = 'http://10.102.196.128:8000';
 
 const styles = StyleSheet.create({
   item: {
     borderRadius: 20,
-    borderColor:'#000000',
+    borderColor: '#000000',
   },
 });
 
+const accountIcon = <List.Icon icon="account" />;
+
 export default function SearchScreen({ userData }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [usernames, setUsernames] = useState([]);
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState('');
 
   async function doAPIRequest() {
     const res = await axios.get(`${baseUrl}/user`)
-    .catch((error) => {
-      alert(error.response.data.error);
-    });
+      .catch((error) => {
+        alert(error.response.data.error);
+      });
     if (res) {
       setUsernames(res.data.data);
     } else {
@@ -34,7 +36,7 @@ export default function SearchScreen({ userData }) {
 
   function handleChangeText(value) {
     setQuery(value);
-    setProfile("");
+    setProfile('');
     doAPIRequest();
     let res = [];
 
@@ -49,7 +51,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderResults() {
-    if (profile !== "") {
+    if (profile !== '') {
       return (
         <View>
           <ProfileScreen userData={userData} profile={profile} />
@@ -57,7 +59,7 @@ export default function SearchScreen({ userData }) {
       );
     }
     if (results.length !== 0) {
-      let uiItems = [];
+      const uiItems = [];
       results.forEach((element) => {
         uiItems.push(
           <List.Section>
@@ -66,7 +68,7 @@ export default function SearchScreen({ userData }) {
               key={element}
               descriptionNumberOfLines={16}
               style={styles.item}
-              left={() => <List.Icon icon="account" />}
+              left={accountIcon}
               onPress={() => setProfile(element)}
             />
           </List.Section>,

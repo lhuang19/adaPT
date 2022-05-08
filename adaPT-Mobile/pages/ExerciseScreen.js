@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { List } from 'antd-mobile';
-// eslint-disable-next-line import/no-relative-packages
+import axios from 'axios';
 
 import Exercise from '../components/Exercise';
-
-import axios from 'axios';
 
 const baseUrl = 'http://10.102.196.128:8000';
 
@@ -15,9 +13,9 @@ function ExerciseScreen({ userData }) {
 
   async function fetchNewExercises() {
     const res = await axios.post(`${baseUrl}/exercise/feed`)
-    .catch((error) => {
-      alert(error);
-    });
+      .catch((error) => {
+        alert(error);
+      });
     setExercises(res.data.data);
   }
   useEffect(() => {
