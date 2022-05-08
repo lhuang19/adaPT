@@ -32,7 +32,7 @@ describe("/ endpoint tests", () => {
       { path: "/feed", method: "post" },
       { path: "/", method: "post" },
       { path: "/", method: "delete" },
-      { path: "/counter", method: "post" },
+      { path: "/counter", method: "put" },
     ];
 
     routes.forEach((route) => {
@@ -102,7 +102,7 @@ describe("/ endpoint tests", () => {
       .expect(201)
       .then((response) => JSON.parse(response.text).data);
     await request(app)
-      .post("/counter")
+      .put("/counter")
       .send({ patient: result.patient, creationTime: 121, setsCompleted: 1 })
       .expect(201);
     return request(app)
@@ -114,12 +114,12 @@ describe("/ endpoint tests", () => {
       .expect(200);
   });
 
-  test("POST /counter endpoint status code and response 500", async () =>
-    request(app).post("/counter").send({}).expect(500));
+  test("PUT /counter endpoint status code and response 500", async () =>
+    request(app).put("/counter").send({}).expect(500));
 
-  test("POST /counter endpoint status code and response 500 second", async () =>
+  test("PUT /counter endpoint status code and response 500 second", async () =>
     request(app)
-      .post("/counter")
+      .put("/counter")
       .send({ patient: "tester", creationTime: 1, setsCompleted: 1 })
       .expect(500));
 
