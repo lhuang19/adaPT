@@ -6,7 +6,10 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+const baseUrl = `${BASE_URL}/api`;
 
 function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { List } from 'antd-mobile';
 import axios from 'axios';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
 
 import Exercise from '../components/Exercise';
 
-const baseUrl = 'http://10.102.196.128:8000';
+const baseUrl = `${BASE_URL}/api`;
 
 function ExerciseScreen({ userData }) {
   const [exercises, setExercises] = useState([]);

@@ -3,11 +3,12 @@ import { View, Text } from 'react-native';
 import { Rate } from 'antd-mobile';
 import { CheckCircleOutline } from 'antd-mobile-icons';
 
-// eslint-disable-next-line import/no-relative-packages
-
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+const baseUrl = `${BASE_URL}/api`;
 
 const setCompletionIcon = <CheckCircleOutline />;
 

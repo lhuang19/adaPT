@@ -5,7 +5,10 @@ import { SvgUri } from 'react-native-svg';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   container: {

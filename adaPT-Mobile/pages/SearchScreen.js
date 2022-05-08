@@ -3,9 +3,12 @@ import { View, SafeAreaView, StyleSheet } from 'react-native';
 import { Searchbar, List } from 'react-native-paper';
 import axios from 'axios';
 
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
 import ProfileScreen from './ProfileScreen';
 
-const baseUrl = 'http://10.102.196.128:8000';
+const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   item: {
