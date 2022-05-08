@@ -16,6 +16,13 @@ const lib = require("../controllers/exercise.controllers");
  *      - exercise
  *    summary: Gets exercises
  *    description: Gets exercise feed
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        description: requester's username
+ *        required: true
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: exercise list
