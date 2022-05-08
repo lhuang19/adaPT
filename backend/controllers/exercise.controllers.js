@@ -23,9 +23,8 @@ const assignExercise = async (exerciseData) => {
   }
 };
 
-const getExercises = async (usernameData) => {
-  const { username } = usernameData;
-  if (!username) throw new Error("params not filled");
+const getExercises = async (username) => {
+  if (!username || username.length === 0) throw new Error("params not filled");
   try {
     const user = await Users.findOne({
       username,

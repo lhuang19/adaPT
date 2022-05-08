@@ -9,9 +9,8 @@ function Exercises({ name, animate }) {
   const [exercises, setExercises] = useState([]);
 
   async function fetchNewExercises() {
-    const { data } = await doAPIRequest("/exercise/feed", {
-      method: "POST",
-      body: { username: name },
+    const { data } = await doAPIRequest(`/exercise/feed/${name}`, {
+      method: "GET",
     });
     setExercises(data);
   }

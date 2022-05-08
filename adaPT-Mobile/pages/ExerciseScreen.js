@@ -12,7 +12,7 @@ function ExerciseScreen({ userData }) {
   const { username } = userData;
 
   async function fetchNewExercises() {
-    const res = await axios.post(`${baseUrl}/exercise/feed`)
+    const res = await axios.get(`${baseUrl}/exercise/feed/${username}`)
       .catch((error) => {
         alert(error);
       });

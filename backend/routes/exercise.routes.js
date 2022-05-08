@@ -10,8 +10,8 @@ const lib = require("../controllers/exercise.controllers");
 
 /**
  * @openapi
- * /exercise/feed:
- *  post:
+ * /exercise/feed/{username}:
+ *  get:
  *    tags:
  *      - exercise
  *    summary: Gets exercises
@@ -27,19 +27,10 @@ const lib = require("../controllers/exercise.controllers");
  *                $ref: "#/components/schemas/exercise"
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              username:
- *                type: string
- *      description: username
  */
-router.post("/feed", async (req, res) => {
+router.get("/feed/:username", async (req, res) => {
   try {
-    const results = await lib.getExercises(req.body);
+    const results = await lib.getExercises(req.params.username);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
