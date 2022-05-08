@@ -78,4 +78,16 @@ router.get("/:username", async (req, res) => {
   }
 });
 
+router.get("/:currUser/:otherUser", async (req, res) => {
+  try {
+    const results = await lib.getCurrChatMessages(
+      req.params.currUser,
+      req.params.otherUser
+    );
+    res.status(200).json({ data: results });
+  } catch (err) {
+    res.status(500).json({ error: "try again later" });
+  }
+});
+
 module.exports = router;

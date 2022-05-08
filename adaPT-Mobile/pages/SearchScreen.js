@@ -5,7 +5,7 @@ import ProfileScreen from './ProfileScreen';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.250.188:8000';
+const baseUrl = 'http://10.102.106.52:8000';
 
 const styles = StyleSheet.create({
   item: {

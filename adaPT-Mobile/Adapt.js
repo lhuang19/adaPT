@@ -8,8 +8,6 @@ import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 import ProfileScreen from './pages/ProfileScreen';
 
-const MessageRoute = () => <MessageScreen />;
-
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
     return <ExerciseScreen userData={userData} />;
@@ -30,7 +28,7 @@ function Adapt({ route }) {
 
   const renderScene = BottomNavigation.SceneMap({
     home: () => <HomeScreen userData={userData} />,
-    message: MessageRoute,
+    message: () => <MessageScreen userData={userData} />,
     search: () => <SearchScreen userData={userData} />,
     profile: () => <ProfileScreen userData={userData} profile={userData.username} />,
     exercise: ExerciseRoute(userData),

@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View } from 'react-native';
-import { List } from 'react-native-paper';
+import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { List, Divider } from 'react-native-paper';
 
-import axios from 'axios';
+// import axios from 'axios';
+// const baseUrl = 'http://10.102.106.52:8000';
 
-const baseUrl = 'http://10.102.250.188:8000';
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1
+  },
+  listTitle: {
+    fontSize: 22
+  },
+});
 
-export default function MessageScreen(userData) {
+export default function MessageScreen({userData}) {
 
-  const { username } = userData;
-  const [friends, setFriends] = useState([]);
+  const { username, friends } = userData;
+  // const [friends, setFriends] = useState([]);
 
-  async function getFriends() {
-    if (username.length > 0) {
-      const res = await axios.get(`${baseUrl}/api/user/${username}`)
-        .catch((error) => {
-          alert(error);
-        });
-      if (res) {
-        const friendList = res.data.friends;
-        friendList.filter((friend) => friend !== username);
-        setFriends(friendList);
-      } else {
-        alert("An error has occurred. Unable to retrieve chats.");
-      }
-    }
-  }
-  useEffect(() => {
-    getFriends();
-  }, []);
+  // async function getFriends() {
+  //   if (userData.username.length > 0) {
+  //     const res = await axios.get(`${baseUrl}/api/user/${username}`)
+  //       .catch((error) => {
+  //         alert(error);
+  //       });
+  //     if (res) {
+  //       const friendList = res.data.friends;
+  //       friendList.filter((friend) => friend !== username);
+  //       setFriends(friendList);
+  //     } else {
+  //       alert("An error has occurred. Unable to retrieve chats.");
+  //     }
+  //   }
+  // }
+  // useEffect(() => {
+  //   getFriends();
+  // }, []);
 
   function openChat(friend) {
     if (friend !== "") {
@@ -44,12 +53,12 @@ export default function MessageScreen(userData) {
     if (friends.length !== 0) {
       let uiItems = [];
       friends.forEach((element) => {
+        console.log(element);
         uiItems.push(
           <List.Item
             title={element}
             key={element}
-            descriptionNumberOfLines={4}
-            // style={styles.item}
+            titleStyle={styles.listTitle}
             left={() => <List.Icon icon="account" />}
             onPress={() => openChat(element)}
           />
@@ -61,8 +70,8 @@ export default function MessageScreen(userData) {
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
+    <SafeAreaView style={styles.container}>
       {renderList()}
-    </View>
+    </SafeAreaView>
   );
 }
