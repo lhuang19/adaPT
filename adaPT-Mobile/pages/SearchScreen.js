@@ -21,9 +21,9 @@ export default function SearchScreen({ userData }) {
   const [profile, setProfile] = useState("");
 
   async function doAPIRequest() {
-    const res = await axios.get(`${baseUrl}/user`)
+    const res = await axios.get(`${baseUrl}/api/user`)
     .catch((error) => {
-      alert(error.response.data.error);
+      alert(error);
     });
     if (res) {
       setUsernames(res.data.data);
@@ -60,16 +60,14 @@ export default function SearchScreen({ userData }) {
       let uiItems = [];
       results.forEach((element) => {
         uiItems.push(
-          <List.Section>
-            <List.Item
-              title={element}
-              key={element}
-              descriptionNumberOfLines={16}
-              style={styles.item}
-              left={() => <List.Icon icon="account" />}
-              onPress={() => setProfile(element)}
-            />
-          </List.Section>,
+          <List.Item
+            title={element}
+            key={element}
+            descriptionNumberOfLines={16}
+            style={styles.item}
+            left={() => <List.Icon icon="account" />}
+            onPress={() => setProfile(element)}
+          />
         );
       });
       return uiItems;
@@ -84,7 +82,9 @@ export default function SearchScreen({ userData }) {
         onChangeText={(value) => handleChangeText(value)}
         value={query}
       />
-      {renderResults()}
+      <List.Section>
+        {renderResults()}
+      </List.Section>
     </SafeAreaView>
   );
 }

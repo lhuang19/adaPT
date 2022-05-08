@@ -41,7 +41,7 @@ export default function ProfileScreen({ userData, profile }) {
   useEffect(() => {
     if (userData.username !== profile) {
       async function getProfileData() {
-        const res = await axios.get(`${baseUrl}/user/${profile}`)
+        const res = await axios.get(`${baseUrl}/api/user/${profile}`)
         .catch((error) => {
           alert(error);
         });
@@ -70,7 +70,7 @@ export default function ProfileScreen({ userData, profile }) {
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+      const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
       .catch((error) => {
         alert(error);
       });
@@ -100,7 +100,7 @@ export default function ProfileScreen({ userData, profile }) {
           if (userData.length === 0) {
             return;
           }
-          const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+          const res = await axios.post(`${baseUrl}/api/profile/friendRequest/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -116,7 +116,7 @@ export default function ProfileScreen({ userData, profile }) {
         <Button
         mode="contained"
         onPress={async () => {
-          const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+          const res = await axios.delete(`${baseUrl}/api/profile/friend/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -136,7 +136,7 @@ export default function ProfileScreen({ userData, profile }) {
         <Button
         mode="contained"
         onPress={async () => {
-          const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+          const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -153,7 +153,7 @@ export default function ProfileScreen({ userData, profile }) {
           <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            const res = await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });
@@ -162,7 +162,7 @@ export default function ProfileScreen({ userData, profile }) {
               return;
             }
             setStatus(0);
-            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+            await axios.post(`${baseUrl}/api/profile/friend/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });
@@ -174,7 +174,7 @@ export default function ProfileScreen({ userData, profile }) {
           <Button
           mode="contained"
           onPress={async () => {
-            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });

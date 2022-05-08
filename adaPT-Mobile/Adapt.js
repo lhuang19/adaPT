@@ -12,7 +12,7 @@ const MessageRoute = () => <MessageScreen />;
 
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
-    return <ExerciseScreen userData={userData} />;
+    return <ExerciseScreen />;
   }
   return ExerciseRouteInner;
 }
