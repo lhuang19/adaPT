@@ -59,14 +59,7 @@ export default function ProfileScreen({ userData, profile }) {
 
   function renderButton() {
     if (userData.username === profile) {
-      return (
-        <Button
-        mode="outlined"
-        onPress={() => alert("Implement edit profile")}
-        >
-          Edit Profile
-        </Button>
-      );
+      return null;
     }
 
     async function doAPIRequest() {
