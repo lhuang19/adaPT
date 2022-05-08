@@ -43,9 +43,9 @@ describe("/ endpoint tests", () => {
     });
   });
 
+  test("GET /feed/:username endpoint status code and response 404", async () =>
+    request(app).get("/feed/").expect(404));
   test("GET /feed/:username endpoint status code and response 500", async () =>
-    request(app).get("/feed/").expect(500));
-  test("GET /feed/:username endpoint status code and response 500 second error", async () =>
     request(app).get("/feed/tester").expect(500));
   test("GET /feed/:username endpoint status code and response 200", async () => {
     await createUser();
