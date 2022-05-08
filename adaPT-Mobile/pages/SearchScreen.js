@@ -21,7 +21,7 @@ export default function SearchScreen({ userData }) {
   const [profile, setProfile] = useState("");
 
   async function doAPIRequest() {
-    const res = await axios.get(`${baseUrl}/user`)
+    const res = await axios.get(`${baseUrl}/api/user`)
     .catch((error) => {
       alert(error.response.data.error);
     });
