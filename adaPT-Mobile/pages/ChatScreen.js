@@ -5,12 +5,11 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.106.52:8000';
+const baseUrl = 'http://10.103.83.173:8000';
 
-export default function ChatScreen(userData, friend) {
+export default function ChatScreen({userData, friend}) {
 
   const [messages, setMessages] = useState([]);
-//   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
   function useInterval(callback, delay) {
@@ -40,9 +39,9 @@ export default function ChatScreen(userData, friend) {
       text: message.body,
       createdAt: message.time,
       user: {
-        _id: message.sender,
+        _id: message.sender === userData.username ? 0 : 1,
         name: message.senderFirstname,
-        avatar: `https:/joeschmoe.io/api/v1/${message.sender}`
+        // avatar: `https:/joeschmoe.io/api/v1/${message.sender}`
       }
     }
   }
@@ -53,10 +52,10 @@ export default function ChatScreen(userData, friend) {
         alert(error);
       });
     if (res) {
-      if (res.data.length > messages.length) {
+      if (res.data.data.length > messages.length) { 
         const newMessages = [];
-        for (let i = messages.length; i < data.length; i++) {
-          newMessages.push(convertMessage(res.data[i], i));
+        for (let i = messages.length; i < res.data.data.length; i++) {
+          newMessages.push(convertMessage(res.data.data[i], i));
         }
         setMessages([...messages, ...newMessages]);
       }
@@ -98,43 +97,14 @@ export default function ChatScreen(userData, friend) {
     }
   }
 
-//   function renderMessages() {
-//     if (messages.length !== 0) {
-//       let uiItems = [];
-//       messages.forEach((message) => {
-//         uiItems.push(
-//           <List.Item
-//             title={message}
-//             description={`${message.senderFirstname }` ${message.time }}
-//             // style={styles.item}
-//             left={() => <List.Icon icon="account" />}
-//           />
-//         );
-//       });
-//       return uiItems;
-//     }
-//     return null;
-//   }
-
   return (
-    <SafeAreaView>
-      <GiftedChat
-        text={input}
-        onInputTextChanged={text => this.setInput(text)}
-        messages={messages}
-        onSend={() => onSendMessageHandler()}
-        user={{ _id: userData.username }}
-        scrollToBottom
-      />
-      {/* <TextInput
-        onChangeText={text => setInput(text)}
-        value={input}
-      />
-      <IconButton
-        icon="send"
-        size={20}
-        onPress={() => onSendMessageHandler()}
-      /> */}
-    </SafeAreaView>  
+    <GiftedChat
+      text={input}
+      onInputTextChanged={text => setInput(text)}
+      messages={messages}
+      onSend={() => onSendMessageHandler()}
+      user={{ _id: 0 }}
+      scrollToBottom
+    />
   );
 }
