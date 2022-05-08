@@ -41,10 +41,10 @@ function Exercise({ data }) {
         defaultValue={setsCompleted}
         onChange={async (value) => {
           const json = JSON.stringify({ patient, creationTime, setsCompleted: value });
-          await axios.post(`${baseUrl}/exercise/counter`, json, {
+          await axios.put(`${baseUrl}/exercise/counter`, json, {
             headers: {
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           });
         }}
       />

@@ -116,7 +116,7 @@ router.delete("/", async (req, res) => {
 /**
  * @openapi
  * /exercise/counter:
- *  post:
+ *  put:
  *    tags:
  *      - exercise
  *    summary: Updates counter
@@ -142,9 +142,9 @@ router.delete("/", async (req, res) => {
  *                type: number
  *              setsCompleted:
  *                type: number
- *      description: post data
+ *      description: put data
  */
-router.post("/counter", async (req, res) => {
+router.put("/counter", async (req, res) => {
   try {
     const results = await lib.setSetsCompleted(req.body);
     res.status(201).json({ data: results });
