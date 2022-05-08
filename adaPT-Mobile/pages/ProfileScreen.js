@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, SafeAreaView } from 'react-native'
 import { Button } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
+import Posts from './Posts';
 
 import axios from 'axios';
 
@@ -11,10 +12,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
-    height: "100%",
   },
   picture: {
-    marginTop: 50,
+    marginTop: 10,
   },
   title: {
     marginTop: 4,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ProfileScreen({ userData, profile }) {
+export default function ProfileScreen({ userData, profile, height }) {
   const [profileData, setProfileData] = useState([]);
   const [status, setStatus] = useState(-2);
 
@@ -183,20 +183,23 @@ export default function ProfileScreen({ userData, profile }) {
   }
 
   return (
-    <View style={styles.container}>
-      <SvgUri
-        width={100}
-        height={100}
-        uri={`https://joeschmoe.io/api/v1/${profileData.username}`}
-        style={styles.picture}
-      />
-      <Text style={styles.title}>
-        {profileData.firstname} {profileData.lastname}
-      </Text>
-      <Text style={styles.subtitle}>
-        ({profileData.username})
-      </Text>
-      {renderButton()}
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <SvgUri
+          width={100}
+          height={100}
+          uri={`https://joeschmoe.io/api/v1/${profileData.username}`}
+          style={styles.picture}
+        />
+        <Text style={styles.title}>
+          {profileData.firstname} {profileData.lastname}
+        </Text>
+        <Text style={styles.subtitle}>
+          ({profileData.username})
+        </Text>
+        {renderButton()}
+      </View>
+      <Posts userData={userData} username={undefined} height={height} />
+    </SafeAreaView>
   );
 }
