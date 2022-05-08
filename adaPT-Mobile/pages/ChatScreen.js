@@ -10,7 +10,7 @@ const baseUrl = 'http://10.102.106.52:8000';
 export default function ChatScreen(userData, friend) {
 
   const [messages, setMessages] = useState([]);
-  const { TextArea } = Input;
+//   const { TextArea } = Input;
   const [input, setInput] = useState("");
 
   function useInterval(callback, delay) {
@@ -43,6 +43,7 @@ export default function ChatScreen(userData, friend) {
         _id: message.sender,
         name: message.senderFirstname,
         avatar: `https:/joeschmoe.io/api/v1/${message.sender}`
+      }
     }
   }
 
@@ -88,39 +89,44 @@ export default function ChatScreen(userData, friend) {
     });
     if (res) {
       // optimistic UI. Assume the message sends and update UI right away.
-      // construct gifted chat version of message here
-      let id = messages.length;
+      let newMessage = convertMessage(message, messages.length);
       setMessages([
         ...messages,
-        { convertMessage(message, id) },
+        { newMessage },
       ]);
       setInput("");
     }
   }
 
-  function renderMessages() {
-    if (messages.length !== 0) {
-      let uiItems = [];
-      messages.forEach((message) => {
-        uiItems.push(
-          <List.Item
-            title={message}
-            description={`${message.senderFirstname }` ${message.time }}
-            // style={styles.item}
-            left={() => <List.Icon icon="account" />}
-          />
-        );
-      });
-      return uiItems;
-    }
-    return null;
-  }
+//   function renderMessages() {
+//     if (messages.length !== 0) {
+//       let uiItems = [];
+//       messages.forEach((message) => {
+//         uiItems.push(
+//           <List.Item
+//             title={message}
+//             description={`${message.senderFirstname }` ${message.time }}
+//             // style={styles.item}
+//             left={() => <List.Icon icon="account" />}
+//           />
+//         );
+//       });
+//       return uiItems;
+//     }
+//     return null;
+//   }
 
   return (
     <SafeAreaView>
-      {/* show messages */}
-
-      <TextInput
+      <GiftedChat
+        text={input}
+        onInputTextChanged={text => this.setInput(text)}
+        messages={messages}
+        onSend={() => onSendMessageHandler()}
+        user={{ _id: userData.username }}
+        scrollToBottom
+      />
+      {/* <TextInput
         onChangeText={text => setInput(text)}
         value={input}
       />
@@ -128,7 +134,7 @@ export default function ChatScreen(userData, friend) {
         icon="send"
         size={20}
         onPress={() => onSendMessageHandler()}
-      />
+      /> */}
     </SafeAreaView>  
   );
 }
