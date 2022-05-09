@@ -10,7 +10,6 @@ function Login() {
   const { setCredentials } = useContext(AuthUserContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-
   async function loginHandler(values) {
     const { username, password } = values;
     const { data, error } = await doAPIRequest("/login", {
@@ -20,6 +19,7 @@ function Login() {
     if (data) {
       const { token, ...body } = data;
       setCredentials(body);
+
       addLoginToken(token);
       navigate("/");
     } else {

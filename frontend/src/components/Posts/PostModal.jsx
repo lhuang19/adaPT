@@ -133,6 +133,7 @@ function PostModal({ fetchNewPosts }) {
             icon={<FormOutlined />}
             size="large"
             onClick={() => setShow(true)}
+            data-testid="post-modal-button"
           />
         </Tooltip>
       </div>
