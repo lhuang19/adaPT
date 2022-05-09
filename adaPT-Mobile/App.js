@@ -5,8 +5,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import LoginScreen from './pages/LoginScreen';
 import Adapt from './Adapt';
-import MessageScreen from './pages/MessageScreen';
-import ChatScreen from './pages/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 

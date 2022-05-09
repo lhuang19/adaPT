@@ -1,6 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { Button, TextInput, Text, Appbar } from 'react-native-paper';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import axios from 'axios';
@@ -9,7 +7,6 @@ const baseUrl = 'http://10.102.250.188:8000';
 
 export default function ChatScreen({userData, friend}) {
 
-  // const {userData, friend} = route.params;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
@@ -42,7 +39,7 @@ export default function ChatScreen({userData, friend}) {
       user: {
         _id: message.sender === userData.username ? 0 : 1,
         name: message.senderFirstname,
-        // avatar: `https:/joeschmoe.io/api/v1/${message.sender}`
+        // avatar: `https:/joeschmoe.io/api/v1/${message.sender}`,
       }
     }
   }
@@ -59,17 +56,9 @@ export default function ChatScreen({userData, friend}) {
           newMessages.push(convertMessage(res.data.data[i], i));
         }
         setMessages([...messages, ...newMessages]);
-      //   setMessages(messages.concat(newMessages));
       }
-      // const convertedMessages = [];
-      // // console.log(res.data.data.length);
-      // for (let i = 0; i < res.data.data.length; i++) {
-      //   convertedMessages.push(convertMessage(res.data.data[i], i));
-      // }
-      // setMessages(convertedMessages);
-      // // console.log(messages.length);
     } else {
-    alert("An error has occurred. Unable to fetch messages.");
+      alert("An error has occurred. Unable to fetch messages.");
     }
   }
   useInterval(async () => {
@@ -113,6 +102,5 @@ export default function ChatScreen({userData, friend}) {
       alwaysShowSend
       renderUsernameOnMessage={true}
     />
-        
   );
 }
