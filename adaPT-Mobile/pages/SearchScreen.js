@@ -54,30 +54,33 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderResults() {
-    if (profile !== '') {
-      return (
-        <View>
-          <ProfileScreen userData={userData} profile={profile} />
-        </View>
-      );
+    if (profile !== "") {
+      return null;
     }
     if (results.length !== 0) {
       const uiItems = [];
       results.forEach((element) => {
         uiItems.push(
-          <List.Section>
-            <List.Item
-              title={element}
-              key={element}
-              descriptionNumberOfLines={16}
-              style={styles.item}
-              left={accountIcon}
-              onPress={() => setProfile(element)}
-            />
-          </List.Section>,
+          <List.Item
+            title={element}
+            key={element}
+            descriptionNumberOfLines={16}
+            style={styles.item}
+            left={() => <List.Icon icon="account" />}
+            onPress={() => setProfile(element)}
+          />
         );
       });
       return uiItems;
+    }
+    return null;
+  }
+
+  function renderPosts() {
+    if (profile !== "") {
+      return (
+        <ProfileScreen userData={userData} profile={profile} height="71%" />
+      );
     }
     return null;
   }
@@ -89,7 +92,10 @@ export default function SearchScreen({ userData }) {
         onChangeText={(value) => handleChangeText(value)}
         value={query}
       />
-      {renderResults()}
+      <List.Section>
+        {renderResults()}
+      </List.Section>
+      {renderPosts()}
     </SafeAreaView>
   );
 }

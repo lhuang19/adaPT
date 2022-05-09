@@ -18,7 +18,7 @@ function LoginScreen({ navigation }) {
   async function loginHandler(login) {
     console.log(baseUrl);
     const json = JSON.stringify(login);
-    const res = await axios.post(`${baseUrl}/login`, json, {
+    const res = await axios.post(`${baseUrl}/api/login`, json, {
       headers: {
         'Content-Type': 'application/json',
       },
