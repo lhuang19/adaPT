@@ -16,6 +16,7 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   async function loginHandler(login) {
+    console.log(baseUrl);
     const json = JSON.stringify(login);
     const res = await axios.post(`${baseUrl}/login`, json, {
       headers: {
