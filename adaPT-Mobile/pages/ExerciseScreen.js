@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
 import { List, Stepper } from '@ant-design/react-native';
 import axios from 'axios';
 // eslint-disable-next-line import/no-unresolved
@@ -24,47 +23,37 @@ function ExerciseScreen({ userData }) {
   }, [username]);
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-      <List header="Exercises">
-        {exercises.map((exercise) => (
-          <List.Item key={exercise.creationTime}>
-            <Text style={{
-              fontWeight: 'bold',
-              fontSize: 20,
-              margin: 50,
-              color: 'black',
-            }}
-            >
-              {`${exercise.name} - ${exercise.sets}x${exercise.reps} - Assigned by ${exercise.pt.username}`}
-            </Text>
-            <Text style={{ margin: 50, color: 'black' }}>
-              {exercise.instructions}
-            </Text>
-            <Stepper
-              min={0}
-              max={exercise.sets}
-              defaultValue={exercise.setsCompleted}
-              onChange={async (value) => {
-                const json = JSON.stringify({
-                  patient: exercise.patient,
-                  creationTime: exercise.creationTime,
-                  setsCompleted: value,
+    <List style={{ paddingTop: 30 }} header="Exercises">
+      {exercises.map((exercise) => (
+        <List.Item style={{ padding: 20, textAlign: 'center', fontWeight: 'bold' }} key={exercise.creationTime} multipleLine wrap>
+          {`${exercise.name} - ${exercise.sets}x${exercise.reps} - Assigned by ${exercise.pt.username}`}
+
+          {exercise.instructions}
+          <Stepper
+            style={{ padding: 30 }}
+            min={0}
+            max={exercise.sets}
+            defaultValue={exercise.setsCompleted}
+            onChange={async (value) => {
+              const json = JSON.stringify({
+                patient: exercise.patient,
+                creationTime: exercise.creationTime,
+                setsCompleted: value,
+              });
+              try {
+                await axios.put(`${baseUrl}/exercise/counter`, json, {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
                 });
-                try {
-                  await axios.put(`${baseUrl}/exercise/counter`, json, {
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                } catch (error) {
-                  alert(error);
-                }
-              }}
-            />
-          </List.Item>
-        ))}
-      </List>
-    </View>
+              } catch (error) {
+                alert(error);
+              }
+            }}
+          />
+        </List.Item>
+      ))}
+    </List>
   );
 }
 
