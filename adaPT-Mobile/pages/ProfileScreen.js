@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, SafeAreaView } from 'react-native'
+import {
+  Text, StyleSheet, View, SafeAreaView,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
-import Posts from './Posts';
 
 import axios from 'axios';
 
 // eslint-disable-next-line import/no-unresolved
 import { BASE_URL } from '@env';
 
+import Posts from './Posts';
+
 const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
   },
   picture: {
     marginTop: 10,
@@ -55,17 +58,6 @@ export default function ProfileScreen({ userData, profile, height }) {
 
   useEffect(() => {
     if (userData.username !== profile) {
-      async function getProfileData() {
-        const res = await axios.get(`${baseUrl}/api/user/${profile}`)
-        .catch((error) => {
-          alert(error);
-        });
-        if (res) {
-          setProfileData(res.data.data);
-        } else {
-          alert("An error has occurred. Please try again.");
-        }
-      }
       getProfileData();
     } else {
       setProfileData(userData);
@@ -78,10 +70,10 @@ export default function ProfileScreen({ userData, profile, height }) {
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
-      .catch((error) => {
-        alert(error);
-      });
+      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+        .catch((error) => {
+          alert(error);
+        });
       if (res) {
         setStatus(res.data.data);
       } else {
@@ -206,10 +198,12 @@ export default function ProfileScreen({ userData, profile, height }) {
           style={styles.picture}
         />
         <Text style={styles.title}>
-          {profileData.firstname} {profileData.lastname}
+          {profileData.firstname}
+          {' '}
+          {profileData.lastname}
         </Text>
         <Text style={styles.subtitle}>
-          ({profileData.username})
+          {profileData.username}
         </Text>
         {renderButton()}
       </View>

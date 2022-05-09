@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { Searchbar, List } from 'react-native-paper';
 import axios from 'axios';
 
@@ -54,7 +54,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderResults() {
-    if (profile !== "") {
+    if (profile !== '') {
       return null;
     }
     if (results.length !== 0) {
@@ -66,9 +66,9 @@ export default function SearchScreen({ userData }) {
             key={element}
             descriptionNumberOfLines={16}
             style={styles.item}
-            left={() => <List.Icon icon="account" />}
+            left={accountIcon}
             onPress={() => setProfile(element)}
-          />
+          />,
         );
       });
       return uiItems;
@@ -77,7 +77,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderPosts() {
-    if (profile !== "") {
+    if (profile !== '') {
       return (
         <ProfileScreen userData={userData} profile={profile} height="71%" />
       );

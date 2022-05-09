@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, SafeAreaView } from 'react-native';
-import { Card, Title, Paragraph, Button, Portal, Dialog, TextInput } from 'react-native-paper';
+import { View, ScrollView } from 'react-native';
+import {
+  Card, Title, Paragraph, Button, Portal, Dialog, TextInput,
+} from 'react-native-paper';
 
 import axios from 'axios';
 
@@ -10,7 +12,7 @@ export default function Posts({ userData, username, height }) {
   const [posts, setPosts] = useState([]);
   const [visible, setVisible] = useState(false);
   const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState('');
   const [commentVisible, setCommentVisible] = useState(false);
   const [curPost, setCurPost] = useState({});
 
@@ -18,15 +20,15 @@ export default function Posts({ userData, username, height }) {
     async function doAPIRequest() {
       if (username) {
         const res = await axios.get(`${baseUrl}/api/post/feed/${username}`)
-        .catch((error) => {
-          alert(error);
-        });
+          .catch((error) => {
+            alert(error);
+          });
         setPosts(res.data.data);
       } else {
         const res = await axios.get(`${baseUrl}/api/post/feed/${userData.username}/all`)
-        .catch((error) => {
-          alert(error);
-        });
+          .catch((error) => {
+            alert(error);
+          });
         setPosts(res.data.data);
       }
     }
@@ -34,16 +36,20 @@ export default function Posts({ userData, username, height }) {
   }, []);
 
   async function postComment() {
-    const json = JSON.stringify({ commenter: userData.username, content: commentText, commentTime: Date.now() });
+    const json = JSON.stringify({
+      commenter: userData.username,
+      content: commentText,
+      commentTime: Date.now(),
+    });
     await axios.post(`${baseUrl}/api/post/${curPost.poster}${curPost.time}/comments`, json, {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-    .catch((error) => {
-      alert(error);
-    });
-    setCommentText("");
+      .catch((error) => {
+        alert(error);
+      });
+    setCommentText('');
   }
 
   async function getComments(post) {
@@ -52,15 +58,18 @@ export default function Posts({ userData, username, height }) {
   }
 
   function renderComments() {
-    let uiItems = [];
+    const uiItems = [];
     comments.forEach((element) => {
       uiItems.push(
         <Card key={`${element.commenter}-${element.commentTime}`}>
-          <Card.Title title={element.commenter} subtitle={new Date(element.commentTime).toLocaleString()} />
+          <Card.Title
+            title={element.commenter}
+            subtitle={new Date(element.commentTime).toLocaleString()}
+          />
           <Card.Content>
             <Paragraph>{element.content}</Paragraph>
           </Card.Content>
-        </Card>
+        </Card>,
       );
     });
     return uiItems;
@@ -77,7 +86,7 @@ export default function Posts({ userData, username, height }) {
 
   function renderPosts() {
     if (posts.length !== 0) {
-      let uiItems = [];
+      const uiItems = [];
       posts.forEach((element) => {
         uiItems.push(
           <Card key={`${element.title}-${element.time}`}>
@@ -93,15 +102,19 @@ export default function Posts({ userData, username, height }) {
                   setCommentVisible(true);
                   setCurPost(element);
                 }}
-              >Comment</Button>
+              >
+                Comment
+              </Button>
               <Button
                 onPress={() => {
                   getComments(element);
                   setVisible(true);
                 }}
-              >View Comments</Button>
+              >
+                View Comments
+              </Button>
             </Card.Actions>
-          </Card>
+          </Card>,
         );
       });
       return uiItems;
@@ -110,7 +123,7 @@ export default function Posts({ userData, username, height }) {
   }
 
   return (
-    <View style={{ height: height }}>
+    <View style={{ height }}>
       <ScrollView>
         {renderPosts()}
       </ScrollView>
@@ -131,20 +144,26 @@ export default function Posts({ userData, username, height }) {
         <Dialog visible={commentVisible}>
           <Dialog.Content>
             <TextInput
-              label={"Comment"}
+              label="Comment"
               value={commentText}
-              onChangeText={text => setCommentText(text)}
+              onChangeText={(text) => setCommentText(text)}
             />
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => {
               setCommentVisible(false);
-              setCommentText("");
-            }}>Cancel</Button>
+              setCommentText('');
+            }}
+            >
+              Cancel
+            </Button>
             <Button onPress={() => {
               setCommentVisible(false);
               postComment();
-            }}>Ok</Button>
+            }}
+            >
+              Ok
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

@@ -14,7 +14,7 @@ function MessageRoute() {
 
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
-    return <ExerciseScreen />;
+    return <ExerciseScreen userData={userData} />;
   }
   return ExerciseRouteInner;
 }
