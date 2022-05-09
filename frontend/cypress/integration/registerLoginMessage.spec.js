@@ -111,6 +111,8 @@ describe("register, login, message", () => {
     cy.get("[id=chat_nav_bar]").click();
 
     cy.get(".ant-input").type("im a goat");
+    cy.wait(1000);
+
     cy.get(".ant-btn").click();
 
     cy.wait(5000);
@@ -125,7 +127,7 @@ describe("register, login, message", () => {
     cy.wait(100);
 
     cy.get("[id=chat_nav_bar]").click();
-    cy.wait(1000);
+    cy.wait(3000);
 
     cy.contains("im a goat").should("be.visible");
 

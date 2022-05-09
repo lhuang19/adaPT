@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, SafeAreaView } from 'react-native'
 import { Button } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
+import Posts from './Posts';
 
 import axios from 'axios';
 
@@ -11,10 +12,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
-    height: "100%",
   },
   picture: {
-    marginTop: 50,
+    marginTop: 10,
   },
   title: {
     marginTop: 4,
@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ProfileScreen({ userData, profile }) {
+export default function ProfileScreen({ userData, profile, height }) {
   const [profileData, setProfileData] = useState([]);
   const [status, setStatus] = useState(-2);
 
   useEffect(() => {
     if (userData.username !== profile) {
       async function getProfileData() {
-        const res = await axios.get(`${baseUrl}/user/${profile}`)
+        const res = await axios.get(`${baseUrl}/api/user/${profile}`)
         .catch((error) => {
           alert(error);
         });
@@ -59,18 +59,11 @@ export default function ProfileScreen({ userData, profile }) {
 
   function renderButton() {
     if (userData.username === profile) {
-      return (
-        <Button
-        mode="outlined"
-        onPress={() => alert("Implement edit profile")}
-        >
-          Edit Profile
-        </Button>
-      );
+      return null;
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+      const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
       .catch((error) => {
         alert(error);
       });
@@ -100,7 +93,7 @@ export default function ProfileScreen({ userData, profile }) {
           if (userData.length === 0) {
             return;
           }
-          const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+          const res = await axios.post(`${baseUrl}/api/profile/friendRequest/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -116,7 +109,7 @@ export default function ProfileScreen({ userData, profile }) {
         <Button
         mode="contained"
         onPress={async () => {
-          const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+          const res = await axios.delete(`${baseUrl}/api/profile/friend/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -136,7 +129,7 @@ export default function ProfileScreen({ userData, profile }) {
         <Button
         mode="contained"
         onPress={async () => {
-          const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+          const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
           .catch((error) => {
             alert(error);
           });
@@ -153,7 +146,7 @@ export default function ProfileScreen({ userData, profile }) {
           <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            const res = await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });
@@ -162,7 +155,7 @@ export default function ProfileScreen({ userData, profile }) {
               return;
             }
             setStatus(0);
-            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+            await axios.post(`${baseUrl}/api/profile/friend/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });
@@ -174,7 +167,7 @@ export default function ProfileScreen({ userData, profile }) {
           <Button
           mode="contained"
           onPress={async () => {
-            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
             .catch((error) => {
               alert(error);
             });
@@ -190,20 +183,23 @@ export default function ProfileScreen({ userData, profile }) {
   }
 
   return (
-    <View style={styles.container}>
-      <SvgUri
-        width={100}
-        height={100}
-        uri={`https://joeschmoe.io/api/v1/${profileData.username}`}
-        style={styles.picture}
-      />
-      <Text style={styles.title}>
-        {profileData.firstname} {profileData.lastname}
-      </Text>
-      <Text style={styles.subtitle}>
-        ({profileData.username})
-      </Text>
-      {renderButton()}
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <SvgUri
+          width={100}
+          height={100}
+          uri={`https://joeschmoe.io/api/v1/${profileData.username}`}
+          style={styles.picture}
+        />
+        <Text style={styles.title}>
+          {profileData.firstname} {profileData.lastname}
+        </Text>
+        <Text style={styles.subtitle}>
+          ({profileData.username})
+        </Text>
+        {renderButton()}
+      </View>
+      <Posts userData={userData} username={undefined} height={height} />
+    </SafeAreaView>
   );
 }

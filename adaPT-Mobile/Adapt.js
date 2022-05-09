@@ -12,7 +12,7 @@ const MessageRoute = () => <MessageScreen />;
 
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
-    return <ExerciseScreen userData={userData} />;
+    return <ExerciseScreen />;
   }
   return ExerciseRouteInner;
 }
@@ -32,7 +32,7 @@ function Adapt({ route }) {
     home: () => <HomeScreen userData={userData} />,
     message: MessageRoute,
     search: () => <SearchScreen userData={userData} />,
-    profile: () => <ProfileScreen userData={userData} profile={userData.username} />,
+    profile: () => <ProfileScreen userData={userData} profile={userData.username} height="77%" />,
     exercise: ExerciseRoute(userData),
   });
 

@@ -48,6 +48,7 @@ function NavBar(props) {
           >
             <Menu.Item
               key="/_nav_bar"
+              data-testid="/_nav_bar"
               icon={
                 <IconWrapper>
                   <HomeOutlined />
@@ -57,6 +58,7 @@ function NavBar(props) {
             />
             <Menu.Item
               key="/exercise_nav_bar"
+              data-testid="exercise_nav_bar"
               icon={
                 <IconWrapper>
                   <IoBarbellSharp />
@@ -71,10 +73,11 @@ function NavBar(props) {
                   <FaUserFriends />
                 </IconWrapper>
               }
-              onClick={() => alert("implement friends")}
+              onClick={() => {}}
             />
             <Menu.Item
               id="chat_nav_bar"
+              data-testid="chat_nav_bar"
               key="/chat_nav_bar"
               icon={
                 <IconWrapper>
@@ -85,6 +88,7 @@ function NavBar(props) {
             />
             <Menu.Item
               id="search_nav_bar"
+              data-testid="search_nav_bar"
               key="search_nav_bar"
               icon={
                 <IconWrapper>

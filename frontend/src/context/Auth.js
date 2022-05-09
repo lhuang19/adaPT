@@ -23,6 +23,7 @@ function WithAuth({ children }) {
         });
         if (data) {
           setCredentials(data);
+
           if (
             location.pathname === "/login" ||
             location.pathname === "/signup"
@@ -50,7 +51,6 @@ function WithAuth({ children }) {
     [credentials]
   );
 
-  console.log("CREDENTIALS: ", credentials);
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>
