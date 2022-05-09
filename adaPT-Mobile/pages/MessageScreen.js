@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
-import { List, Avatar, Divider } from 'react-native-paper';
+import { List, Avatar, Appbar } from 'react-native-paper';
 import ChatScreen from './ChatScreen';
 
 const styles = StyleSheet.create({
@@ -53,11 +53,18 @@ export default function MessageScreen({ userData }) {
 
   if (showChat) {
     return (
-      <ChatScreen userData={userData} friend={friend} />
+      <><Appbar.Header>
+        <Appbar.BackAction onPress={() => setShowChat(false)} />
+        <Appbar.Content title={friend} />
+      </Appbar.Header>
+      <ChatScreen userData={userData} friend={friend} /></>
     )
   }
   return (
     <SafeAreaView style={styles.container}>
+      {/* <Appbar.Header>
+        <Appbar.Content title="Chat" />
+      </Appbar.Header> */}
       {renderList()}
     </SafeAreaView>
   );

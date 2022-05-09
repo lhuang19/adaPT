@@ -20,8 +20,6 @@ function App() {
         >
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Start" component={Adapt} />
-          <Stack.Screen name="Messages" component={MessageScreen} />
-          <Stack.Screen name="Chat" component={ChatScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

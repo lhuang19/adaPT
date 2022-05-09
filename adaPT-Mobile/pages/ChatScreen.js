@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { SafeAreaView } from 'react-native';
-import { Button, TextInput, Text } from 'react-native-paper';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Button, TextInput, Text, Appbar } from 'react-native-paper';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import axios from 'axios';
@@ -54,7 +54,6 @@ export default function ChatScreen({userData, friend}) {
       });
     if (res) {
       if (res.data.data.length > messages.length) { 
-        console.log("new message");
         const newMessages = [];
         for (let i = messages.length; i < res.data.data.length; i++) {
           newMessages.push(convertMessage(res.data.data[i], i));
@@ -114,5 +113,6 @@ export default function ChatScreen({userData, friend}) {
       alwaysShowSend
       renderUsernameOnMessage={true}
     />
+        
   );
 }

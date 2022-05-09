@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper';
 
 import HomeScreen from './pages/HomeScreen';
@@ -9,8 +6,6 @@ import MessageScreen from './pages/MessageScreen';
 import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 import ProfileScreen from './pages/ProfileScreen';
-import ChatScreen from './pages/ChatScreen';
-import ChatStack from './ChatStack';
 
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
@@ -30,24 +25,9 @@ function Adapt({ route }) {
     { key: 'profile', title: 'Profile', icon: 'account' },
   ]);
 
-  const chatStack = createNativeStackNavigator();
-  
-  function chatNav() {
-    return (
-      <chatStack.Navigator
-        initialRouteName="Messages"
-        // screenOptions={{ headerShown: false }}
-      >
-        <chatStack.Screen name="Messages" component={MessageScreen} initialParams={{ userData: userData }} />
-        <chatStack.Screen name="Chat" component={ChatScreen} />
-      </chatStack.Navigator>
-    );
-  }
-
   const renderScene = BottomNavigation.SceneMap({
     home: () => <HomeScreen userData={userData} />,
     message: () => <MessageScreen userData={userData} />,
-    // message: () => <ChatStack userData={userData} />,
     search: () => <SearchScreen userData={userData} />,
     profile: () => <ProfileScreen userData={userData} profile={userData.username} />,
     exercise: ExerciseRoute(userData),
