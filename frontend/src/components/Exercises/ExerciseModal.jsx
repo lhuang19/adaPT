@@ -130,6 +130,7 @@ function ExerciseModal() {
             icon={<FormOutlined />}
             size="large"
             onClick={() => setShow(true)}
+            data-testid="exercise-modal-button"
           />
         </Tooltip>
       </div>

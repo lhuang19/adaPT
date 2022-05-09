@@ -38,7 +38,7 @@ function Message(props) {
             }}
           >
             <p>{senderFirstname}</p>
-            <p>{new Date(time).toLocaleString()}</p>
+            <p>{new Date(time).toLocaleString("en-US")}</p>
           </div>
         </div>
         <p style={{ whiteSpace: "pre-wrap" }}>{body}</p>
