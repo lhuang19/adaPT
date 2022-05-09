@@ -37,6 +37,17 @@ jobs:
         - run: npm install
         - run: npm run lint
         - run: npm run test
+  
+  mobile-checks:
+      name: Mobile Checks
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./adaPT-Mobile
+      steps:
+        - uses: actions/checkout@v3
+        - run: npm install
+        - run: npm run lint
 
   cypress-run:
     name: Integration Tests

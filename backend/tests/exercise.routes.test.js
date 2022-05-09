@@ -29,10 +29,10 @@ beforeEach(async () => {
 describe("/ endpoint tests", () => {
   test("has routes", () => {
     const routes = [
-      { path: "/feed", method: "post" },
+      { path: "/feed/:username", method: "get" },
       { path: "/", method: "post" },
-      { path: "/", method: "delete" },
-      { path: "/counter", method: "post" },
+      { path: "/:pt/:creationTime", method: "delete" },
+      { path: "/counter", method: "put" },
     ];
 
     routes.forEach((route) => {
@@ -43,31 +43,21 @@ describe("/ endpoint tests", () => {
     });
   });
 
-  test("POST /feed endpoint status code and response 500", async () =>
-    request(app).post("/feed").send({}).expect(500));
-  test("POST /feed endpoint status code and response 500 second error", async () =>
-    request(app).post("/feed").send({ username: "tester" }).expect(500));
-  test("POST /feed  endpoint status code and response 200", async () => {
+  test("GET /feed/:username endpoint status code and response 404", async () =>
+    request(app).get("/feed/").expect(404));
+  test("GET /feed/:username endpoint status code and response 500", async () =>
+    request(app).get("/feed/tester").expect(500));
+  test("GET /feed/:username endpoint status code and response 200", async () => {
     await createUser();
-    await request(app)
-      .post("/feed")
-      .send({
-        username: "tester",
-      })
-      .expect(200);
+    await request(app).get("/feed/tester").expect(200);
     await createUser("tester2", "Patient");
-    return request(app)
-      .post("/feed")
-      .send({
-        username: "tester2",
-      })
-      .expect(200);
+    return request(app).get("/feed/tester2").expect(200);
   });
 
   test("POST / endpoint status code and response 500", async () =>
     request(app).post("/").send({}).expect(500));
-  test("DELETE / endpoint status code and response 500", async () =>
-    request(app).delete("/").send({}).expect(500));
+  test("DELETE /:pt/:creationTime endpoint status code and response 500", async () =>
+    request(app).delete("/somerando/1").expect(500));
   test("POST / endpoint status code and response 500 not found", async () => {
     await createUser();
     await request(app)
@@ -102,24 +92,18 @@ describe("/ endpoint tests", () => {
       .expect(201)
       .then((response) => JSON.parse(response.text).data);
     await request(app)
-      .post("/counter")
+      .put("/counter")
       .send({ patient: result.patient, creationTime: 121, setsCompleted: 1 })
       .expect(201);
-    return request(app)
-      .delete("/")
-      .send({
-        pt: result.pt,
-        creationTime: 121,
-      })
-      .expect(200);
+    return request(app).delete(`/${result.pt}/121`).expect(200);
   });
 
-  test("POST /counter endpoint status code and response 500", async () =>
-    request(app).post("/counter").send({}).expect(500));
+  test("PUT /counter endpoint status code and response 500", async () =>
+    request(app).put("/counter").send({}).expect(500));
 
-  test("POST /counter endpoint status code and response 500 second", async () =>
+  test("PUT /counter endpoint status code and response 500 second", async () =>
     request(app)
-      .post("/counter")
+      .put("/counter")
       .send({ patient: "tester", creationTime: 1, setsCompleted: 1 })
       .expect(500));
 

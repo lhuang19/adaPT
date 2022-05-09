@@ -6,8 +6,10 @@ import Posts from './Posts';
 export default function HomeScreen({ userData }) {
   return (
     <SafeAreaView>
-      <Title style={{ textAlign: "center" }}>
-        Welcome, {userData.firstname}
+      <Title style={{ textAlign: 'center' }}>
+        Welcome,
+        {' '}
+        {userData.firstname}
       </Title>
       <Posts userData={userData} username={undefined} height="100%" />
     </SafeAreaView>

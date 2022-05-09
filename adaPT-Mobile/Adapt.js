@@ -8,13 +8,36 @@ import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 import ProfileScreen from './pages/ProfileScreen';
 
-const MessageRoute = () => <MessageScreen />;
+function MessageRoute() {
+  return <MessageScreen />;
+}
 
 function ExerciseRoute(userData) {
   function ExerciseRouteInner() {
-    return <ExerciseScreen />;
+    return <ExerciseScreen userData={userData} />;
   }
   return ExerciseRouteInner;
+}
+
+function HomeRoute(userData) {
+  function HomeRouteInner() {
+    return <HomeScreen userData={userData} />;
+  }
+  return HomeRouteInner;
+}
+
+function SearchRoute(userData) {
+  function SearchRouteInner() {
+    return <SearchScreen userData={userData} />;
+  }
+  return SearchRouteInner;
+}
+
+function ProfileRoute(userData) {
+  function ProfileRouteInner() {
+    return <ProfileScreen userData={userData} profile={userData.username} />;
+  }
+  return ProfileRouteInner;
 }
 
 function Adapt({ route }) {
@@ -29,10 +52,10 @@ function Adapt({ route }) {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    home: () => <HomeScreen userData={userData} />,
+    home: HomeRoute(userData),
     message: MessageRoute,
-    search: () => <SearchScreen userData={userData} />,
-    profile: () => <ProfileScreen userData={userData} profile={userData.username} height="77%" />,
+    search: SearchRoute(userData),
+    profile: ProfileRoute(userData),
     exercise: ExerciseRoute(userData),
   });
 

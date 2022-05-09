@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, SafeAreaView } from 'react-native'
+import {
+  Text, StyleSheet, View, SafeAreaView,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
-import Posts from './Posts';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+import Posts from './Posts';
+
+const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
   },
   picture: {
     marginTop: 10,
@@ -30,7 +36,7 @@ const styles = StyleSheet.create({
     fontWeight: '200',
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });
 
@@ -38,19 +44,20 @@ export default function ProfileScreen({ userData, profile, height }) {
   const [profileData, setProfileData] = useState([]);
   const [status, setStatus] = useState(-2);
 
+  async function getProfileData() {
+    const res = await axios.get(`${baseUrl}/user/${profile}`)
+      .catch((error) => {
+        alert(error);
+      });
+    if (res) {
+      setProfileData(res.data.data);
+    } else {
+      alert('An error has occurred. Please try again.');
+    }
+  }
+
   useEffect(() => {
     if (userData.username !== profile) {
-      async function getProfileData() {
-        const res = await axios.get(`${baseUrl}/api/user/${profile}`)
-        .catch((error) => {
-          alert(error);
-        });
-        if (res) {
-          setProfileData(res.data.data);
-        } else {
-          alert("An error has occurred. Please try again.");
-        }
-      }
       getProfileData();
     } else {
       setProfileData(userData);
@@ -63,15 +70,14 @@ export default function ProfileScreen({ userData, profile, height }) {
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
-      .catch((error) => {
-        alert(error);
-      });
+      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+        .catch((error) => {
+          alert(error);
+        });
       if (res) {
         setStatus(res.data.data);
       } else {
-        alert("An error occurred. Please try again.");
-        return null;
+        alert('An error occurred. Please try again.');
       }
     }
     doAPIRequest();
@@ -85,101 +91,101 @@ export default function ProfileScreen({ userData, profile, height }) {
           Loading
         </Button>
       );
-    } else if (status === -1) {
+    }
+    if (status === -1) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          if (userData.length === 0) {
-            return;
-          }
-          const res = await axios.post(`${baseUrl}/api/profile/friendRequest/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          setStatus(res.data.data);
-        }}
-        color={"#1890FF"}
+          mode="contained"
+          onPress={async () => {
+            if (userData.length === 0) {
+              return;
+            }
+            const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            setStatus(res.data.data);
+          }}
+          color="#1890FF"
         >
           Request Friend
         </Button>
       );
-    } else if (status === 0) {
+    } if (status === 0) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          const res = await axios.delete(`${baseUrl}/api/profile/friend/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          if (res.data.data !== 100) {
-            setStatus(res.data.data);
-            return;
-          }
-          setStatus(-1);
-        }}
-        color={"#FF7875"}
+          mode="contained"
+          onPress={async () => {
+            const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            if (res.data.data !== 100) {
+              setStatus(res.data.data);
+              return;
+            }
+            setStatus(-1);
+          }}
+          color="#FF7875"
         >
           Remove Friend
         </Button>
       );
-    } else if (status === 1) {
+    } if (status === 1) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          setStatus(res.data.data);
-        }}
-        color={"#1890FF"}
+          mode="contained"
+          onPress={async () => {
+            const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            setStatus(res.data.data);
+          }}
+          color="#1890FF"
         >
           Requested Friend
         </Button>
       );
-    } else {
-      return (
-        <View style={styles.buttonContainer}>
-          <Button
+    }
+    return (
+      <View style={styles.buttonContainer}>
+        <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
             if (res.data.data !== 100) {
               setStatus(res.data.data);
               return;
             }
             setStatus(0);
-            await axios.post(`${baseUrl}/api/profile/friend/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
           }}
-          color={"#1890FF"}
-          >
-            Accept
-          </Button>
-          <Button
+          color="#1890FF"
+        >
+          Accept
+        </Button>
+        <Button
           mode="contained"
           onPress={async () => {
-            await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
             setStatus(-1);
           }}
-          color={"#FF7875"}
-          >
-            Decline
-          </Button>
-        </View>
-      );
-    }
+          color="#FF7875"
+        >
+          Decline
+        </Button>
+      </View>
+    );
   }
 
   return (
@@ -192,10 +198,12 @@ export default function ProfileScreen({ userData, profile, height }) {
           style={styles.picture}
         />
         <Text style={styles.title}>
-          {profileData.firstname} {profileData.lastname}
+          {profileData.firstname}
+          {' '}
+          {profileData.lastname}
         </Text>
         <Text style={styles.subtitle}>
-          ({profileData.username})
+          {profileData.username}
         </Text>
         {renderButton()}
       </View>

@@ -61,7 +61,7 @@ function Exercise(props) {
         defaultValue={setsCompleted}
         onChange={async (value) => {
           await doAPIRequest("/exercise/counter", {
-            method: "POST",
+            method: "PUT",
             body: { patient, creationTime, setsCompleted: value },
           });
         }}

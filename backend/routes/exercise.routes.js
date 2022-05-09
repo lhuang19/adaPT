@@ -10,12 +10,19 @@ const lib = require("../controllers/exercise.controllers");
 
 /**
  * @openapi
- * /exercise/feed:
- *  post:
+ * /exercise/feed/{username}:
+ *  get:
  *    tags:
  *      - exercise
  *    summary: Gets exercises
  *    description: Gets exercise feed
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        description: requester's username
+ *        required: true
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: exercise list
@@ -27,19 +34,10 @@ const lib = require("../controllers/exercise.controllers");
  *                $ref: "#/components/schemas/exercise"
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              username:
- *                type: string
- *      description: username
  */
-router.post("/feed", async (req, res) => {
+router.get("/feed/:username", async (req, res) => {
   try {
-    const results = await lib.getExercises(req.body);
+    const results = await lib.getExercises(req.params.username);
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -81,32 +79,37 @@ router.post("/", async (req, res) => {
 
 /**
  * @openapi
- * /exercise/:
+ * /exercise/{pt}/{creationTime}:
  *  delete:
  *    tags:
  *      - exercise
  *    summary: Delete exercise
  *    description: Deletes a exercise resource
+ *    parameters:
+ *      - name: pt
+ *        in: path
+ *        description: the pt who assigned the exercise to be deleted
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: creationTime
+ *        in: path
+ *        description: creation time of exercise
+ *        required: true
+ *        schema:
+ *          type: number
  *    responses:
  *      200:
  *        description: ok
  *      500:
  *        description: server error
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              pt:
- *                type: string
- *              creationTime:
- *                type: number
- *      description: post data
  */
-router.delete("/", async (req, res) => {
+router.delete("/:pt/:creationTime", async (req, res) => {
   try {
-    const results = await lib.deleteExercise(req.body);
+    const results = await lib.deleteExercise(
+      req.params.pt,
+      req.params.creationTime
+    );
     res.status(200).json({ data: results });
   } catch (err) {
     res.status(500).json({ error: "try again later" });
@@ -116,7 +119,7 @@ router.delete("/", async (req, res) => {
 /**
  * @openapi
  * /exercise/counter:
- *  post:
+ *  put:
  *    tags:
  *      - exercise
  *    summary: Updates counter
@@ -142,9 +145,9 @@ router.delete("/", async (req, res) => {
  *                type: number
  *              setsCompleted:
  *                type: number
- *      description: post data
+ *      description: put data
  */
-router.post("/counter", async (req, res) => {
+router.put("/counter", async (req, res) => {
   try {
     const results = await lib.setSetsCompleted(req.body);
     res.status(201).json({ data: results });

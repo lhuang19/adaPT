@@ -1,30 +1,35 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { Searchbar, List } from 'react-native-paper';
-import ProfileScreen from './ProfileScreen';
-
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+import ProfileScreen from './ProfileScreen';
+
+const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   item: {
     borderRadius: 20,
-    borderColor:'#000000',
+    borderColor: '#000000',
   },
 });
 
+const accountIcon = <List.Icon icon="account" />;
+
 export default function SearchScreen({ userData }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [usernames, setUsernames] = useState([]);
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState('');
 
   async function doAPIRequest() {
-    const res = await axios.get(`${baseUrl}/api/user`)
-    .catch((error) => {
-      alert(error);
-    });
+    const res = await axios.get(`${baseUrl}/user`)
+      .catch((error) => {
+        alert(error.response.data.error);
+      });
     if (res) {
       setUsernames(res.data.data);
     } else {
@@ -34,7 +39,7 @@ export default function SearchScreen({ userData }) {
 
   function handleChangeText(value) {
     setQuery(value);
-    setProfile("");
+    setProfile('');
     doAPIRequest();
     let res = [];
 
@@ -49,11 +54,11 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderResults() {
-    if (profile !== "") {
+    if (profile !== '') {
       return null;
     }
     if (results.length !== 0) {
-      let uiItems = [];
+      const uiItems = [];
       results.forEach((element) => {
         uiItems.push(
           <List.Item
@@ -61,9 +66,9 @@ export default function SearchScreen({ userData }) {
             key={element}
             descriptionNumberOfLines={16}
             style={styles.item}
-            left={() => <List.Icon icon="account" />}
+            left={accountIcon}
             onPress={() => setProfile(element)}
-          />
+          />,
         );
       });
       return uiItems;
@@ -72,7 +77,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderPosts() {
-    if (profile !== "") {
+    if (profile !== '') {
       return (
         <ProfileScreen userData={userData} profile={profile} height="71%" />
       );
