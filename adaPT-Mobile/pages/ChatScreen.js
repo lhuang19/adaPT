@@ -5,10 +5,11 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.103.83.173:8000';
+const baseUrl = 'http://10.102.250.188:8000';
 
 export default function ChatScreen({userData, friend}) {
 
+  // const {userData, friend} = route.params;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
@@ -53,13 +54,21 @@ export default function ChatScreen({userData, friend}) {
       });
     if (res) {
       if (res.data.data.length > messages.length) { 
+        console.log("new message");
         const newMessages = [];
         for (let i = messages.length; i < res.data.data.length; i++) {
           newMessages.push(convertMessage(res.data.data[i], i));
         }
         setMessages([...messages, ...newMessages]);
+      //   setMessages(messages.concat(newMessages));
       }
-      
+      // const convertedMessages = [];
+      // // console.log(res.data.data.length);
+      // for (let i = 0; i < res.data.data.length; i++) {
+      //   convertedMessages.push(convertMessage(res.data.data[i], i));
+      // }
+      // setMessages(convertedMessages);
+      // // console.log(messages.length);
     } else {
     alert("An error has occurred. Unable to fetch messages.");
     }
@@ -67,14 +76,16 @@ export default function ChatScreen({userData, friend}) {
   useInterval(async () => {
     fetchNewMessages(true);
   }, 1000);
+  useEffect(() => {
+  }, [messages]);
 
   async function onSendMessageHandler() {
     const message = {
       body: input,
       time: Date.now(),
-      sender: userData,
+      sender: userData.username,
       receiver: friend,
-      senderFirstname: userData.username,
+      senderFirstname: userData.firstname,
     }
     const json = JSON.stringify(message);
     const res = await axios.post(`${baseUrl}/api/chat`, json, {
@@ -87,12 +98,6 @@ export default function ChatScreen({userData, friend}) {
       alert(error);
     });
     if (res) {
-      // optimistic UI. Assume the message sends and update UI right away.
-      let newMessage = convertMessage(message, messages.length);
-      setMessages([
-        ...messages,
-        { newMessage },
-      ]);
       setInput("");
     }
   }
@@ -105,6 +110,9 @@ export default function ChatScreen({userData, friend}) {
       onSend={() => onSendMessageHandler()}
       user={{ _id: 0 }}
       scrollToBottom
+      inverted={false}
+      alwaysShowSend
+      renderUsernameOnMessage={true}
     />
   );
 }
