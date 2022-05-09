@@ -1,12 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { List } from 'antd-mobile';
+// eslint-disable-next-line import/no-relative-packages
 
-function ExerciseScreen() {
+import Exercise from '../components/Exercise';
+
+import axios from 'axios';
+
+const baseUrl = 'http://10.102.196.128:8000';
+
+function ExerciseScreen({ userData }) {
+  const [exercises, setExercises] = useState([]);
+  const { username } = userData;
+
+  async function fetchNewExercises() {
+    const res = await axios.post(`${baseUrl}/exercise/feed`)
+    .catch((error) => {
+      alert(error);
+    });
+    setExercises(res.data.data);
+  }
+  useEffect(() => {
+    if (username !== undefined) fetchNewExercises();
+  }, [username]);
+
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-      <Text>
-        Exercises
-      </Text>
+      <List header="Exercises">
+        {exercises.map((exercise) => (
+          <List.Item key={exercise.creationTime}>
+            <Exercise
+              data={exercise}
+            />
+          </List.Item>
+        ))}
+      </List>
     </View>
   );
 }
