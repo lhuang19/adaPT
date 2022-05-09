@@ -6,7 +6,10 @@ import {
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.196.128:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
+
+const baseUrl = `${BASE_URL}/api`;
 
 export default function Posts({ userData, username, height }) {
   const [posts, setPosts] = useState([]);
@@ -19,13 +22,13 @@ export default function Posts({ userData, username, height }) {
   useEffect(() => {
     async function doAPIRequest() {
       if (username) {
-        const res = await axios.get(`${baseUrl}/api/post/feed/${username}`)
+        const res = await axios.get(`${baseUrl}/post/feed/${username}`)
           .catch((error) => {
             alert(error);
           });
         setPosts(res.data.data);
       } else {
-        const res = await axios.get(`${baseUrl}/api/post/feed/${userData.username}/all`)
+        const res = await axios.get(`${baseUrl}/post/feed/${userData.username}/all`)
           .catch((error) => {
             alert(error);
           });
@@ -41,7 +44,7 @@ export default function Posts({ userData, username, height }) {
       content: commentText,
       commentTime: Date.now(),
     });
-    await axios.post(`${baseUrl}/api/post/${curPost.poster}${curPost.time}/comments`, json, {
+    await axios.post(`${baseUrl}/post/${curPost.poster}${curPost.time}/comments`, json, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -53,7 +56,7 @@ export default function Posts({ userData, username, height }) {
   }
 
   async function getComments(post) {
-    const res = await axios.get(`${baseUrl}/api/post/${post.poster}${post.time}/comments`);
+    const res = await axios.get(`${baseUrl}/post/${post.poster}${post.time}/comments`);
     setComments(res.data.data);
   }
 
