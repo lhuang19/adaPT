@@ -78,6 +78,39 @@ router.get("/:username", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /chat/{currUser}/{otherUser}:
+ *  get:
+ *    tags:
+ *      - chat
+ *    summary: Gets chat messages between two users
+ *    description: Gets all messages between two users
+ *    parameters:
+ *      - name: currUser
+ *        in: path
+ *        description: username of current user to get messages
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: otherUser
+ *        in: path
+ *        description: username of other user that current user is chatting with
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Array of messages
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: "#/components/schemas/message"
+ *      404:
+ *        description: bad input parameter
+ */
 router.get("/:currUser/:otherUser", async (req, res) => {
   try {
     const results = await lib.getCurrChatMessages(
