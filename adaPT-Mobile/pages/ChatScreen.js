@@ -54,7 +54,7 @@ export default function ChatScreen({ userData, friend }) {
     if (res) {
       if (res.data.data.length > messages.length) {
         const newMessages = [];
-        for (let i = messages.length; i < res.data.data.length; i++) {
+        for (let i = messages.length; i < res.data.data.length; i += 1) {
           newMessages.push(convertMessage(res.data.data[i], i));
         }
         setMessages([...messages, ...newMessages]);

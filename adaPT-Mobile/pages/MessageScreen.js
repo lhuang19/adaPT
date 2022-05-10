@@ -30,6 +30,20 @@ export default function MessageScreen({ userData }) {
     }
   }
 
+  function renderDivider() {
+    return <Divider />;
+  }
+
+  function renderAvatar(user) {
+    return (
+      <SvgUri
+        width={40}
+        height={40}
+        uri={`https://joeschmoe.io/api/v1/${user}`}
+      />
+    );
+  }
+
   if (showChat) {
     return (
       <>
@@ -49,7 +63,7 @@ export default function MessageScreen({ userData }) {
       <FlatList
         data={friends}
         keyExtractor={(item) => item}
-        ItemSeparatorComponent={() => <Divider />}
+        ItemSeparatorComponent={() => renderDivider()}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => openChat(item)}
@@ -57,13 +71,7 @@ export default function MessageScreen({ userData }) {
             <List.Item
               title={item}
               titleStyle={styles.listTitle}
-              left={() => (
-                <SvgUri
-                  width={40}
-                  height={40}
-                  uri={`https://joeschmoe.io/api/v1/${item}`}
-                />
-              )}
+              left={() => renderAvatar(item)}
             />
           </TouchableOpacity>
         )}
