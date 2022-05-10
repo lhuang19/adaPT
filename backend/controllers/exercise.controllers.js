@@ -69,12 +69,7 @@ const deleteExercise = async (pt, creationTime) => {
 };
 
 const setSetsCompleted = async (exerciseData) => {
-  if (
-    !exerciseData ||
-    !exerciseData.patient ||
-    !exerciseData.creationTime ||
-    !exerciseData.setsCompleted
-  )
+  if (!exerciseData || !exerciseData.patient || !exerciseData.creationTime)
     throw new Error("params not filled");
 
   try {
