@@ -94,6 +94,7 @@ export const mockedDoAPIRequest = jest.fn((url, data) => {
   if (url.startsWith("/login")) {
     if (!data || !data.body || !(data.body.password === "some password"))
       return { error: "incorrect password" };
+  }
 
   if (url.startsWith("/post/feed")) {
     return {
