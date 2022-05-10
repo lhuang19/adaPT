@@ -70,10 +70,10 @@ export default function ProfileScreen({ userData, profile, height }) {
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
-      .catch((error) => {
-        alert(error);
-      });
+      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+        .catch((error) => {
+          alert(error);
+        });
       if (res) {
         setStatus(res.data.data);
       } else {
@@ -95,18 +95,18 @@ export default function ProfileScreen({ userData, profile, height }) {
     if (status === -1) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          if (userData.length === 0) {
-            return;
-          }
-          const res = await axios.post(`${baseUrl}/api/profile/friendRequest/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          setStatus(res.data.data);
-        }}
-        color={"#1890FF"}
+          mode="contained"
+          onPress={async () => {
+            if (userData.length === 0) {
+              return;
+            }
+            const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            setStatus(res.data.data);
+          }}
+          color="#1890FF"
         >
           Request Friend
         </Button>
@@ -114,19 +114,19 @@ export default function ProfileScreen({ userData, profile, height }) {
     } if (status === 0) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          const res = await axios.delete(`${baseUrl}/api/profile/friend/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          if (res.data.data !== 100) {
-            setStatus(res.data.data);
-            return;
-          }
-          setStatus(-1);
-        }}
-        color={"#FF7875"}
+          mode="contained"
+          onPress={async () => {
+            const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            if (res.data.data !== 100) {
+              setStatus(res.data.data);
+              return;
+            }
+            setStatus(-1);
+          }}
+          color="#FF7875"
         >
           Remove Friend
         </Button>
@@ -134,15 +134,15 @@ export default function ProfileScreen({ userData, profile, height }) {
     } if (status === 1) {
       return (
         <Button
-        mode="contained"
-        onPress={async () => {
-          const res = await axios.get(`${baseUrl}/api/profile/${userData.username}/${profile}`)
-          .catch((error) => {
-            alert(error);
-          });
-          setStatus(res.data.data);
-        }}
-        color={"#1890FF"}
+          mode="contained"
+          onPress={async () => {
+            const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+              .catch((error) => {
+                alert(error);
+              });
+            setStatus(res.data.data);
+          }}
+          color="#1890FF"
         >
           Requested Friend
         </Button>
@@ -153,19 +153,19 @@ export default function ProfileScreen({ userData, profile, height }) {
         <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
             if (res.data.data !== 100) {
               setStatus(res.data.data);
               return;
             }
             setStatus(0);
-            await axios.post(`${baseUrl}/api/profile/friend/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
           }}
           color="#1890FF"
         >
@@ -174,10 +174,10 @@ export default function ProfileScreen({ userData, profile, height }) {
         <Button
           mode="contained"
           onPress={async () => {
-            await axios.delete(`${baseUrl}/api/profile/friendRequest/${profile}/${userData.username}`)
-            .catch((error) => {
-              alert(error);
-            });
+            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+              .catch((error) => {
+                alert(error);
+              });
             setStatus(-1);
           }}
           color="#FF7875"

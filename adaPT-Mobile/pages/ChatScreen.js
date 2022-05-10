@@ -3,21 +3,23 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import axios from 'axios';
 
-const baseUrl = 'http://10.102.250.188:8000';
+// eslint-disable-next-line import/no-unresolved
+import { BASE_URL } from '@env';
 
-export default function ChatScreen({userData, friend}) {
+const baseUrl = `${BASE_URL}/api`;
 
+export default function ChatScreen({ userData, friend }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   function useInterval(callback, delay) {
     const savedCallback = useRef();
-  
+
     // Remember the latest callback.
     useEffect(() => {
       savedCallback.current = callback;
     }, [callback]);
-  
+
     // Set up the interval.
     useEffect(() => {
       function tick() {
@@ -40,17 +42,17 @@ export default function ChatScreen({userData, friend}) {
         _id: message.sender === userData.username ? 0 : 1,
         name: message.senderFirstname,
         // avatar: `https:/joeschmoe.io/api/v1/${message.sender}`,
-      }
-    }
+      },
+    };
   }
 
   async function fetchNewMessages() {
-    const res = await axios.get(`${baseUrl}/api/chat/${userData.username}/${friend}`)
+    const res = await axios.get(`${baseUrl}/chat/${userData.username}/${friend}`)
       .catch((error) => {
         alert(error);
       });
     if (res) {
-      if (res.data.data.length > messages.length) { 
+      if (res.data.data.length > messages.length) {
         const newMessages = [];
         for (let i = messages.length; i < res.data.data.length; i++) {
           newMessages.push(convertMessage(res.data.data[i], i));
@@ -58,7 +60,7 @@ export default function ChatScreen({userData, friend}) {
         setMessages([...messages, ...newMessages]);
       }
     } else {
-      alert("An error has occurred. Unable to fetch messages.");
+      alert('An error has occurred. Unable to fetch messages.');
     }
   }
   useInterval(async () => {
@@ -74,33 +76,33 @@ export default function ChatScreen({userData, friend}) {
       sender: userData.username,
       receiver: friend,
       senderFirstname: userData.firstname,
-    }
+    };
     const json = JSON.stringify(message);
-    const res = await axios.post(`${baseUrl}/api/chat`, json, {
+    const res = await axios.post(`${baseUrl}/chat`, json, {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-    .catch((error) => {
-      console.log(error.response.data);
-      alert(error);
-    });
+      .catch((error) => {
+        console.log(error.response.data);
+        alert(error);
+      });
     if (res) {
-      setInput("");
+      setInput('');
     }
   }
 
   return (
     <GiftedChat
       text={input}
-      onInputTextChanged={text => setInput(text)}
+      onInputTextChanged={(text) => setInput(text)}
       messages={messages}
       onSend={() => onSendMessageHandler()}
       user={{ _id: 0 }}
       scrollToBottom
       inverted={false}
       alwaysShowSend
-      renderUsernameOnMessage={true}
+      renderUsernameOnMessage
     />
   );
 }

@@ -8,7 +8,7 @@ import { BASE_URL } from '@env';
 
 import ProfileScreen from './ProfileScreen';
 
-const baseUrl = 'http://10.102.250.188:8000';
+const baseUrl = `${BASE_URL}/api`;
 
 const styles = StyleSheet.create({
   item: {

@@ -7,9 +7,9 @@ import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 import ProfileScreen from './pages/ProfileScreen';
 
-function MessageRoute() {
+function MessageRoute(userData) {
   function MessageRouteInner() {
-    return <MessageScreen userData={userData}/>;
+    return <MessageScreen userData={userData} />;
   }
   return MessageRouteInner;
 }
@@ -55,7 +55,7 @@ function Adapt({ route }) {
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute(userData),
-    message: MessageRoute (userData),
+    message: MessageRoute(userData),
     search: SearchRoute(userData),
     profile: ProfileRoute(userData),
     exercise: ExerciseRoute(userData),
