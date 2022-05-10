@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const accountIcon = <List.Icon icon="account" />;
+const accountIcon = () => <List.Icon icon="account" />;
 
 export default function SearchScreen({ userData }) {
   const [query, setQuery] = useState('');
@@ -25,19 +25,19 @@ export default function SearchScreen({ userData }) {
   const [usernames, setUsernames] = useState([]);
   const [profile, setProfile] = useState('');
 
-  async function doAPIRequest() {
-    const res = await axios.get(`${baseUrl}/user`)
-      .catch((error) => {
-        alert(error.response.data.error);
-      });
-    if (res) {
-      setUsernames(res.data.data);
-    } else {
-      setUsernames([]);
-    }
-  }
-
   function handleChangeText(value) {
+    async function doAPIRequest() {
+      const res = await axios.get(`${baseUrl}/user`)
+        .catch((error) => {
+          alert(error.response.data.error);
+        });
+      if (res) {
+        setUsernames(res.data.data);
+      } else {
+        setUsernames([]);
+      }
+    }
+
     setQuery(value);
     setProfile('');
     doAPIRequest();

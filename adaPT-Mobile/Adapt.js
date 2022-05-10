@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper';
 
 import HomeScreen from './pages/HomeScreen';
@@ -8,8 +7,11 @@ import SearchScreen from './pages/SearchScreen';
 import ExerciseScreen from './pages/ExerciseScreen';
 import ProfileScreen from './pages/ProfileScreen';
 
-function MessageRoute() {
-  return <MessageScreen />;
+function MessageRoute(userData) {
+  function MessageRouteInner() {
+    return <MessageScreen userData={userData} />;
+  }
+  return MessageRouteInner;
 }
 
 function ExerciseRoute(userData) {
@@ -53,7 +55,7 @@ function Adapt({ route }) {
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute(userData),
-    message: MessageRoute,
+    message: MessageRoute(userData),
     search: SearchRoute(userData),
     profile: ProfileRoute(userData),
     exercise: ExerciseRoute(userData),
