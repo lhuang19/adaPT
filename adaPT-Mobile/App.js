@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -9,6 +10,7 @@ import Adapt from './Adapt';
 const Stack = createNativeStackNavigator();
 
 function App() {
+  LogBox.ignoreLogs(['EventEmitter.removeListener']);
   return (
     <PaperProvider>
       <NavigationContainer>
