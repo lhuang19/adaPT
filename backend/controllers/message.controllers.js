@@ -20,7 +20,27 @@ const getMessages = async (username) => {
   return result;
 };
 
+const getCurrChatMessages = async (currUser, otherUser) => {
+  if (
+    !currUser ||
+    !otherUser ||
+    !(await Users.findOne({ currUser })) ||
+    !(await Users.findOne({ otherUser }))
+  )
+    throw new Error("params not filled");
+
+  const result = await Messages.find({
+    $and: [
+      { sender: { $in: [currUser, otherUser] } },
+      { receiver: { $in: [currUser, otherUser] } },
+    ],
+  }).exec();
+  result.sort((a, b) => a.time - b.time);
+  return result;
+};
+
 module.exports = {
   postMessage,
   getMessages,
+  getCurrChatMessages,
 };
