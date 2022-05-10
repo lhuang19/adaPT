@@ -3,6 +3,8 @@ import "@testing-library/user-event";
 
 window.ResizeObserver = require("resize-observer-polyfill");
 
+export const mockedGetApiURL = jest.fn((e) => `http://localhost:8000/api${e}`);
+
 export const mockedDoAPIRequest = jest.fn((url, data) => {
   if (url.startsWith("/post") && url.endsWith("/comments")) {
     return {
@@ -133,9 +135,8 @@ export const mockedDoAPIRequest = jest.fn((url, data) => {
     },
   };
 });
-
 jest.mock("../src/modules/api", () => ({
-  getApiURL: (e) => `http://localhost:8000/api${e}`,
+  getApiURL: mockedGetApiURL,
   doAPIRequest: mockedDoAPIRequest,
 }));
 
