@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const accountIcon = <List.Icon icon="account" />;
+const accountIcon = () => <List.Icon icon="account" />;
 
 export default function SearchScreen({ userData }) {
   const [query, setQuery] = useState('');
@@ -66,7 +66,7 @@ export default function SearchScreen({ userData }) {
             key={element}
             descriptionNumberOfLines={16}
             style={styles.item}
-            left={() => accountIcon}
+            left={accountIcon}
             onPress={() => setProfile(element)}
           />,
         );

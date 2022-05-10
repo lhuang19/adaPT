@@ -106,7 +106,7 @@ exports[`snapshot tests Login wrong entry 1`] = `
               style="width: 60%;"
             >
               <div
-                class="ant-row ant-form-item"
+                class="ant-row ant-form-item ant-form-item-with-help ant-form-item-has-error"
               >
                 <div
                   class="ant-col ant-form-item-label"
@@ -129,7 +129,7 @@ exports[`snapshot tests Login wrong entry 1`] = `
                       class="ant-form-item-control-input-content"
                     >
                       <span
-                        class="ant-input-affix-wrapper"
+                        class="ant-input-affix-wrapper ant-input-affix-wrapper-status-error"
                       >
                         <span
                           class="ant-input-prefix"
@@ -163,10 +163,20 @@ exports[`snapshot tests Login wrong entry 1`] = `
                       </span>
                     </div>
                   </div>
+                  <div
+                    class="ant-form-item-explain ant-form-item-explain-connected"
+                  >
+                    <div
+                      class="ant-form-item-explain-error"
+                      role="alert"
+                    >
+                      Please input your username!
+                    </div>
+                  </div>
                 </div>
               </div>
               <div
-                class="ant-row ant-form-item"
+                class="ant-row ant-form-item ant-form-item-with-help ant-form-item-has-error"
               >
                 <div
                   class="ant-col ant-form-item-label"
@@ -189,7 +199,7 @@ exports[`snapshot tests Login wrong entry 1`] = `
                       class="ant-form-item-control-input-content"
                     >
                       <span
-                        class="ant-input-affix-wrapper ant-input-password"
+                        class="ant-input-affix-wrapper ant-input-password ant-input-affix-wrapper-status-error"
                       >
                         <span
                           class="ant-input-prefix"
@@ -248,6 +258,16 @@ exports[`snapshot tests Login wrong entry 1`] = `
                           </span>
                         </span>
                       </span>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-form-item-explain ant-form-item-explain-connected"
+                  >
+                    <div
+                      class="ant-form-item-explain-error"
+                      role="alert"
+                    >
+                      Please input your password!
                     </div>
                   </div>
                 </div>
