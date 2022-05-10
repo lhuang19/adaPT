@@ -207,7 +207,7 @@ export default function ProfileScreen({ userData, profile, height }) {
         </Text>
         {renderButton()}
       </View>
-      <Posts userData={userData} username={undefined} height={height} />
+      <Posts userData={userData} username={profile} height={height} />
     </SafeAreaView>
   );
 }

@@ -25,19 +25,19 @@ export default function SearchScreen({ userData }) {
   const [usernames, setUsernames] = useState([]);
   const [profile, setProfile] = useState('');
 
-  async function doAPIRequest() {
-    const res = await axios.get(`${baseUrl}/user`)
-      .catch((error) => {
-        alert(error.response.data.error);
-      });
-    if (res) {
-      setUsernames(res.data.data);
-    } else {
-      setUsernames([]);
-    }
-  }
-
   function handleChangeText(value) {
+    async function doAPIRequest() {
+      const res = await axios.get(`${baseUrl}/user`)
+        .catch((error) => {
+          alert(error.response.data.error);
+        });
+      if (res) {
+        setUsernames(res.data.data);
+      } else {
+        setUsernames([]);
+      }
+    }
+
     setQuery(value);
     setProfile('');
     doAPIRequest();
@@ -66,7 +66,7 @@ export default function SearchScreen({ userData }) {
             key={element}
             descriptionNumberOfLines={16}
             style={styles.item}
-            left={accountIcon}
+            left={() => accountIcon}
             onPress={() => setProfile(element)}
           />,
         );
