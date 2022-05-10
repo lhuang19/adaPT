@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 
 import { Button, TextInput, Text } from 'react-native-paper';
