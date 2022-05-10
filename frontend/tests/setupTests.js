@@ -100,39 +100,39 @@ export const mockedDoAPIRequest = jest.fn((url, data) => {
     return {
       data: [
         {
-          "title": "my post",
-          "body": "my post body",
-          "time": 1,
-          "poster": "TonyPT",
-          "users": 0,
-          "media": "string"
+          title: "my post",
+          body: "my post body",
+          time: 1,
+          poster: "TonyPT",
+          users: 0,
+          media: "string",
         },
       ],
     };
   }
   if (url.startsWith("/profile/friendRequest/tester/tester5")) {
     return {
-      data: 100
+      data: 100,
     };
   }
   if (url.startsWith("/profile/tester2/tester")) {
     return {
-      data: -1
+      data: -1,
     };
   }
   if (url.startsWith("/profile/tester3/tester")) {
     return {
-      data: 0
+      data: 0,
     };
   }
   if (url.startsWith("/profile/tester4/tester")) {
     return {
-      data: 1
+      data: 1,
     };
   }
   if (url.startsWith("/profile/tester5/tester")) {
     return {
-      data: 2
+      data: 2,
     };
   }
   if (url.startsWith("/exercise/feed")) {
