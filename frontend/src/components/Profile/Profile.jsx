@@ -29,7 +29,6 @@ function Profile() {
   }
 
   useEffect(() => {
-    console.log(userData);
     async function getStatus() {
       if (username === undefined || username.length === 0) {
         setStatus(-1);

@@ -17,16 +17,28 @@ function WithAuth({ children }) {
   useEffect(() => {
     async function loadToken() {
       const token = checkLoggedIn();
-      const { data } = await doAPIRequest(`/login/returning/${token}`, {
-        method: "GET",
-      });
-      if (data) {
-        setCredentials(data);
-        if (location.pathname === "/login" || location.pathname === "/signup") {
-          navigate("/");
+      try {
+        const { data } = await doAPIRequest(`/login/returning/${token}`, {
+          method: "GET",
+        });
+        if (data) {
+          setCredentials(data);
+
+          if (
+            location.pathname === "/login" ||
+            location.pathname === "/signup"
+          ) {
+            navigate("/");
+          }
         }
-      } else {
-        navigate("/login");
+
+        if (!data && location.pathname !== "/signup") {
+          navigate("/login");
+        }
+      } catch (e) {
+        if (location.pathname !== "/login" && location.pathname !== "/signup") {
+          navigate("/login");
+        }
       }
     }
     loadToken();
@@ -39,7 +51,6 @@ function WithAuth({ children }) {
     [credentials]
   );
 
-  console.log("CREDENTIALS: ", credentials);
   return (
     <AuthUserContext.Provider value={passInValue}>
       <Layout>

@@ -7,11 +7,11 @@
     "@react-three/drei": "^9.5.0",
     "@react-three/fiber": "^8.0.12",
     "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/user-event": "^13.5.0",
     "antd": "^4.20.2",
     "i": "^0.3.7",
     "install": "^0.13.0",
     "npm": "^8.7.0",
+    "pretty": "^2.0.0",
     "rc-scroll-anim": "^2.7.6",
     "rc-texty": "^0.2.0",
     "react": "^18.0.0",
@@ -20,15 +20,34 @@
     "react-router-dom": "^6.2.2",
     "react-scripts": "^5.0.0",
     "react-unity-webgl": "^8.8.0",
+    "resize-observer-polyfill": "^1.5.1",
     "three": "^0.139.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest --coverage --forceExit",
     "eject": "react-scripts eject",
     "lint": "eslint --ext js,jsx ."
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./src/**"
+    ],
+    "testPathIgnorePatterns": [
+      "cypress/"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "babel-jest"
+    },
+    "setupFilesAfterEnv": [
+      "./tests/setupTests.js"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -49,9 +68,16 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^14.1.1",
+    "babel-jest": "^28.1.0",
+    "cypress": "^9.6.0",
     "eslint": "^8.15.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",

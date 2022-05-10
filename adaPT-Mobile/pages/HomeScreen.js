@@ -1,12 +1,17 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import { Title } from 'react-native-paper';
+import Posts from './Posts';
 
 export default function HomeScreen({ userData }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-      <Text style={{ margin: 50 }}>
-        {`Hello, ${userData.firstname} ${userData.lastname}`}
-      </Text>
-    </View>
+    <SafeAreaView>
+      <Title style={{ textAlign: 'center' }}>
+        Welcome,
+        {' '}
+        {userData.firstname}
+      </Title>
+      <Posts userData={userData} username={undefined} height="100%" />
+    </SafeAreaView>
   );
 }

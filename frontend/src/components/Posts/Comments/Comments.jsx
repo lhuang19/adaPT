@@ -12,7 +12,6 @@ import {
 
 import { AuthUserContext } from "../../../context/Auth";
 
-// import { getComments, postComment } from "../../../modules/storage";
 import { doAPIRequest } from "../../../modules/api";
 
 const { Panel } = Collapse;

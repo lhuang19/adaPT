@@ -8,7 +8,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { IoBarbellSharp } from "react-icons/io5";
-import { FaUserFriends } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
 import Search from "./Search";
 import { logout } from "../../modules/storage";
@@ -48,6 +47,7 @@ function NavBar(props) {
           >
             <Menu.Item
               key="/_nav_bar"
+              data-testid="/_nav_bar"
               icon={
                 <IconWrapper>
                   <HomeOutlined />
@@ -57,6 +57,7 @@ function NavBar(props) {
             />
             <Menu.Item
               key="/exercise_nav_bar"
+              data-testid="exercise_nav_bar"
               icon={
                 <IconWrapper>
                   <IoBarbellSharp />
@@ -65,15 +66,8 @@ function NavBar(props) {
               onClick={() => navigate("/exercises")}
             />
             <Menu.Item
-              key="/friends_nav_bar"
-              icon={
-                <IconWrapper>
-                  <FaUserFriends />
-                </IconWrapper>
-              }
-              onClick={() => alert("implement friends")}
-            />
-            <Menu.Item
+              id="chat_nav_bar"
+              data-testid="chat_nav_bar"
               key="/chat_nav_bar"
               icon={
                 <IconWrapper>
@@ -83,6 +77,8 @@ function NavBar(props) {
               onClick={() => navigate("/chat")}
             />
             <Menu.Item
+              id="search_nav_bar"
+              data-testid="search_nav_bar"
               key="search_nav_bar"
               icon={
                 <IconWrapper>

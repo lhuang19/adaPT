@@ -10,9 +10,8 @@ function Dashboard({ name, animate }) {
   const [, render] = useState(0);
 
   async function fetchNewPatients() {
-    const { data } = await doAPIRequest("/exercise/feed", {
-      method: "POST",
-      body: { username: name },
+    const { data } = await doAPIRequest(`/exercise/feed/${name}`, {
+      method: "GET",
     });
     for (let i = 0; i < data.length; i += 1) {
       const { patient } = data[i];

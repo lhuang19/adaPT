@@ -5,6 +5,14 @@ name: adapt
 
 on: push
 
+env: 
+  MONGO_URL: ${{ secrets.MONGO_TEST_URL }}
+  MONGO_TEST_URL: ${{ secrets.MONGO_TEST_URL }}
+  SECRETKEY: somesecret109248120938u109
+  GOOGLE_CLOUD_PROJECT: adapt-348705
+  GCLOUD_STORAGE_BUCKET: adaptstorage350
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
 jobs:
   backend-checks:
     name: Backend Checks
@@ -17,12 +25,6 @@ jobs:
     - run: npm install
     - run: npm run lint
     - run: npm run test
-      env: 
-        MONGO_TEST_URL: ${{ secrets.MONGO_TEST_URL }}
-        SECRETKEY: somesecret109248120938u109
-        GOOGLE_CLOUD_PROJECT: adapt-348705
-        GCLOUD_STORAGE_BUCKET: adaptstorage350
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
     
   frontend-checks:
       name: Frontend Checks
@@ -34,4 +36,36 @@ jobs:
         - uses: actions/checkout@v3
         - run: npm install
         - run: npm run lint
+        - run: npm run test
+  
+  mobile-checks:
+      name: Mobile Checks
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./adaPT-Mobile
+      steps:
+        - uses: actions/checkout@v3
+        - run: npm install
+        - run: npm run lint
+
+  cypress-run:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [ backend-checks, frontend-checks ]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run Backend Server
+      working-directory: ./backend
+      run: |
+        npm install
+        npm start &
+
+    - name: Run Cypress
+      uses: cypress-io/github-action@v2
+      with:
+        working-directory: ./frontend
+        wait-on: 'http://localhost:3000'
+        start: npm start
+        browser: chrome
 

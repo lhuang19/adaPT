@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import { List, Divider, Appbar } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 });
 
 export default function MessageScreen({ userData }) {
-  const { username, friends } = userData;
+  const { friends } = userData;
   const [friend, setFriend] = useState("");
   const [showChat, setShowChat] = useState(false);
 
