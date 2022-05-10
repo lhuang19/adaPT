@@ -8,7 +8,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { IoBarbellSharp } from "react-icons/io5";
-import { FaUserFriends } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
 import Search from "./Search";
 import { logout } from "../../modules/storage";
@@ -65,15 +64,6 @@ function NavBar(props) {
                 </IconWrapper>
               }
               onClick={() => navigate("/exercises")}
-            />
-            <Menu.Item
-              key="/friends_nav_bar"
-              icon={
-                <IconWrapper>
-                  <FaUserFriends />
-                </IconWrapper>
-              }
-              onClick={() => {}}
             />
             <Menu.Item
               id="chat_nav_bar"
