@@ -1,34 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Button, TextInput, Text } from 'react-native-paper';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { Button, TextInput, Text } from "react-native-paper";
+import { SafeAreaView, StyleSheet } from "react-native";
 
-import axios from 'axios';
+import axios from "axios";
 
-// eslint-disable-next-line import/no-unresolved
-import { BASE_URL } from '@env';
-
-const baseUrl = `${BASE_URL}/api`;
+import baseUrl from "../utils/constants";
 
 function LoginScreen({ navigation }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   async function loginHandler(login) {
     console.log(baseUrl);
     const json = JSON.stringify(login);
-    const res = await axios.post(`${baseUrl}/login`, json, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const res = await axios
+      .post(`${baseUrl}/login`, json, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .catch((error) => {
         console.log(error.response.data);
         alert(error);
       });
     if (res) {
       console.log(res.data.data);
-      navigation.navigate('Start', {
+      navigation.navigate("Start", {
         userData: res.data.data,
       });
     }
@@ -37,16 +35,16 @@ function LoginScreen({ navigation }) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
-      backgroundColor: '#fff',
+      justifyContent: "center",
+      backgroundColor: "#fff",
       padding: 10,
       margin: 10,
     },
     title: {
       paddingVertical: 12,
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 30,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     button: {
       paddingVertical: 12,
@@ -55,9 +53,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>
-        adaPT Sign In
-      </Text>
+      <Text style={styles.title}>adaPT Sign In</Text>
       <TextInput
         label="Username"
         placeholder="Username"

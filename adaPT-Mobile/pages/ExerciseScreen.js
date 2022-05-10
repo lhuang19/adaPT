@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { List, Stepper } from '@ant-design/react-native';
-import axios from 'axios';
-// eslint-disable-next-line import/no-unresolved
-import { BASE_URL } from '@env';
+import React, { useState, useEffect } from "react";
+import { List, Stepper } from "@ant-design/react-native";
+import axios from "axios";
 
-const baseUrl = `${BASE_URL}/api`;
+import baseUrl from "../utils/constants";
 
 function ExerciseScreen({ userData }) {
   const [exercises, setExercises] = useState([]);
@@ -25,7 +23,12 @@ function ExerciseScreen({ userData }) {
   return (
     <List style={{ paddingTop: 30 }} header="Exercises">
       {exercises.map((exercise) => (
-        <List.Item style={{ padding: 20, textAlign: 'center', fontWeight: 'bold' }} key={exercise.creationTime} multipleLine wrap>
+        <List.Item
+          style={{ padding: 20, textAlign: "center", fontWeight: "bold" }}
+          key={exercise.creationTime}
+          multipleLine
+          wrap
+        >
           {`${exercise.name} - ${exercise.sets}x${exercise.reps} - Assigned by ${exercise.pt.username}`}
 
           {exercise.instructions}
@@ -43,7 +46,7 @@ function ExerciseScreen({ userData }) {
               try {
                 await axios.put(`${baseUrl}/exercise/counter`, json, {
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                 });
               } catch (error) {

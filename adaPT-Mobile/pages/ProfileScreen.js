@@ -1,42 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Text, StyleSheet, View, SafeAreaView,
-} from 'react-native';
-import { Button } from 'react-native-paper';
-import { SvgUri } from 'react-native-svg';
+import React, { useEffect, useState } from "react";
+import { Text, StyleSheet, View, SafeAreaView } from "react-native";
+import { Button } from "react-native-paper";
+import { SvgUri } from "react-native-svg";
 
-import axios from 'axios';
+import axios from "axios";
 
-// eslint-disable-next-line import/no-unresolved
-import { BASE_URL } from '@env';
+import Posts from "./Posts";
 
-import Posts from './Posts';
-
-const baseUrl = `${BASE_URL}/api`;
+import baseUrl from "../utils/constants";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
   },
   picture: {
     marginTop: 10,
   },
   title: {
     marginTop: 4,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     marginTop: 4,
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 15,
-    fontWeight: '200',
+    fontWeight: "200",
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
 
@@ -45,14 +40,13 @@ export default function ProfileScreen({ userData, profile, height }) {
   const [status, setStatus] = useState(-2);
 
   async function getProfileData() {
-    const res = await axios.get(`${baseUrl}/user/${profile}`)
-      .catch((error) => {
-        alert(error);
-      });
+    const res = await axios.get(`${baseUrl}/user/${profile}`).catch((error) => {
+      alert(error);
+    });
     if (res) {
       setProfileData(res.data.data);
     } else {
-      alert('An error has occurred. Please try again.');
+      alert("An error has occurred. Please try again.");
     }
   }
 
@@ -70,24 +64,22 @@ export default function ProfileScreen({ userData, profile, height }) {
     }
 
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+      const res = await axios
+        .get(`${baseUrl}/profile/${userData.username}/${profile}`)
         .catch((error) => {
           alert(error);
         });
       if (res) {
         setStatus(res.data.data);
       } else {
-        alert('An error occurred. Please try again.');
+        alert("An error occurred. Please try again.");
       }
     }
     doAPIRequest();
 
     if (status === -2) {
       return (
-        <Button
-          mode="outlined"
-          loading
-        >
+        <Button mode="outlined" loading>
           Loading
         </Button>
       );
@@ -100,7 +92,10 @@ export default function ProfileScreen({ userData, profile, height }) {
             if (userData.length === 0) {
               return;
             }
-            const res = await axios.post(`${baseUrl}/profile/friendRequest/${userData.username}/${profile}`)
+            const res = await axios
+              .post(
+                `${baseUrl}/profile/friendRequest/${userData.username}/${profile}`
+              )
               .catch((error) => {
                 alert(error);
               });
@@ -111,12 +106,16 @@ export default function ProfileScreen({ userData, profile, height }) {
           Request Friend
         </Button>
       );
-    } if (status === 0) {
+    }
+    if (status === 0) {
       return (
         <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/profile/friend/${userData.username}/${profile}`)
+            const res = await axios
+              .delete(
+                `${baseUrl}/profile/friend/${userData.username}/${profile}`
+              )
               .catch((error) => {
                 alert(error);
               });
@@ -131,12 +130,14 @@ export default function ProfileScreen({ userData, profile, height }) {
           Remove Friend
         </Button>
       );
-    } if (status === 1) {
+    }
+    if (status === 1) {
       return (
         <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.get(`${baseUrl}/profile/${userData.username}/${profile}`)
+            const res = await axios
+              .get(`${baseUrl}/profile/${userData.username}/${profile}`)
               .catch((error) => {
                 alert(error);
               });
@@ -153,7 +154,10 @@ export default function ProfileScreen({ userData, profile, height }) {
         <Button
           mode="contained"
           onPress={async () => {
-            const res = await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            const res = await axios
+              .delete(
+                `${baseUrl}/profile/friendRequest/${profile}/${userData.username}`
+              )
               .catch((error) => {
                 alert(error);
               });
@@ -162,7 +166,8 @@ export default function ProfileScreen({ userData, profile, height }) {
               return;
             }
             setStatus(0);
-            await axios.post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
+            await axios
+              .post(`${baseUrl}/profile/friend/${profile}/${userData.username}`)
               .catch((error) => {
                 alert(error);
               });
@@ -174,7 +179,10 @@ export default function ProfileScreen({ userData, profile, height }) {
         <Button
           mode="contained"
           onPress={async () => {
-            await axios.delete(`${baseUrl}/profile/friendRequest/${profile}/${userData.username}`)
+            await axios
+              .delete(
+                `${baseUrl}/profile/friendRequest/${profile}/${userData.username}`
+              )
               .catch((error) => {
                 alert(error);
               });
@@ -198,13 +206,9 @@ export default function ProfileScreen({ userData, profile, height }) {
           style={styles.picture}
         />
         <Text style={styles.title}>
-          {profileData.firstname}
-          {' '}
-          {profileData.lastname}
+          {profileData.firstname} {profileData.lastname}
         </Text>
-        <Text style={styles.subtitle}>
-          {profileData.username}
-        </Text>
+        <Text style={styles.subtitle}>{profileData.username}</Text>
         {renderButton()}
       </View>
       <Posts userData={userData} username={profile} height={height} />

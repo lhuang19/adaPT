@@ -1,36 +1,31 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { Searchbar, List } from 'react-native-paper';
-import axios from 'axios';
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { Searchbar, List } from "react-native-paper";
+import axios from "axios";
 
-// eslint-disable-next-line import/no-unresolved
-import { BASE_URL } from '@env';
-
-import ProfileScreen from './ProfileScreen';
-
-const baseUrl = `${BASE_URL}/api`;
+import ProfileScreen from "./ProfileScreen";
+import baseUrl from "../utils/constants";
 
 const styles = StyleSheet.create({
   item: {
     borderRadius: 20,
-    borderColor: '#000000',
+    borderColor: "#000000",
   },
 });
 
 const accountIcon = () => <List.Icon icon="account" />;
 
 export default function SearchScreen({ userData }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [usernames, setUsernames] = useState([]);
-  const [profile, setProfile] = useState('');
+  const [profile, setProfile] = useState("");
 
   function handleChangeText(value) {
     async function doAPIRequest() {
-      const res = await axios.get(`${baseUrl}/user`)
-        .catch((error) => {
-          alert(error.response.data.error);
-        });
+      const res = await axios.get(`${baseUrl}/user`).catch((error) => {
+        alert(error.response.data.error);
+      });
       if (res) {
         setUsernames(res.data.data);
       } else {
@@ -39,7 +34,7 @@ export default function SearchScreen({ userData }) {
     }
 
     setQuery(value);
-    setProfile('');
+    setProfile("");
     doAPIRequest();
     let res = [];
 
@@ -54,7 +49,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderResults() {
-    if (profile !== '') {
+    if (profile !== "") {
       return null;
     }
     if (results.length !== 0) {
@@ -68,7 +63,7 @@ export default function SearchScreen({ userData }) {
             style={styles.item}
             left={accountIcon}
             onPress={() => setProfile(element)}
-          />,
+          />
         );
       });
       return uiItems;
@@ -77,7 +72,7 @@ export default function SearchScreen({ userData }) {
   }
 
   function renderPosts() {
-    if (profile !== '') {
+    if (profile !== "") {
       return (
         <ProfileScreen userData={userData} profile={profile} height="71%" />
       );
@@ -92,9 +87,7 @@ export default function SearchScreen({ userData }) {
         onChangeText={(value) => handleChangeText(value)}
         value={query}
       />
-      <List.Section>
-        {renderResults()}
-      </List.Section>
+      <List.Section>{renderResults()}</List.Section>
       {renderPosts()}
     </SafeAreaView>
   );

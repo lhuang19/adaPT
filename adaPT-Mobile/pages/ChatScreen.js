@@ -1,16 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
+import React, { useState, useRef, useEffect } from "react";
+import { GiftedChat } from "react-native-gifted-chat";
 
-import axios from 'axios';
+import axios from "axios";
 
-// eslint-disable-next-line import/no-unresolved
-import { BASE_URL } from '@env';
-
-const baseUrl = `${BASE_URL}/api`;
+import baseUrl from "../utils/constants";
 
 export default function ChatScreen({ userData, friend }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -47,7 +44,8 @@ export default function ChatScreen({ userData, friend }) {
   }
 
   async function fetchNewMessages() {
-    const res = await axios.get(`${baseUrl}/chat/${userData.username}/${friend}`)
+    const res = await axios
+      .get(`${baseUrl}/chat/${userData.username}/${friend}`)
       .catch((error) => {
         alert(error);
       });
@@ -60,14 +58,13 @@ export default function ChatScreen({ userData, friend }) {
         setMessages([...messages, ...newMessages]);
       }
     } else {
-      alert('An error has occurred. Unable to fetch messages.');
+      alert("An error has occurred. Unable to fetch messages.");
     }
   }
   useInterval(async () => {
     fetchNewMessages(true);
   }, 1000);
-  useEffect(() => {
-  }, [messages]);
+  useEffect(() => {}, [messages]);
 
   async function onSendMessageHandler() {
     const message = {
@@ -78,17 +75,18 @@ export default function ChatScreen({ userData, friend }) {
       senderFirstname: userData.firstname,
     };
     const json = JSON.stringify(message);
-    const res = await axios.post(`${baseUrl}/chat`, json, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const res = await axios
+      .post(`${baseUrl}/chat`, json, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .catch((error) => {
         console.log(error.response.data);
         alert(error);
       });
     if (res) {
-      setInput('');
+      setInput("");
     }
   }
 
