@@ -94,16 +94,85 @@ export const mockedDoAPIRequest = jest.fn((url, data) => {
   if (url.startsWith("/login")) {
     if (!data || !data.body || !(data.body.password === "some password"))
       return { error: "incorrect password" };
+
+  if (url.startsWith("/post/feed")) {
+    return {
+      data: [
+        {
+          "title": "my post",
+          "body": "my post body",
+          "time": 1,
+          "poster": "TonyPT",
+          "users": 0,
+          "media": "string"
+        },
+      ],
+    };
+  }
+  if (url.startsWith("/profile/friendRequest/tester/tester5")) {
+    return {
+      data: 100
+    };
+  }
+  if (url.startsWith("/profile/tester2/tester")) {
+    return {
+      data: -1
+    };
+  }
+  if (url.startsWith("/profile/tester3/tester")) {
+    return {
+      data: 0
+    };
+  }
+  if (url.startsWith("/profile/tester4/tester")) {
+    return {
+      data: 1
+    };
+  }
+  if (url.startsWith("/profile/tester5/tester")) {
+    return {
+      data: 2
+    };
+  }
+  if (url.startsWith("/exercise/feed")) {
+    return {
+      data: [
+        {
+          name: "exercise",
+          sets: 2,
+          reps: 10,
+          instructions: "squat",
+          setsCompleted: 0,
+          creationTime: 121,
+        },
+      ],
+    };
+  }
+  if (url.startsWith("/post/feed/")) {
+    return {
+      data: [
+        {
+          title: "some title",
+          body: "some body",
+          time: "some time",
+          poster: "tester",
+          users: "some user",
+          media: "some media",
+        },
+      ],
+    };
+  }
+  if (url.startsWith("/user")) {
     return {
       data: {
         username: "tester",
-        password: "secretPassword",
-        title: "some title",
-        body: "some body",
-        time: "some time",
-        poster: "tester",
-        users: "some user",
-        media: "some media",
+        password: "tester",
+        firstname: "tester",
+        lastname: "tester",
+        role: "PT",
+        registerTime: 1,
+        friends: ["tester2"],
+        freindRequests: [],
       },
     };
   }

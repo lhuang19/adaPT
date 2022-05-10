@@ -37,6 +37,7 @@ function Profile() {
       const { data } = await doAPIRequest(`/profile/${username}/${name}`, {
         method: "GET",
       });
+      console.log(data);
       setStatus(data);
     }
     getStatus();

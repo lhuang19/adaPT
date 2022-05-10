@@ -6,7 +6,6 @@
     "@ant-design/icons": "^4.7.0",
     "@react-three/drei": "^9.5.0",
     "@react-three/fiber": "^8.0.12",
-    "@testing-library/jest-dom": "^5.16.2",
     "antd": "^4.20.2",
     "i": "^0.3.7",
     "install": "^0.13.0",
@@ -70,6 +69,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-react": "^7.16.7",
+    "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.1.1",
     "babel-jest": "^28.1.0",
