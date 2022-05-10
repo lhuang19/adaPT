@@ -34,10 +34,12 @@ const lib = require("../controllers/message.controllers");
  */
 
 router.post("/", async (req, res) => {
+  console.log("POST MESSAGE");
   try {
     const results = await lib.postMessage(req.body);
     res.status(201).json({ data: results });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: "try again later" });
   }
 });

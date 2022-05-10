@@ -51,7 +51,7 @@ describe("register, login, message", () => {
 
     cy.contains("Patient").click();
     cy.contains("Sign up").click();
-    cy.wait(100);
+    cy.wait(1000);
 
     cy.contains("Successfully Created An Account!").should("be.visible");
     cy.contains(`Welcome ${username1}`).should("be.visible");
@@ -72,7 +72,7 @@ describe("register, login, message", () => {
 
     cy.contains("Patient").click();
     cy.contains("Sign up").click();
-    cy.wait(100);
+    cy.wait(1000);
 
     cy.contains("Successfully Created An Account!").should("be.visible");
     cy.contains(`Welcome ${username2}`).should("be.visible");
@@ -91,6 +91,7 @@ describe("register, login, message", () => {
     cy.wait(100);
 
     cy.contains("Request Friend").click();
+    cy.wait(1000);
   });
 
   it("login 1, friend 2, send message", () => {
@@ -106,7 +107,7 @@ describe("register, login, message", () => {
     cy.wait(100);
 
     cy.contains("Accept").click();
-    cy.wait(100);
+    cy.wait(1000);
 
     cy.get("[id=chat_nav_bar]").click();
 
