@@ -194,7 +194,7 @@ export default function ProfileScreen({ userData, profile, height }) {
         <SvgUri
           width={100}
           height={100}
-          uri={`https://joeschmoe.io/api/v1/${profileData.username}`}
+          uri={`https://joeschmoe.io/api/v1/${profile}`}
           style={styles.picture}
         />
         <Text style={styles.title}>
