@@ -140,7 +140,7 @@ describe("snapshot tests", () => {
       </Router>
     );
     fireEvent.click(screen.getByText("Log in"));
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
     expect(asFragment()).toMatchSnapshot();
     expect(screen.getByText("Please input your username!")).toBeInTheDocument();
   });
