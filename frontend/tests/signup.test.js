@@ -62,7 +62,7 @@ test("Signup next and prev", async () => {
   expect(screen.getByDisplayValue("username1")).toBeInTheDocument();
 }, 10000);
 
-test("Signup next and prev", async () => {
+test("Signup submit", async () => {
   const mockSetCreds = jest.fn();
 
   render(

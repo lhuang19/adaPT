@@ -110,6 +110,11 @@ export const mockedDoAPIRequest = jest.fn((url, data) => {
       ],
     };
   }
+  if (url.startsWith("/profile/friend/tester3/tester")) {
+    return {
+      data: 100,
+    };
+  }
   if (url.startsWith("/profile/friendRequest/tester/tester5")) {
     return {
       data: 100,
