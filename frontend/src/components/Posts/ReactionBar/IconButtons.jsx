@@ -59,6 +59,7 @@ function IconButton({
           reactionHandler();
           setSelected(!selected);
         }}
+        data-testid="icon-button"
       >
         <div style={{ marginRight: "4px" }}>{cloned}</div>
         <div className={styles.noselect} style={{ fontSize: "10px" }}>

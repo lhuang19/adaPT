@@ -112,6 +112,7 @@ describe("register, login, message", () => {
 
     cy.get(".ant-input").type("im a goat");
     cy.wait(1000);
+    cy.contains("im a goat").should("be.visible");
 
     cy.get(".ant-btn").click();
 

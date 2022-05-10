@@ -17,7 +17,7 @@ function ReactionBar({ poster, time, username }) {
     reactionTime,
     reactionUsername
   ) {
-    if (reactionUsername !== "") {
+    if (reactionUsername && reactionUsername !== "") {
       const { data } = await doAPIRequest(
         `/post/${reactionPoster}${reactionTime}/reactions/${reactionUsername}`,
         {
@@ -38,7 +38,7 @@ function ReactionBar({ poster, time, username }) {
   }, [username]);
 
   return reactions ? (
-    <Space>
+    <Space data-testid="reaction-bar">
       <IconButton
         icon={<SmileTwoTone />}
         name="smile"

@@ -21,7 +21,12 @@ function Editor({ onChange, onSubmit, submitting, value }) {
   return (
     <>
       <Form.Item>
-        <TextArea rows={2} onChange={onChange} value={value} />
+        <TextArea
+          rows={2}
+          onChange={onChange}
+          value={value}
+          data-testid="comment-textarea"
+        />
       </Form.Item>
       <Form.Item
         style={{
@@ -54,7 +59,6 @@ function Comments({ poster, time }) {
   function onSubmitCommentHandler() {
     setInput("");
     const submitTime = Date.now();
-    // postComment(poster, time, username, input, Date.now());
     doAPIRequest(`/post/${poster}${time}/comments`, {
       method: "POST",
       body: { commenter: username, content: input, commentTime: Date.now() },

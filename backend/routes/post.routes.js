@@ -317,7 +317,9 @@ router.delete("/:id/reactions/:username/:type", async (req, res) => {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/comment"
+ *              type: array
+ *              items:
+ *                $ref: "#/components/schemas/comment"
  *      404:
  *        description: bad input parameter
  */

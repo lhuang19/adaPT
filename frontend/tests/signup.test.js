@@ -44,7 +44,7 @@ test("Signup next and prev", async () => {
     </Router>
   );
   fireEvent.click(screen.getByText("Next"));
-  await new Promise((r) => setTimeout(r, 100));
+  await new Promise((r) => setTimeout(r, 200));
 
   expect(screen.getByText("Please create a username!")).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText("Username"), {
